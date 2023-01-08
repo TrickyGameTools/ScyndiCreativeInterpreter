@@ -11,3 +11,4 @@ SCI_Exe
 *.recipe
 *.log
 *.lastbuildstate
+*.tlog

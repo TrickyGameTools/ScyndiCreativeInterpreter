@@ -12,3 +12,4 @@ SCI_Exe
 *.log
 *.lastbuildstate
 *.tlog
+*.idb

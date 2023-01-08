@@ -1,0 +1,9 @@
+.vs
+.DS_Store
+._*
+tumbs.db
+MKL*
+*.MKL.*
+
+*.obj
+

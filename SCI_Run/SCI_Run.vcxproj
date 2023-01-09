@@ -159,7 +159,26 @@
     <ClCompile Include="SCI_Run.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvArgParse.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvAsk.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvBank.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvConInput.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvDir.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvDirry.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvEndian.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvGINIE.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvHSVRGB.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\Slyvina.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvMD5.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvQCol.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvRandom.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvRequestFile.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvSTOI.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvStream.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvString.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvTime.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvVecSearch.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvVolumes.hpp" />
     <ClInclude Include="..\SCI_Share\SCI_GlobalConfig.hpp" />
     <ClInclude Include="..\SCI_Share\SCI_Header.hpp" />
     <ClInclude Include="..\SCI_Share\Version.hpp" />

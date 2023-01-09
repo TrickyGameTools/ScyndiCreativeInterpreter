@@ -14,4 +14,8 @@ SCI_Exe
 *.tlog
 *.idb
 
+*.iobj
+*.ipdb
+*.pdb
+
 TestProjects

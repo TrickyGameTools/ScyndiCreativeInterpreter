@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.09
+// Version: 23.01.10
 // EndLic
 #pragma once
 #include <SlyvArgParse.hpp>
@@ -29,5 +29,6 @@
 namespace Scyndi_CI {
 	namespace Builder {
 		extern Slyvina::Units::ParsedArg CLI_Args;
+		inline bool DebugFlag() { return CLI_Args.bool_flags["debug"]; };
 	}
 }

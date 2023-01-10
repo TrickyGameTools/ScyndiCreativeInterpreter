@@ -82,7 +82,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>../SCI_Exe</OutDir>
-    <IncludePath>E:\Projects\Applications\Slyvina\Libs\Units\Headers;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Projects\Applications\Slyvina\Libs\JCR6\Headers;E:\Projects\Applications\Slyvina\Libs\Units\Headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -141,6 +141,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_Core.cpp" />
+    <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_JQL.cpp" />
+    <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_RealDir.cpp" />
+    <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_Write.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvArgParse.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvAsk.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvBank.cpp" />
@@ -154,13 +158,18 @@
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvString.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvTime.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvVolumes.cpp" />
+    <ClCompile Include="..\SCI_Share\SCI_GlobalConfig.cpp" />
     <ClCompile Include="SCI_Build.cpp" />
     <ClCompile Include="SCI_Build_Config.cpp" />
+    <ClCompile Include="SCI_Package.cpp" />
     <ClCompile Include="SCI_Project.cpp" />
+    <ClCompile Include="SCI_Script.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SCI_Build_Config.hpp" />
+    <ClInclude Include="SCI_Package.hpp" />
     <ClInclude Include="SCI_Project.hpp" />
+    <ClInclude Include="SCI_Script.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

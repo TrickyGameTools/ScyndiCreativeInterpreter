@@ -76,6 +76,9 @@ namespace Scyndi_CI {
 					}
 				}
 				OutputJQL + "\n\n";
+			} else {
+				QCol->Error("Packing for release not yet implemented");
+				return false;
 			}
 			return true;
 		}

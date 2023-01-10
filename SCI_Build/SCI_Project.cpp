@@ -21,14 +21,18 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.09
+// Version: 23.01.10
 // EndLic
 
 #include <SlyvQCol.hpp>
 #include <SlyvAsk.hpp>
 #include <SlyvTime.hpp>
+#include <SlyvVolumes.hpp>
+
+#include "../SCI_Share/Version.hpp"
 
 #include "SCI_Project.hpp"
+#include "SCI_Script.hpp"
 
 using namespace Slyvina;
 using namespace Units;
@@ -53,9 +57,54 @@ namespace Scyndi_CI {
 			SaveString(Project,"[Project]\nCreated=" + CurrentDate() + "; " + CurrentTime() + "\n");		
 		}
 
+		bool SCI_Project::WindowSettings() {
+			ID->Value("Engine", "Engine", "SCI");
+			ID->Value("Engine", "Version", QVersion.Version());
+			ID->Value("Window", "Caption", Ask(Data, "SCI::WINDOW", "Caption", "Window - Caption: ", Title()));
+			auto Full{ Yes(Data, "SCI::WINDOW","Full Screen","Do you want to game to run full screen?") };
+			ID->Value("Window", "Full", boolstring(Full));
+			if (!Full) {
+				ID->Value("Window", "Width", Ask(Data, "SCI::Window", "WinWidth", "Window width (suffix with % to make it calculate on the desktop size)", "1200"));
+				ID->Value("WIndow", "Height", Ask(Data, "SCI::Window", "WinHeight", "Window height (suffix with % to make it calculate on the desktop size)", "1000"));
+			}
+			auto Alt{ Yes(Data,"SCI::Window","UseAlt","Use the Alt Height system") };
+			ID->Value("Alt", "Use", boolstring(Alt));
+			if (Alt) {
+				ID->Value("Alt", Ask(Data, "SCI::Window", "AltWidth", "Alt width", "1200"));
+				ID->Value("Alt", Ask(Data, "SCI::Window", "AltHeight", "Alt Height", "1000"));
+			}
+			return true;
+		}
+
 		std::string SCI_Project::Title() { return Ask(Data, "Project", "Title","What is the title of the project?"); }
 		std::string SCI_Project::Author() { return Ask(Data, "Project", "Author", "What is the name of the author?"); }
 		std::string SCI_Project::Copyright() { return Ask(Data, "Project", "Copyright", "Copyright: ", TrSPrintF("(c) %s, %s", Author().c_str(), Right(CurrentDate(), 4).c_str())); }
+		std::string SCI_Project::License() { return Ask(Data, "Project", "License", "License", "General Public License 3"); }
+
+		std::string SCI_Project::File() { return Project; }
+
+		std::string SCI_Project::OutputName() {
+			if (!Data->HasValue("Project", "Outputname")) {
+				QCol->LMagenta("Output Name\n");
+				QCol->White("This name will be used to name the .exe file, and the main resource file.\n\n");				
+			}
+			return Ask(Data, "Project", "OutputName", "Please enter the output name: ", Title());			
+		}
+
+		std::string SCI_Project::DebugJQLFile() {
+			auto dir = Ask(Data, "Project", "DebugJQLDir", "For the debug JQL file, I need a directory. Please name it: ", ChReplace(ExtractDir(File()),'\\','/'));
+			dir = ChReplace(dir,'\\', '/');
+			if (!Suffixed(dir, "/")) dir += "/";
+			return AVolPath(dir + OutputName() + ".jql");
+		}
+
+		std::string SCI_Project::AssetsDir() {
+			return AVolPath(Ask(Data, "Directory", "SCI_Assets_Source", "Please tell me where the assets to include in this project are stored: "));
+		}
+
+		bool SCI_Project::AssetsMultiDir() {
+			return Yes(Data,"Directory","SCI_ASSETS_MULTIDIR","Is the assets dir set up for 'multi-dir'");
+		}
 
 		Scyndi_CI::Builder::SCI_Project::SCI_Project(std::string _Project) {
 			Project = _Project;
@@ -67,6 +116,9 @@ namespace Scyndi_CI {
 			QCol->Doing("Title", Title());
 			QCol->Doing("Author",Author());
 			QCol->Doing("Copyright", Copyright());
+			WindowSettings();
+			if (!CompileScripts(this, Data)) { Fail++; return; }
+			if (!HandlePackage(this, Data)) { Fail++; return; }
 		}
 
 	}

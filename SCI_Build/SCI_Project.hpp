@@ -21,29 +21,51 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.09
+// Version: 23.01.10
 // EndLic
 
 #pragma once
 #include <string>
 #include <SlyvGINIE.hpp>
+#include <SlyvTime.hpp>
+
+//namespace Scyndi_CI { namespace Builder { class SCI_Project; } }
+//#include "SCI_Package.hpp"
+//#define SCI_PROJECT_LOADED
 
 namespace Scyndi_CI {
 	namespace Builder {
 
+
+
 		class SCI_Project {
 		private:
 
+			//Package Pack;
+
 			Slyvina::Units::GINIE Data{ nullptr };
+			Slyvina::Units::GINIE ID{ Slyvina::Units::ParseGINIE("[ID]\nBuild=" + Slyvina::Units::CurrentDate()) };
 			std::string Project{ "" };
 
 			bool CreateIfNeeded();
+
+			bool WindowSettings();
+
+		public:
+
 			std::string Title();
 			std::string Author();
 			std::string Copyright();
+			std::string License();
+			std::string File();
 
 
-		public:
+			std::string OutputName();
+			std::string DebugJQLFile();
+
+			std::string AssetsDir();
+			bool AssetsMultiDir();
+			
 
 			static Slyvina::uint64 Processed;
 			static Slyvina::uint64 Success;
@@ -53,5 +75,11 @@ namespace Scyndi_CI {
 			SCI_Project(std::string _Project);
 		};
 
+
+
+
+		// Please note, this lives in SCI_Package.cpp
+		// Placed here as a conflict preventer
+		bool HandlePackage(SCI_Project* P, Slyvina::Units::GINIE G);
 	}
 }

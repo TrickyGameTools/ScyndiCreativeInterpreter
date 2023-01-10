@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Shared">
       <UniqueIdentifier>{70642a40-a43e-4e13-8399-9e10c7a80a42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Slyvina\JCR6">
+      <UniqueIdentifier>{aa8419f0-02c3-4978-98ad-0dcb5eab1b2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SCI_Run.cpp">
@@ -80,6 +83,18 @@
     </ClCompile>
     <ClCompile Include="..\SCI_Share\SCI_GlobalConfig.cpp">
       <Filter>Source Files\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_Core.cpp">
+      <Filter>Source Files\Slyvina\JCR6</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_JQL.cpp">
+      <Filter>Source Files\Slyvina\JCR6</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_RealDir.cpp">
+      <Filter>Source Files\Slyvina\JCR6</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_Write.cpp">
+      <Filter>Source Files\Slyvina\JCR6</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

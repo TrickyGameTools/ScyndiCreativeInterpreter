@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.09
+// Version: 23.01.10
 // EndLic
 #include <SlyvArgParse.hpp>
 #include <SlyvString.hpp>
@@ -38,6 +38,7 @@ int main(int ac, char** args) {
 	FlagConfig Cfg;
 	AddFlag_Bool(Cfg, "debug", false);
 	AddFlag_Bool(Cfg, "scyndidebug", false); // Use debug builds of Scyndi compilations
+	AddFlag_Bool(Cfg, "scyndiforce", false);	
 	CLI_Args = ParseArg(ac, args, Cfg);
 	if (!CLI_Args.arguments.size()) {
 		QCol->Magenta("Usage: ");
@@ -47,6 +48,7 @@ int main(int ac, char** args) {
 		QCol->Magenta("Available switches:\n");
 		QCol->White("\t-debug       "); QCol->Green("Create a debug build\n");
 		QCol->White("\t-scyndidebug "); QCol->Green("Use the debug compilations of Scyndi scripts\n");
+		QCol->White("\t-scyndiforce "); QCol->Green("Forces Scyndi to compile ALL required scripts regardless if they were modified or not\n");
 		QCol->Reset();
 		return 0;
 	}

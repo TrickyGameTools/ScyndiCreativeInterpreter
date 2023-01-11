@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.10
+// Version: 23.01.11
 // EndLic
 #pragma once
 #include <memory>
@@ -39,6 +39,7 @@ namespace Scyndi_CI {
 	namespace Builder {
 		class _Package; typedef std::shared_ptr<_Package> Package;
 		
+		struct PackResult;
 
 		class _Package {
 		private:
@@ -54,10 +55,13 @@ namespace Scyndi_CI {
 
 			std::string Package(std::string dir);
 
+			bool EligableScriptBundle(std::string bundle);
 			bool PackDir(std::string srcdir,Slyvina::VecString D, std::string Package, std::string Author, std::string Notes);
+			PackResult PackScript(std::string bundle, bool bytecode, std::string entry, std::string package, std::string directory);
 
 		public:
 
+			bool PackScript();
 			bool AddString(std::string package, std::string entry, std::string content,std::string author,std::string notes);
 			bool Pack();
 			_Package(SCI_Project*P,Slyvina::Units::GINIE D);

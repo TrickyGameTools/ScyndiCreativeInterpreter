@@ -34,6 +34,12 @@
     <Filter Include="Source Files\Slyvina\JCR6">
       <UniqueIdentifier>{aa8419f0-02c3-4978-98ad-0dcb5eab1b2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Slyvina\Lunatic">
+      <UniqueIdentifier>{955375d7-f75b-47ec-9e1e-d1d835d57da9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Slyvina\Lunatic\Lua">
+      <UniqueIdentifier>{5469828b-0adf-4b94-9a5a-4379d6d82429}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SCI_Run.cpp">
@@ -169,6 +175,93 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvVolumes.hpp">
       <Filter>Header Files\Slyvina\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lunatic.hpp">
+      <Filter>Header Files\Slyvina\Lunatic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lapi.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lauxlib.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lcode.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lctype.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\ldebug.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\ldo.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lfunc.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lgc.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\ljumptab.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\llex.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\llimits.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lmem.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lobject.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lopcodes.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lopnames.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lparser.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lprefix.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lstate.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lstring.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\ltable.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\ltm.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lua.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lua.hpp">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\luaconf.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lualib.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lundump.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lvm.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lzio.h">
+      <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

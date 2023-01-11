@@ -163,6 +163,35 @@
     <ClCompile Include="SCI_Run.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lapi.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lauxlib.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lcode.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lctype.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\ldebug.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\ldo.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lfunc.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lgc.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\ljumptab.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\llex.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\llimits.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lmem.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lobject.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lopcodes.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lopnames.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lparser.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lprefix.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lstate.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lstring.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\ltable.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\ltm.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lua.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lua.hpp" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\luaconf.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lualib.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lundump.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lvm.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lzio.h" />
+    <ClInclude Include="..\..\..\Libs\Lunatic\Lunatic.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvArgParse.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvAsk.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvBank.hpp" />

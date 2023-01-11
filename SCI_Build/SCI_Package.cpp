@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.10
+// Version: 23.01.11
 // EndLic
 
 #define Act(A) if (!A) return false
@@ -30,6 +30,7 @@
 
 #include <SlyvAsk.hpp>
 #include <SlyvDir.hpp>
+#include <SlyvVecSearch.hpp>
 
 #include "SCI_Package.hpp"
 #include "SCI_Build_Config.hpp"
@@ -42,6 +43,38 @@ using namespace JCR6;
 namespace Scyndi_CI {
 	namespace Builder {
 
+		struct PackResult {
+			bool Success{false};
+			VecString Dependencies{NewVecString()};
+		};
+
+#pragma region ScriptRecord
+		class ScriptRecord {
+		public:
+			string
+				FullFileName,
+				FileName,
+				ResDir;
+			string ResFileName(bool wantbytecode) { 
+				auto FN{ StripExt(FileName) }; if (CLI_Args.bool_flags["scyndidebug"]) FN = StripExt(FileName); 
+				if (wantbytecode) FN += ".lbc"; else FN += ".lua";
+				return ResDir + "/" + FN; 
+			}
+			ScriptRecord(string FFN, string FN, string RD) { FullFileName = ChReplace(FFN, '\\', '/'); FileName = ChReplace(FN, '\\', '/'); ResDir = ChReplace(RD, '\\', '/'); }
+		};
+		
+		typedef shared_ptr<vector<shared_ptr<ScriptRecord>>> SRList;
+		inline SRList NewSRList() { return make_shared<vector<shared_ptr<ScriptRecord>>>(); }
+		void SRPush(SRList L, string FFN, string FN, string RD) { L->push_back(make_shared<ScriptRecord>(FFN, FN, RD)); }
+		bool SRFind(SRList L, string FFN) {
+			for (auto a : *L) if (a->FullFileName == FFN) return true;
+			return false;
+		}
+		void SRPushUnqiue(SRList L, string FFN, string FN, string RD) { if (!SRFind(L,FFN)) L->push_back(make_shared<ScriptRecord>(FFN, FN, RD)); }
+#pragma endregion
+		
+
+
 		std::map<std::string, std::string> _Package::ReservedDirs {
 			{"ID","identification data"},
 			{"SCRIPT","game scripts"},
@@ -52,6 +85,12 @@ namespace Scyndi_CI {
 			if (_debug) return "*DEBUG";
 			if (dir == "*SCRIPT*") return "*MAIN";
 			return Ask(PrjData, "DIR2PACKAGE", dir, TrSPrintF("Which package is '%s' part of? ", dir.c_str()), "*MAIN");			
+		}
+
+		bool _Package::EligableScriptBundle(std::string bundle) {
+			Trans2Upper(bundle);
+			if (CLI_Args.bool_flags["scyndidebug"]) return Suffixed(bundle, ".DEBUG.STB");
+			return Suffixed(bundle,".STB") && (!Suffixed(bundle,".DEBUG.STB"));
 		}
 
 		bool _Package::PackDir(std::string srcdir, Slyvina::VecString D, std::string Package, std::string Author, std::string Notes) {
@@ -82,6 +121,114 @@ namespace Scyndi_CI {
 			}
 			return true;
 		}
+
+		PackResult _Package::PackScript(std::string bundle, bool bytecode, std::string entry, std::string package, std::string directory) {
+			PackResult ret;
+			//cout << " GGRR!\n"; // debug
+			if (_debug) {
+				QCol->Doing("Script Link", bundle);
+				OutputJQL += "From:" + bundle + "\n";
+				if (bytecode) {
+					//OutputJQL += "Steal:Bytecode.lbc>" + directory + "/" + entry + ".lbc\n";
+					OutputJQL += "Steal:Bytecode.lbc>" + entry + "\n";
+				} else {
+					//OutputJQL += "Steal:Translation.lua>" + directory + "/" + entry + ".lua\n";
+					OutputJQL += "Steal:Translation.lua>" + entry + "\n";
+				}
+			} else { QCol->Error("Release not yet implemented for script"); }
+			return ret;
+		}
+
+		
+
+		bool _Package::PackScript() {
+			QCol->LMagenta("Script inclusion\n");
+			auto wantbytecode = Yes(PrjData, "Script", "ByteCode", "Import the bytcode of the scripts");
+			auto wantpackage = Ask(PrjData, "Script", "Package", "Put script in package: ", "*MAIN");
+			auto wantlibs = NewVecString();
+			auto listscripts = PrjData->List("Directory", "SourceFiles");
+			auto listlibs = PrjData->List("Directory", "Libraries");
+			/*
+			auto
+				DepDone{ NewVecString() },
+				DepNeed{ NewVecString() },
+				DepNextNeed{ NewVecString() };
+			*/
+			auto
+				DepDone{ NewSRList() },
+				DepNeed{ NewSRList() },
+				DepNextNeed{ NewSRList() };
+
+			VecString List;
+			auto
+				SourceList{ PrjData->List("Directory","SourceFiles") },
+				LibList{ PrjData->List("Directory","Libraries") };
+			QCol->Doing("Src dirs", SourceList->size());
+			QCol->Doing("Lib dirs", LibList->size());
+			for (auto sl : *SourceList) {
+				QCol->Doing("Scanning", sl);
+				auto d = GetTree(sl);
+				for (auto bndl : *d) {
+					//cout << "Is " << bndl << " eligable for linking? >> " << EligableScriptBundle(bndl) << endl; // debug
+					if (EligableScriptBundle(bndl)) SRPush(DepNeed, sl + "/" + bndl, bndl, "Script"); // DepNeed->push_back(sl + "/" + bndl);
+				}
+				uint64 TimeOut{ 0xffffff };
+				while (DepNeed->size()) {
+					TimeOut--;
+					if (TimeOut % 10000 == 0) QCol->Doing("Time Warning", TimeOut);
+					if (!TimeOut) QCol->Error("Timeout");
+					for (auto bndl : *DepNeed) {
+						//auto bndl{ sl + "/" + _bndl };
+						auto J = JCR6_Dir(bndl->FullFileName);
+						if (Last()->Error) { 
+							QCol->Error(TrSPrintF("JCR ERROR: %s", Last()->ErrorMessage.c_str())); 
+							QCol->Doing("JCR6 Main:", Last()->MainFile);
+							QCol->Doing("JCR6 Entry:", Last()->Entry);
+							return false; 
+						}
+						if (!J->EntryExists("Configuration.ini")) {
+							QCol->Error(TrSPrintF("Bundle '%s' does not contain configuration", bndl->FullFileName.c_str()));
+							return false;
+						}
+						QCol->Doing("Analysing", bndl->FullFileName);
+						auto bcfg{ ParseGINIE(J->GetString("Configuration.ini")) };
+						auto list{ bcfg->List("DEPENDENCIES","LIST") };
+
+						for (auto ldep : *list) {
+							string dep{ "" };
+							if (Prefixed(Upper(ldep), "LIBS/")) {
+								QCol->Error("Dependencies NOT YET supported!"); return false;
+								//* 
+								dep = ldep.substr(5);
+								for (auto libd : *LibList) {
+									auto fdep{ libd + "/" + dep };
+									auto found{ false };
+									if ((!SRFind(DepDone, fdep)) && (!SRFind(DepNeed, fdep))) {
+										QCol->Doing("=> Dep", ldep);
+										if (FileExists(fdep)) {
+											//VecPushUnique(DepNextNeed, fdep);
+											SRPushUnqiue(DepNextNeed, fdep, dep, "Libs");
+											found = true;
+										}
+									} else found = true;
+									if (!found) { QCol->Error("Dependency not found in any of the library directories"); return false; }
+								}
+								//*/
+							}
+						}
+						string ent{ bndl->ResFileName(wantbytecode) };
+						string dir{ bndl->ResDir }; // No longer needed, but kept for saving myself some work
+						PackScript(bndl->FullFileName, wantbytecode, ent, wantpackage , dir);
+					}
+					DepNeed = DepNextNeed;
+					DepNextNeed = NewSRList(); //NewVecString();
+				}
+			}
+		}
+			
+			
+			
+		
 
 		bool _Package::AddString(std::string package, std::string entry, std::string content, std::string author, std::string notes) {
 			if (_debug || package == "*DEBUG") {
@@ -149,6 +296,7 @@ namespace Scyndi_CI {
 			QCol->Doing("Identifying", P->File());
 			Act(HP->AddString("*MAIN", "ID/Identify.ini", G->UnParse("Identify data for Scyndi's Creative Interpreter"), P->Author(), P->Copyright()));
 			Act(HP->Pack());
+			Act(HP->PackScript());
 			return true;
 		}
 	}

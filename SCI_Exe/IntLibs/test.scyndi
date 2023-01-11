@@ -1,0 +1,6 @@
+Module
+
+Global Void Testing()
+	Print("Testing, testing, one, two, three!")
+End
+

@@ -67,10 +67,11 @@ namespace Scyndi_CI {
 		inline SRList NewSRList() { return make_shared<vector<shared_ptr<ScriptRecord>>>(); }
 		void SRPush(SRList L, string FFN, string FN, string RD) { L->push_back(make_shared<ScriptRecord>(FFN, FN, RD)); }
 		bool SRFind(SRList L, string FFN) {
+			FFN = ChReplace(FFN, '\\', '/');
 			for (auto a : *L) if (a->FullFileName == FFN) return true;
 			return false;
 		}
-		void SRPushUnqiue(SRList L, string FFN, string FN, string RD) { if (!SRFind(L,FFN)) L->push_back(make_shared<ScriptRecord>(FFN, FN, RD)); }
+		void SRPushUnique(SRList L, string FFN, string FN, string RD) { if (!SRFind(L,FFN)) L->push_back(make_shared<ScriptRecord>(FFN, FN, RD)); }
 #pragma endregion
 		
 
@@ -166,7 +167,7 @@ namespace Scyndi_CI {
 			QCol->Doing("Src dirs", SourceList->size());
 			QCol->Doing("Lib dirs", LibList->size());
 			for (auto sl : *SourceList) {
-				QCol->Doing("Scanning", sl);
+				QCol->Doing("Scanning", ChReplace(sl, '\\', '/'));
 				auto d = GetTree(sl);
 				for (auto bndl : *d) {
 					//cout << "Is " << bndl << " eligable for linking? >> " << EligableScriptBundle(bndl) << endl; // debug
@@ -197,22 +198,26 @@ namespace Scyndi_CI {
 						for (auto ldep : *list) {
 							string dep{ "" };
 							if (Prefixed(Upper(ldep), "LIBS/")) {
-								QCol->Error("Dependencies NOT YET supported!"); return false;
+								//QCol->Error("Dependencies NOT YET supported!"); return false;
 								//* 
 								dep = ldep.substr(5);
+								auto found{ false };
+								QCol->Doing("=> Dep", ldep);
 								for (auto libd : *LibList) {
 									auto fdep{ libd + "/" + dep };
-									auto found{ false };
+									if (CLI_Args.bool_flags["scyndidebug"]) fdep += ".Debug"; fdep += ".stb";
+									//cout << "Checking: " << fdep << endl;
 									if ((!SRFind(DepDone, fdep)) && (!SRFind(DepNeed, fdep))) {
-										QCol->Doing("=> Dep", ldep);
 										if (FileExists(fdep)) {
 											//VecPushUnique(DepNextNeed, fdep);
-											SRPushUnqiue(DepNextNeed, fdep, dep, "Libs");
+											//cout << "Push " << fdep << "," << dep << ", Libs\n";
+											auto tdep{ dep }; if (CLI_Args.bool_flags["scyndidebug"]) tdep += ".Debug"; tdep += ".stb";
+											SRPushUnique(DepNextNeed, fdep, tdep, "Libs");
 											found = true;
 										}
 									} else found = true;
-									if (!found) { QCol->Error("Dependency not found in any of the library directories"); return false; }
 								}
+								if (!found) { QCol->Error("Dependency not found in any of the library directories"); return false; }
 								//*/
 							}
 						}

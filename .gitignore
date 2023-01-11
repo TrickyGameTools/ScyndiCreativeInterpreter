@@ -23,3 +23,4 @@ SCI_Exe/*
 TestProjects
 SCI_Build/x64/Release/SCI_Build.vcxproj.FileListAbsolute.txt
 SCI_Run/x64/Release/SCI_Run.vcxproj.FileListAbsolute.txt
+*.STB

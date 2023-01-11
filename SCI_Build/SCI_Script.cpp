@@ -49,6 +49,9 @@ namespace Scyndi_CI {
 			PrjDat->NewValue("AA_META", "02_CREATEDBY", Prj->Author());
 			PrjDat->NewValue("AA_META", "03_COPYRIGHT", Prj->Copyright());
 			PrjDat->NewValue("AA_META", "04_LICENSE", Prj->License());
+			AskList(PrjDat, "Directory", "SourceFiles", "Name your directories to search for script source files:");
+			AskList(PrjDat,"Directory", "Libraries", "Name your directories to search for libraries:");
+			PrjDat->AddNew("Directory", "Libraries", ExtractDir(ChReplace(CLI_Args.myexe, '\\', '/')) + "/IntLibs");
 			auto cmd{ Scyndi() }; cmd += " ";
 			if (CLI_Args.bool_flags["scyndidebug"]) cmd += "-debug ";
 			if (CLI_Args.bool_flags["scyndiforce"]) cmd += "-force ";

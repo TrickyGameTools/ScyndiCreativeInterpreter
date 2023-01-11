@@ -7,7 +7,9 @@ MKL*
 
 *.obj
 
-SCI_Exe
+SCI_Exe/*
+!SCI_Exe/IntLibs
+!SCI_Exe/readme.md
 *.recipe
 *.log
 *.lastbuildstate

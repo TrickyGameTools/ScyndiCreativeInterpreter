@@ -40,6 +40,9 @@
     <Filter Include="Header Files\Slyvina\Lunatic\Lua">
       <UniqueIdentifier>{5469828b-0adf-4b94-9a5a-4379d6d82429}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\dll">
+      <UniqueIdentifier>{cfc3e7ae-a2b7-45cd-b962-e6023b602f8f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SCI_Run.cpp">
@@ -263,5 +266,10 @@
     <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lzio.h">
       <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\..\Libs\JCR6\3rdParty\zlib\zlib.dll">
+      <Filter>Source Files\dll</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

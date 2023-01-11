@@ -139,6 +139,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>pwsh bsrf.ps1</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Build BSRF file</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_Core.cpp" />
@@ -216,6 +222,11 @@
     <ClInclude Include="..\SCI_Share\SCI_Header.hpp" />
     <ClInclude Include="..\SCI_Share\Version.hpp" />
     <ClInclude Include="SCI_Config.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\..\Libs\JCR6\3rdParty\zlib\zlib.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

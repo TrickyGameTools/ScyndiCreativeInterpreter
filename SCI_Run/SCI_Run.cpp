@@ -36,6 +36,7 @@ namespace Scyndi_CI {
 	bool CanStart(int c, char** cliargs) {
 		FlagConfig Cfg;
 		Args = ParseArg(c, cliargs, Cfg);
+		QCol->Doing("SRF build", SRF_Date());
 		QCol->Doing("Resource", JCR_MainFile());
 		auto J{ JCR_MainFile() };
 		if (!FileExists(J)) {

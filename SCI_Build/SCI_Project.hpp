@@ -59,6 +59,8 @@ namespace Scyndi_CI {
 			std::string License();
 			std::string File();
 
+			inline std::string IDUnparsed() { return ID->UnParse(); }
+
 
 			std::string OutputName();
 			std::string DebugJQLFile();

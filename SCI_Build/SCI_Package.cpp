@@ -299,7 +299,8 @@ namespace Scyndi_CI {
 			QCol->Doing("Packaging", P->OutputName());
 			auto HP{ Package(new _Package(P,G)) };
 			QCol->Doing("Identifying", P->File());
-			Act(HP->AddString("*MAIN", "ID/Identify.ini", G->UnParse("Identify data for Scyndi's Creative Interpreter"), P->Author(), P->Copyright()));
+			//Act(HP->AddString("*MAIN", "ID/Identify.ini", G->UnParse("Identify data for Scyndi's Creative Interpreter"), P->Author(), P->Copyright()));
+			Act(HP->AddString("*MAIN", "ID/Identify.ini", P->IDUnparsed(),P->Author(), P->Copyright()));
 			Act(HP->Pack());
 			Act(HP->PackScript());
 			return true;

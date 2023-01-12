@@ -48,6 +48,7 @@ namespace Scyndi_CI {
 		if (VerdereUitleg) {
 			for (auto ul : *VerdereUitleg) QCol->Magenta(ul + "\n");
 		}
+		SetAltScreen(0, 0);
 		Cls();
 		SetColor(0, 0, 127, 255);
 		Rect(0, 0, ScreenWidth(), ScreenHeight());
@@ -57,6 +58,19 @@ namespace Scyndi_CI {
 			auto y = std::max(0,ScreenHeight() - death->Height());
 			death->Draw(0, y);
 		}
+		auto fnt = Fnt("*SYSFONT");
+		SetColor(255, 100, 50);
+		fnt->Text("Oops! You tried something I didn't think of!", 5, 5);
+		SetColor(255, 255, 0);
+		fnt->Text(ErrorMessage,5,30);
+		SetColor(0, 180, 255);
+		if (VerdereUitleg) {
+			for (size_t i = 0; i < VerdereUitleg->size(); i++) {
+				fnt->Text((*VerdereUitleg)[i], 5, 90 + (i * 30));
+			}
+		}
+		SetColor(255, 255, 255);
+		fnt->Text("Press Escape to exit this application!", 5, ScreenHeight() - 35, Align::Left);
 		Flip();
 		Flush();
 		do { Poll(); } while (!KeyHit(SDLK_ESCAPE));

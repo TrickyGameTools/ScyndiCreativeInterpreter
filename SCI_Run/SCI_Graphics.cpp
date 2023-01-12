@@ -40,93 +40,94 @@ using namespace TQSG;
 using namespace JCR6;
 
 namespace Scyndi_CI {
-    static map<std::string, TImage> ImageRegister{};
-    static map<std::string, TImageFont> FontRegister{};
+	static map<std::string, TImage> ImageRegister{};
+	static map<std::string, TImageFont> FontRegister{};
 
-    bool WantFullScreen() {
-        return Upper(GameID_GINIE()->Value("Window", "Full")) == "TRUE";
-    }
+	bool WantFullScreen() {
+		return Upper(GameID_GINIE()->Value("Window", "Full")) == "TRUE";
+	}
 
-    std::string WindowCaption() { return GameID_GINIE()->Value("Window", "Caption"); }
+	std::string WindowCaption() { return GameID_GINIE()->Value("Window", "Caption"); }
 
-    TImage Img(std::string Tag, bool crash) {
-        Trans2Upper(Tag);
-        if (!ImageRegister.count(Tag)) {
-            if (crash) { throw std::runtime_error(TrSPrintF("There is no image tagged '%s'", Tag.c_str())); }
-            return nullptr;
-        }
-        return ImageRegister[Tag];
-    }
+	TImage Img(std::string Tag, bool crash) {
+		Trans2Upper(Tag);
+		if (!ImageRegister.count(Tag)) {
+			if (crash) { throw std::runtime_error(TrSPrintF("There is no image tagged '%s'", Tag.c_str())); }
+			return nullptr;
+		}
+		return ImageRegister[Tag];
+	}
 
-    void Img(std::string Tag, Slyvina::TQSG::TImage _Img) {
-        Trans2Upper(Tag);
-        if (!_Img) {
-            if (!ImageRegister.count(Tag)) return;
-            ImageRegister.erase(Tag);
-        } else {
-            ImageRegister[Tag] = _Img;
-        }
-    }
+	void Img(std::string Tag, Slyvina::TQSG::TImage _Img) {
+		Trans2Upper(Tag);
+		if (!_Img) {
+			if (!ImageRegister.count(Tag)) return;
+			ImageRegister.erase(Tag);
+		} else {
+			ImageRegister[Tag] = _Img;
+		}
+	}
 
-    void Img(std::string Tag, Slyvina::JCR6::JT_Dir J, std::string File) {
-        if (!J->EntryExists(File)) {
-            Crash("Image name '" + File + "' (for tag '" + Tag + "') not found");
-            return;
-        }
-        Trans2Upper(Tag);
-        Img(Tag, LoadImage(J, File));
-        if (Last()->Error) Crash("JCR6 error: " + Last()->ErrorMessage, "MainFile: " + Last()->MainFile + "\nEntry: " + Last()->Entry);
-    }
+	void Img(std::string Tag, Slyvina::JCR6::JT_Dir J, std::string File) {
+		if (!J->EntryExists(File)) {
+			Crash("Image name '" + File + "' (for tag '" + Tag + "') not found");
+			return;
+		}
+		Trans2Upper(Tag);
+		Img(Tag, LoadImage(J, File));
+		if (Last()->Error) Crash("JCR6 error: " + Last()->ErrorMessage, "MainFile: " + Last()->MainFile + "\nEntry: " + Last()->Entry);
+	}
 
-    void Img(std::string Tag, std::string File) { Img(Tag, Resource(), File); }
+	void Img(std::string Tag, std::string File) { Img(Tag, Resource(), File); }
 
-    Slyvina::TQSG::TImageFont Fnt(std::string Tag, bool crash) {
-        Trans2Upper(Tag);
-        if (!FontRegister.count(Tag)) {
-            if (crash) { throw std::runtime_error(TrSPrintF("There is no font tagged '%s'", Tag.c_str())); }
-            return nullptr;
-        }
-        return FontRegister[Tag];
-    }
+	Slyvina::TQSG::TImageFont Fnt(std::string Tag, bool crash) {
+		Trans2Upper(Tag);
+		if (!FontRegister.count(Tag)) {
+			if (crash) { throw std::runtime_error(TrSPrintF("There is no font tagged '%s'", Tag.c_str())); }
+			return nullptr;
+		}
+		return FontRegister[Tag];
+	}
 
-    void Fnt(std::string Tag, Slyvina::TQSG::TImageFont _Fnt) {
-        Trans2Upper(Tag);
-        if (!_Fnt) {
-            if (!FontRegister.count(Tag)) return;
-            FontRegister.erase(Tag);
-        } else {
-            FontRegister[Tag] = _Fnt;
-        }
-    }
+	void Fnt(std::string Tag, Slyvina::TQSG::TImageFont _Fnt) {
+		Trans2Upper(Tag);
+		if (!_Fnt) {
+			if (!FontRegister.count(Tag)) return;
+			FontRegister.erase(Tag);
+		} else {
+			FontRegister[Tag] = _Fnt;
+		}
+	}
 
-    void Fnt(std::string Tag, Slyvina::JCR6::JT_Dir J, std::string File) {
-        if (!J->DirectoryExists(File)) {
-            Crash("Font name '" + File + "' (for tag '" + Tag + "') not found");
-            return;
-        }
-        Trans2Upper(Tag);
-        Fnt(Tag, LoadImageFont(J,File));
-        if (Last()->Error) Crash("JCR6 error: " + Last()->ErrorMessage, "MainFile: " + Last()->MainFile + "\nEntry: " + Last()->Entry);
-    }
+	void Fnt(std::string Tag, Slyvina::JCR6::JT_Dir J, std::string File) {
+		if (!J->DirectoryExists(File)) {
+			Crash("Font name '" + File + "' (for tag '" + Tag + "') not found");
+			return;
+		}
+		Trans2Upper(Tag);
+		Fnt(Tag, LoadImageFont(J,File));
+		if (Last()->Error) Crash("JCR6 error: " + Last()->ErrorMessage, "MainFile: " + Last()->MainFile + "\nEntry: " + Last()->Entry);
+	}
 
-    void Fnt(std::string Tag, std::string File) { Fnt(Tag, Resource(), File); }
+	void Fnt(std::string Tag, std::string File) { Fnt(Tag, Resource(), File); }
 
-    void StartGraphics() {
-        if (WantFullScreen()) {
-            QCol->Doing("Entering", "FullScreen");
-            QCol->Doing("Caption", WindowCaption());
-            Graphics(WindowCaption());
-        } else {
-            QCol->Error("Windowed mode not yet implemented");
-            exit(500);
-        }
-        Img("*SCIPOWER", SRF(), "GFX/PoweredBySCI.png");
-        Img("*SCIPOWER")->HotCenter();
-        Cls();
-        Img("*SCIPOWER")->Draw(ScreenWidth() / 2, ScreenHeight() / 2);
-        Flip();
-        Img("*DEATH", SRF(), "GFX/Death.png");
-        // SDL_Delay(4000); // debug
-    }
+	void StartGraphics() {
+		if (WantFullScreen()) {
+			QCol->Doing("Entering", "FullScreen");
+			QCol->Doing("Caption", WindowCaption());
+			Graphics(WindowCaption());
+		} else {
+			QCol->Error("Windowed mode not yet implemented");
+			exit(500);
+		}
+		Img("*SCIPOWER", SRF(), "GFX/PoweredBySCI.png");
+		Img("*SCIPOWER")->HotCenter();
+		Fnt("*SYSFONT", SRF(), "Font/DosFont.jfbf");
+		Cls();
+		Img("*SCIPOWER")->Draw(ScreenWidth() / 2, ScreenHeight() / 2);
+		Flip();
+		Img("*DEATH", SRF(), "GFX/Death.png");
+		// SDL_Delay(4000); // debug
+	}
 
 }

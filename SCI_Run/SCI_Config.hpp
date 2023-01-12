@@ -28,6 +28,8 @@
 #include <SlyvArgParse.hpp>
 #include <SlyvGINIE.hpp>
 
+
+
 namespace Scyndi_CI {
 	extern Slyvina::Units::ParsedArg Args;
 
@@ -40,9 +42,12 @@ namespace Scyndi_CI {
 #pragma endregion
 
 #pragma region "Game ID"
+	Slyvina::Units::GINIE GameID_GINIE();
 	std::string GameTitle();
 	std::string GameAuthor();
 	std::string GameCopyright();
+
+	bool VersionMatch(bool ask = false);
 #pragma endregion
 
 

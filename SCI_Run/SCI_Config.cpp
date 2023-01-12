@@ -24,6 +24,8 @@
 // Version: 23.01.12
 // EndLic
 
+#include <TQSE.hpp>
+
 #include <SlyvArgParse.hpp>
 #include <SlyvString.hpp>
 #include <SlyvQCol.hpp>
@@ -31,13 +33,16 @@
 
 #include <JCR6_Core.hpp>
 
+#include "../SCI_Share/Version.hpp"
 #include "../SCI_Share/SCI_GlobalConfig.hpp"
+
 #include "SCI_Config.hpp"
 #include "SCI_JCR.hpp"
 
 using namespace Slyvina;
 using namespace Units;
 using namespace JCR6;
+using namespace TQSE;
 
 namespace Scyndi_CI {
 	ParsedArg Args{};
@@ -110,9 +115,43 @@ namespace Scyndi_CI {
 		return res_id->Value("ID", "Copyright");
 	}
 
+	GINIE GameID() {
+		return GINIE();
+	}
+
+	bool VersionMatch(bool ask) {
+		LoadGameID();
+		try {
+			auto ret{ false };
+			auto s{ Split(res_id->Value("Engine","Version"),'.') };
+			auto
+				gt{ stol((*s)[0]) },
+				mj{ stol((*s)[1]) },
+				mn{ stol((*s)[2]) };
+			if (gt != QVersion.giant || mj != QVersion.major || mn != QVersion.minor) {
+				if (!ask) return false;
+				if (gt > QVersion.giant) { throw runtime_error(TrSPrintF("This game requires at least version %d.0.0 in order to run", gt)); }
+				if (gt == QVersion.giant && (mj > QVersion.major || (mj == QVersion.minor && mn > QVersion.minor))) {
+					return Yes(TrSPrintF("This game requires version %d.%d.%d of Scyndi's Creative Interpreter, which is a slightly later version than you are using now. Are you sure you wish to continue?"));
+				}				
+				return Yes("This version of Scyndi's Creative Interpreter appears to be of a later version than the game wants.\n\nThis means it's possible this game uses deprecated or even removed portions of the engine.\n\nAre you sure you wish to continue?");
+			}
+			return true;
+		} catch (runtime_error rte) {
+			QCol->Error(rte.what());
+			exit(50);
+		}
+		return false;
+	}
+
 	std::string GameAuthor() {
 		LoadGameID();
 		return res_id->Value("ID", "Author");
+	}
+
+	GINIE GameID_GINIE() {
+		LoadGameID();
+		return res_id;
 	}
 #pragma endregion
 

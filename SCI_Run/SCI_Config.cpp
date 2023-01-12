@@ -27,15 +27,22 @@
 #include <SlyvArgParse.hpp>
 #include <SlyvString.hpp>
 #include <SlyvQCol.hpp>
+#include <SlyvGINIE.hpp>
+
+#include <JCR6_Core.hpp>
 
 #include "../SCI_Share/SCI_GlobalConfig.hpp"
 #include "SCI_Config.hpp"
+#include "SCI_JCR.hpp"
 
 using namespace Slyvina;
 using namespace Units;
+using namespace JCR6;
 
 namespace Scyndi_CI {
 	ParsedArg Args{};
+
+	static GINIE srf_id{ nullptr };
 	
 	std::string JCR_MainFile() {
 		if (Args.arguments.size()) return Args.arguments[0];
@@ -51,5 +58,23 @@ namespace Scyndi_CI {
 		return ret;
 	}
 
+	std::string JCR_SRF() {	return ChReplace(StripExt(Args.myexe) + ".srf",'\\','/'); }
+
+	static void LoadSRFGINIE() {
+		if (!srf_id) {
+			auto src = SRF()->GetString("ID/Identify.ini");
+			if (Last()->Error) { QCol->Error("JCR Error in getting SRF identification: " + Last()->ErrorMessage); exit(1); }
+			QCol->Doing("Parsing", "SRF Identification");
+			srf_id = ParseGINIE(src); 
+
+		}		
+	}
+
+	std::string SRF_Date() {
+		LoadSRFGINIE();
+		return srf_id->Value("SRF", "Build");
+	}
+	
+	
 
 }

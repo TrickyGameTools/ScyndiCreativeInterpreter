@@ -32,6 +32,8 @@ namespace Scyndi_CI {
 	extern Slyvina::Units::ParsedArg Args;
 
 	std::string JCR_MainFile();
+	std::string JCR_SRF();
 	std::string GameGlobalHome();
+	std::string SRF_Date();
 
 }

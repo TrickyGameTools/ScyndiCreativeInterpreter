@@ -96,7 +96,7 @@ namespace Scyndi_CI {
 
 		bool _Package::PackDir(std::string srcdir, Slyvina::VecString D, std::string Package, std::string Author, std::string Notes) {
 			srcdir = ChReplace(srcdir, '\\', '/');
-			QCol->Doing("Directory:", srcdir);
+			QCol->Doing("Directory", srcdir);
 			if (_debug) {
 				OutputJQL += "Author:"; OutputJQL += Author + "\n";
 				OutputJQL += "Notes:"; OutputJQL += Notes + "\n";
@@ -106,6 +106,7 @@ namespace Scyndi_CI {
 					if (ReservedDirs.count(PWD)) Allow = Yes(PrjData, "SCI_RESERVEDDIRS", PWD, TrSPrintF("The directory '%s' has been reserved for %s!\nThis can lead to undesirable behavior!\nAre you sure you still want to include files for this directory",PWD.c_str(),ReservedDirs[PWD].c_str()));
 					if (Allow) {
 						auto ffile{ srcdir + "/" + file };
+						//std::cout << "JCR6 Recognize: " << ffile << " >> " << _JT_Dir::Recognize(ffile) << "\n"; // debug only
 						if (_JT_Dir::Recognize(ffile) == "NONE") {
 							QCol->Doing("Raw Link", file);
 							OutputJQL += "Raw:" + ffile + ">" + file + "\n";

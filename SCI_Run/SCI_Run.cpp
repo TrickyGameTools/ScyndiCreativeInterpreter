@@ -24,15 +24,28 @@
 // Version: 23.01.12
 // EndLic
 
+#undef SCI_NO_ERROR_CATCHING
+
+#include <SDL.h>
+
+#include <TQSE.hpp>
+
 #include <SlyvArgParse.hpp>
 #include <SlyvStream.hpp>
 #include <SlyvQCol.hpp>
+#include <SlyvTime.hpp>
 
 #include "../SCI_Share/SCI_Header.hpp"
 #include "SCI_Config.hpp"
+#include "SCI_Graphics.hpp"
+#include "SCI_Load.hpp"
+#include "SCI_Crash.hpp"
 
 using namespace Slyvina;
 using namespace Units;
+using namespace TQSE;
+using namespace Scyndi_CI;
+
 namespace Scyndi_CI {
 	bool CanStart(int c, char** cliargs) {
 		FlagConfig Cfg;
@@ -59,6 +72,13 @@ namespace Scyndi_CI {
 		QCol->White("\n\n\n" + Repeat(" ", TP) + Tit+"\n");
 		QCol->Yellow(Repeat(" ",TA) + "By: "); QCol->LCyan(Author + "\n");
 		QCol->LMagenta(Repeat(" ", TC) + Copy + "\n\n\n\n");
+
+		if (GameID_GINIE()->Value("ENGINE", "ENGINE") != "SCI") {
+			QCol->Error("This game is NOT made for Scyndi's Creative Interpreter");
+			return false;
+		}
+		if (!VersionMatch()) return false;
+
 		return true;
 	}
 }
@@ -70,7 +90,24 @@ int main(int c, char** cli_args) {
 	QCol->Doing("Run from", CurrentDir());
 	QCol->Doing("Game Home", GameGlobalHome());
 	if (CanStart(c, cli_args)) {
-
+#ifndef SCI_NO_ERROR_CATCHING
+		try {
+#endif
+			StartGraphics();
+			auto StartTime{ TimeStamp() };
+			LoadAllStartStuff();
+			Img("Fuck");
+			do { Poll(); } while (abs(TimeStamp() - StartTime) < 3);
+			
+#ifndef SCI_NO_ERROR_CATCHING
+		} catch (runtime_error rte) {
+			if (!Crashed()) {
+				Crash(std::string(rte.what()), "", false);
+			} else {
+				QCol->Error(rte.what());
+			}
+		}
+#endif
 	} else { return 1; }
 	return 0;
 	

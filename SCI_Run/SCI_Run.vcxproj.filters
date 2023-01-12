@@ -105,6 +105,12 @@
     <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_Write.cpp">
       <Filter>Source Files\Slyvina\JCR6</Filter>
     </ClCompile>
+    <ClCompile Include="SCI_JCR.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_zlib.cpp">
+      <Filter>Source Files\Slyvina\JCR6</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SCI_Share\Version.hpp">
@@ -265,6 +271,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lzio.h">
       <Filter>Header Files\Slyvina\Lunatic\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="SCI_JCR.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

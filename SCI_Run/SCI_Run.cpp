@@ -95,8 +95,7 @@ int main(int c, char** cli_args) {
 #endif
 			StartGraphics();
 			auto StartTime{ TimeStamp() };
-			LoadAllStartStuff();
-			Img("Fuck");
+			LoadAllStartStuff();			
 			do { Poll(); } while (abs(TimeStamp() - StartTime) < 3);
 			
 #ifndef SCI_NO_ERROR_CATCHING

@@ -31,7 +31,8 @@
 #include "../SCI_Share/SCI_Header.hpp"
 #include "SCI_Config.hpp"
 
-using namespace Slyvina::Units;
+using namespace Slyvina;
+using namespace Units;
 namespace Scyndi_CI {
 	bool CanStart(int c, char** cliargs) {
 		FlagConfig Cfg;
@@ -43,6 +44,21 @@ namespace Scyndi_CI {
 			QCol->Error("File '" + J + "' has not been found");
 			return false;
 		}
+		auto
+			Tit{ GameTitle() },
+			Author{ GameAuthor() },
+			ByAuthor{ "By: " + Author },
+			Copy{ GameCopyright() };
+		
+
+		auto
+			TP{ std::max((uint64)0,(uint64)40 - (Tit.size() / 2)) },
+			TA{ std::max((uint64)0,(uint64)40 - (ByAuthor.size() / 2)) },
+			TC{ std::max((uint64)0,(uint64)40 - (Copy.size() / 2)) };
+
+		QCol->White("\n\n\n" + Repeat(" ", TP) + Tit+"\n");
+		QCol->Yellow(Repeat(" ",TA) + "By: "); QCol->LCyan(Author + "\n");
+		QCol->LMagenta(Repeat(" ", TC) + Copy + "\n\n\n\n");
 		return true;
 	}
 }

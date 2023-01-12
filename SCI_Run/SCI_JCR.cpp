@@ -37,10 +37,11 @@ using namespace Slyvina::Units;
 
 namespace  Scyndi_CI {
     inline void InitJCR6forSCI() {
-        bool done{ false };
+        static bool done{ false };
         if (done) return;
         QCol->Doing("Init", "zlib for JCR6");  init_zlib();
         QCol->Doing("Init", "JCR Quick Link"); InitJQL();
+        done = true;
     }
 
     static JT_Dir _srf{nullptr};
@@ -53,5 +54,17 @@ namespace  Scyndi_CI {
             if (!_srf) QCol->Error("Loading '" + JCR_SRF() + "' failed for unknown reasons");
         }
         return _srf;
+    }
+
+    static JT_Dir _Resource{ nullptr };
+    Slyvina::JCR6::JT_Dir Resource() {
+        InitJCR6forSCI();
+        if (!_Resource) {
+            QCol->Doing("Reading", JCR_MainFile());
+            _Resource = JCR6_Dir(JCR_MainFile());
+            if (Last()->Error) QCol->Error("JCR Error:" + Last()->ErrorMessage);
+            if (!_Resource) QCol->Error("Loading '" + JCR_MainFile() + "' failed for unknown reasons");
+        }
+        return _Resource;
     }
 }

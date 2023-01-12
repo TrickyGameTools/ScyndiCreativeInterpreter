@@ -29,5 +29,6 @@
 namespace Scyndi_CI {
 
 	Slyvina::JCR6::JT_Dir SRF();
+	Slyvina::JCR6::JT_Dir Resource();
 
 }

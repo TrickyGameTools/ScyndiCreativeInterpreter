@@ -43,10 +43,11 @@ namespace Scyndi_CI {
 	ParsedArg Args{};
 
 	static GINIE srf_id{ nullptr };
+	static GINIE res_id{ nullptr };
 	
 	std::string JCR_MainFile() {
-		if (Args.arguments.size()) return Args.arguments[0];
-		return StripExt(Args.myexe) + ".jcr";
+		if (Args.arguments.size()) return ChReplace(Args.arguments[0],'\\','/');
+		return ChReplace(StripExt(Args.myexe) + ".jcr", '\\', '/');
 	}
 
 	std::string GameGlobalHome() {
@@ -57,6 +58,8 @@ namespace Scyndi_CI {
 		}
 		return ret;
 	}
+
+#pragma region SRF
 
 	std::string JCR_SRF() {	return ChReplace(StripExt(Args.myexe) + ".srf",'\\','/'); }
 
@@ -74,7 +77,43 @@ namespace Scyndi_CI {
 		LoadSRFGINIE();
 		return srf_id->Value("SRF", "Build");
 	}
+
 	
-	
+#pragma endregion
+
+#pragma region "Game ID"
+	static void LoadGameID() {
+		if (!res_id) {
+			QCol->Doing("Loading", "Game identification data");
+			auto s = Resource()->GetString("ID/Identify.ini");
+			if (Last()->Error) {
+				QCol->Error("JCR6 error: " + Last()->ErrorMessage);
+				QCol->Doing("==> Main", Last()->MainFile);
+				QCol->Doing("==> Entry", Last()->Entry);
+				exit(1234);
+			}
+			if (!s.size()) {
+				QCol->Error("For some reason there's no ID data!");
+				exit(4321);
+			}
+			res_id = ParseGINIE(s);
+		}
+	}
+
+	std::string GameTitle() {
+		LoadGameID();
+		return res_id->Value("ID", "Title");
+	}
+
+	std::string GameCopyright() {
+		LoadGameID();
+		return res_id->Value("ID", "Copyright");
+	}
+
+	std::string GameAuthor() {
+		LoadGameID();
+		return res_id->Value("ID", "Author");
+	}
+#pragma endregion
 
 }

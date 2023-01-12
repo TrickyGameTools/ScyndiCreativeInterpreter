@@ -70,8 +70,8 @@ namespace Scyndi_CI {
 			auto Alt{ Yes(Data,"SCI::Window","UseAlt","Use the Alt Height system") };
 			ID->Value("Alt", "Use", boolstring(Alt));
 			if (Alt) {
-				ID->Value("Alt", Ask(Data, "SCI::Window", "AltWidth", "Alt width", "1200"));
-				ID->Value("Alt", Ask(Data, "SCI::Window", "AltHeight", "Alt Height", "1000"));
+				ID->Value("Alt", "Width",Ask(Data, "SCI::Window", "AltWidth", "Alt width", "1200"));
+				ID->Value("Alt", "Height",Ask(Data, "SCI::Window", "AltHeight", "Alt Height", "1000"));				
 			}
 			return true;
 		}
@@ -116,6 +116,9 @@ namespace Scyndi_CI {
 			QCol->Doing("Title", Title());
 			QCol->Doing("Author",Author());
 			QCol->Doing("Copyright", Copyright());
+			ID->Value("ID", "Title", Title());
+			ID->Value("ID", "Author", Author());
+			ID->Value("ID", "Copyright", Copyright());
 			WindowSettings();
 			if (!CompileScripts(this, Data)) { Fail++; return; }
 			if (!HandlePackage(this, Data)) { Fail++; return; }

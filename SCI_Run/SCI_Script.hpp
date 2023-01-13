@@ -23,7 +23,10 @@
 // 
 // Version: 23.01.13
 // EndLic
+
 #pragma once
+
+#include <Lunatic.hpp>
 
 #include <string>
 
@@ -31,4 +34,9 @@ namespace Scyndi_CI {
 	std::string MainScript();
 
 	bool GotState(std::string _State);
+
+	Slyvina::Lunatic::SLunatic State(std::string _State);
+	void State(std::string _State, Slyvina::Lunatic::SLunatic _Lun);
+	void State(std::string _Stage, Slyvina::JCR6::JT_Dir _Res, std::string _Entry);
+	
 }

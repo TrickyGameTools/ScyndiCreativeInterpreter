@@ -23,8 +23,12 @@
 // 
 // Version: 23.01.13
 // EndLic
+
 #include <Lunatic.hpp>
 
+#include <SlyvQCol.hpp>
+
+#include "SCI_Crash.hpp"
 #include "SCI_Script.hpp"
 #include "SCI_JCR.hpp"
 
@@ -33,9 +37,43 @@ using namespace Units;
 using namespace Lunatic;
 
 namespace Scyndi_CI {
-    static std::map < std::string, Slyvina::Lunatic::Lunatic > StateRegister{};
+    static std::map < std::string, SLunatic > StateRegister{};
+
+    static int PaniekLua(lua_State* L) {
+        auto Uitleg{ NewVecString() };
+        //cout << lua_gettop(L) << "\n";
+        Uitleg->push_back(TrSPrintF("lua_gettop(State) = %d", lua_gettop(L)));
+        for (int i = 1; i <= lua_gettop(L); i++) {
+            auto line{ TrSPrintF("Arg #%d/%d:\t",i,lua_gettop(L)) };
+            switch (lua_type(L, i)) {
+            case LUA_TSTRING:
+                line += TrSPrintF("String: \"%s\"",luaL_checkstring(L, i)); 
+                break;
+            case LUA_TNUMBER:
+                line += TrSPrintF("Number: %f", luaL_checknumber(L, i));
+                break;
+            case LUA_TFUNCTION:
+                line+= "Function";
+                break;
+            default:
+                line += TrSPrintF("Unknown: %d", lua_type(L, i));
+                break;
+            }
+            Uitleg->push_back(line);
+        }
+        Crash("Lua went in a state of panic", Uitleg);
+        return 0;
+    }
+
+    static void InitScript() {
+        static bool done{ false };
+        if (done) return;
+        QCol->Doing("Init", "Script engine");
+        Slyvina::Lunatic::_Lunatic::Panick = PaniekLua;
+    }
 
     std::string MainScript() {
+        InitScript();
         static std::string ret{ "" };
         if (!ret.size()) {
             auto E = Resource()->Entries();
@@ -51,5 +89,25 @@ namespace Scyndi_CI {
     bool GotState(std::string _State) {
         Trans2Upper(_State);
         return StateRegister.count(_State);
+    }
+    Slyvina::Lunatic::SLunatic State(std::string _State) {
+        Trans2Upper(_State);
+        if (!StateRegister.count(_State)) { throw std::runtime_error(TrSPrintF("State '%s' doesn't exist", _State.c_str())); }
+        return StateRegister[_State];
+    }
+
+    void State(std::string _State, Slyvina::Lunatic::SLunatic _Lun) {
+        Trans2Upper(_State);
+        if (!_Lun) {
+            if (StateRegister.count(_State)) StateRegister.erase(_State);
+            return;
+        }
+        StateRegister[_State] = _Lun;
+    }
+
+    void State(std::string _State, Slyvina::JCR6::JT_Dir _Res, std::string _Entry) {
+        if (!_Res->EntryExists(_Entry)) throw std::runtime_error(TrSPrintF("There is no script named '%s'"));
+        auto Buf{ _Res->B(_Entry) };
+        StateRegister[_State] = LunaticByByteCode(Buf,_Entry);
     }
 }

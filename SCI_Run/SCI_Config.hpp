@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.12
+// Version: 23.01.13
 // EndLic
 
 #pragma once
@@ -31,6 +31,9 @@
 
 
 namespace Scyndi_CI {
+
+	enum class RunType { Unknown, Straight, Flow, Callback };
+
 	extern Slyvina::Units::ParsedArg Args;
 
 	std::string JCR_MainFile();
@@ -50,5 +53,5 @@ namespace Scyndi_CI {
 	bool VersionMatch(bool ask = false);
 #pragma endregion
 
-
+	RunType GetRunType();
 }

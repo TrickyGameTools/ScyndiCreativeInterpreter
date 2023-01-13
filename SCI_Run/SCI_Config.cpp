@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.12
+// Version: 23.01.13
 // EndLic
 
 #include <TQSE.hpp>
@@ -142,6 +142,18 @@ namespace Scyndi_CI {
 			exit(50);
 		}
 		return false;
+	}
+
+	RunType GetRunType() {
+		static RunType Ret{ RunType::Unknown };
+		if (Ret == RunType::Unknown) {
+			auto SRT = Upper(res_id->Value("Run", "Type"));
+			if (SRT == "CALLBACK") Ret = RunType::Callback;
+			if (SRT == "STRAIGHT") Ret = RunType::Straight;
+			if (SRT == "" || SRT == "FLOW") Ret = RunType::Flow;
+			throw runtime_error("Unknown RunType");
+		}
+		return Ret;
 	}
 
 	std::string GameAuthor() {

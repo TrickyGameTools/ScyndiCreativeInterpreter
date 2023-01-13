@@ -110,4 +110,6 @@ namespace Scyndi_CI {
         auto Buf{ _Res->B(_Entry) };
         StateRegister[_State] = LunaticByByteCode(Buf,_Entry);
     }
+
+    void State(std::string _Stage, std::string _Entry) { State(_Stage, Resource(), _Entry); }
 }

@@ -154,6 +154,7 @@
     <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_RealDir.cpp" />
     <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_Write.cpp" />
     <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_zlib.cpp" />
+    <ClCompile Include="..\..\..\Libs\Lunatic\Lunatic.cpp" />
     <ClCompile Include="..\..\..\Libs\TQSL\Source\TQSA.cpp" />
     <ClCompile Include="..\..\..\Libs\TQSL\Source\TQSE.cpp" />
     <ClCompile Include="..\..\..\Libs\TQSL\Source\TQSG.cpp" />

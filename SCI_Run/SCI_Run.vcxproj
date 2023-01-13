@@ -177,6 +177,7 @@
     <ClCompile Include="SCI_JCR.cpp" />
     <ClCompile Include="SCI_Load.cpp" />
     <ClCompile Include="SCI_Run.cpp" />
+    <ClCompile Include="SCI_Script.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lapi.h" />
@@ -237,6 +238,7 @@
     <ClInclude Include="SCI_Graphics.hpp" />
     <ClInclude Include="SCI_JCR.hpp" />
     <ClInclude Include="SCI_Load.hpp" />
+    <ClInclude Include="SCI_Script.hpp" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="..\..\..\Libs\JCR6\3rdParty\zlib\zlib.dll">

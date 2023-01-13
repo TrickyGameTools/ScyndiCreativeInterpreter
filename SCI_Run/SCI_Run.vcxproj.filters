@@ -132,6 +132,9 @@
     <ClCompile Include="SCI_Load.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SCI_Script.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SCI_Share\Version.hpp">
@@ -306,6 +309,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SCI_Load.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SCI_Script.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

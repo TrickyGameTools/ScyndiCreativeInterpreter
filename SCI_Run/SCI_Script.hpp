@@ -26,6 +26,7 @@
 
 #pragma once
 
+#include <JCR6_Core.hpp>
 #include <Lunatic.hpp>
 
 #include <string>
@@ -37,6 +38,13 @@ namespace Scyndi_CI {
 
 	Slyvina::Lunatic::SLunatic State(std::string _State);
 	void State(std::string _State, Slyvina::Lunatic::SLunatic _Lun);
-	void State(std::string _Stage, Slyvina::JCR6::JT_Dir _Res, std::string _Entry);
-	
+	void State(std::string _State, Slyvina::JCR6::JT_Dir _Res, std::string _Entry);
+	void State(std::string _State, std::string _Entry);
+
+	inline Slyvina::Lunatic::SLunatic Flow(std::string _State) { return State("FLOW_" + _State); }
+	void Flow(std::string _State, Slyvina::Lunatic::SLunatic _Lun) { State("FLOW_" + _State, _Lun); }
+	void Flow(std::string _State, Slyvina::JCR6::JT_Dir _Res, std::string _Entry) { State("FLOW_" + _State, _Res, _Entry); }
+	void Flow(std::string _State, std::string _Entry) { Flow(_State, _Entry); }
+
+	void GoToFlow(std::string State);
 }

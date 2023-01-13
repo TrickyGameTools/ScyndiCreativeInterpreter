@@ -37,7 +37,11 @@ using namespace Units;
 using namespace Lunatic;
 
 namespace Scyndi_CI {
+    struct SCFlow { std::string Name; SLunatic State{ nullptr }; };
+    SCFlow CFlow;
+
     static std::map < std::string, SLunatic > StateRegister{};
+    
 
     static int PaniekLua(lua_State* L) {
         auto Uitleg{ NewVecString() };
@@ -112,4 +116,10 @@ namespace Scyndi_CI {
     }
 
     void State(std::string _Stage, std::string _Entry) { State(_Stage, Resource(), _Entry); }
+
+    void GoToFlow(std::string State) {
+        CFlow.Name = State;
+        CFlow.State = Flow(State);
+    }
+
 }

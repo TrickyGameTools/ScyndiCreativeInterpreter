@@ -39,6 +39,7 @@
 #include "SCI_Config.hpp"
 #include "SCI_Graphics.hpp"
 #include "SCI_Load.hpp"
+#include "SCI_Script.hpp"
 #include "SCI_Crash.hpp"
 
 using namespace Slyvina;
@@ -96,6 +97,7 @@ int main(int c, char** cli_args) {
 			StartGraphics();
 			auto StartTime{ TimeStamp() };
 			LoadAllStartStuff();			
+			Flow("MAIN", MainScript());
 			do { Poll(); } while (abs(TimeStamp() - StartTime) < 3);
 			
 #ifndef SCI_NO_ERROR_CATCHING

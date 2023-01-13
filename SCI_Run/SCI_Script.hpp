@@ -42,9 +42,9 @@ namespace Scyndi_CI {
 	void State(std::string _State, std::string _Entry);
 
 	inline Slyvina::Lunatic::SLunatic Flow(std::string _State) { return State("FLOW_" + _State); }
-	void Flow(std::string _State, Slyvina::Lunatic::SLunatic _Lun) { State("FLOW_" + _State, _Lun); }
-	void Flow(std::string _State, Slyvina::JCR6::JT_Dir _Res, std::string _Entry) { State("FLOW_" + _State, _Res, _Entry); }
-	void Flow(std::string _State, std::string _Entry) { Flow(_State, _Entry); }
+	inline void Flow(std::string _State, Slyvina::Lunatic::SLunatic _Lun) { State("FLOW_" + _State, _Lun); }
+	inline void Flow(std::string _State, Slyvina::JCR6::JT_Dir _Res, std::string _Entry) { State("FLOW_" + _State, _Res, _Entry); }
+	inline void Flow(std::string _State, std::string _Entry) { Flow(_State, _Entry); }
 
 	void GoToFlow(std::string State);
 }

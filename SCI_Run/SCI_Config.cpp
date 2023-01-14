@@ -149,9 +149,9 @@ namespace Scyndi_CI {
 		if (Ret == RunType::Unknown) {
 			auto SRT = Upper(res_id->Value("Run", "Type"));
 			if (SRT == "CALLBACK") Ret = RunType::Callback;
-			if (SRT == "STRAIGHT") Ret = RunType::Straight;
-			if (SRT == "" || SRT == "FLOW") Ret = RunType::Flow;
-			throw runtime_error("Unknown RunType");
+			else if (SRT == "STRAIGHT") Ret = RunType::Straight;
+			else if (SRT == "" || SRT == "FLOW") Ret = RunType::Flow;
+			else throw runtime_error("Unknown RunType");
 		}
 		return Ret;
 	}

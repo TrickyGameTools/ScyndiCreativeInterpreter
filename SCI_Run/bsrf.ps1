@@ -11,6 +11,7 @@ Engine=SCI
 Description=Resource for Scyndi's Creative Interpreter
 Build=$mydate
 " > ID/Identify.ini
+cp "Scyndi:/Projects/Applications/Slyvina/Tools/Scyndi/QuickScyndi/QuickScyndi/ScyndiCore.lua" Script
 NJCR add -doj -cm zlib -fc zlib ../../SCI_Exe/SCI_Run.srf
 # -puremerge
 cd ..

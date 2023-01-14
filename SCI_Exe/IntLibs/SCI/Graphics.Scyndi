@@ -1,0 +1,95 @@
+Module
+
+// Just making sure this comes first. GewoonNiks will contain 'nil' as result, but that doesn't matter!
+Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Graphics")
+
+PLUA _LoadImage = Lua.Graphics.LoadImage
+
+const delegate Cls = Lua.Graphics.Cls
+global const delegate Cls = Lua.Graphics.Cls
+
+
+Class TImage
+	ReadOnly String Tag
+		
+	Get Bool AutoDel
+		return Left(Tag,3)=="***"
+	End
+		
+	Constructor(String _Tag)
+		Tag = _Tag
+	End
+	
+	Destructor
+		if AutoDel
+			Lua.Graphics.KillImage(Tag)
+		End
+	End
+	
+	Void Draw(int x, int y, int Frame=0)
+		Lua.Graphics.Draw(Tag,x,y,frame)
+	End
+	
+	Void HotCenter()
+		Lua.Graphics.HotCenter(Tag)
+	End
+
+	Static Var Load(String File, String Tag="")
+		String RTag 
+		RTag = _LoadImage(File,Tag)
+		Return New TImage(RTag)
+	End
+	
+	Static ReadOnly Delegate HasTag = Lua.Graphics.HasImageTag
+		
+	Static Var Obtain(String RTag)
+		if ! HasTag(RTag)
+			Lua.error(SPrintF("There is no image tagged '%s', so it cannot be obtained!",Tag))
+		end
+		return New TImage(RTag)
+	End
+	
+	Static Var LoadNew(String File,String _Tag)
+		if _Tag==""
+			Lua.error("Tagless TImage.LoadNew request")
+		End
+		if HasTag(_Tag)
+			return New TImage(_Tag)
+		End
+		Return Self.Load(File,_Tag)
+	End
+End
+
+Var LoadImage(string File, String Tag="")
+	Return TImage.Load(File,Tag)
+End
+
+global Var LoadImage(string File, String Tag="")
+	Return TImage.Load(File,Tag)
+End
+
+Var LoadNewImage(string File, String Tag) 
+	Return TImage.LoadNew(File,Tag)
+End
+
+global Var LoadNewImage(string File, String Tag) 
+	Return TImage.LoadNew(File,Tag)
+End
+
+Var ObtainImage(String Tag)
+	Return New TImage(Tag)
+End
+
+Global Var ObtainImage(String Tag)
+	Return New TImage(Tag)
+End
+
+const delegate Color = Lua.Graphics.Color
+global const delegate SetColor=Lua.Graphics.Color
+const delegate ColorHSV = Lua.Graphics.ColorHSV
+global const delegate SetColorHSV=Lua.Graphics.ColorHSV
+
+
+Init
+	Lua.Graphics.LoadImage = LoadImage
+End

@@ -101,6 +101,17 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_SWidth(lua_State* L) {
+		lua_pushinteger(L,ScreenWidth((bool)luaL_checkinteger(L, 1)));
+		return 1;
+	}
+
+	static int API_SHeight(lua_State* L) {
+		lua_pushinteger(L, ScreenHeight((bool)luaL_checkinteger(L, 1)));
+		return 1;
+	}
+
+
 	void Init_API_Graphics() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"KillImage",API_Kill},
@@ -110,7 +121,9 @@ namespace Scyndi_CI {
 			{"Cls",API_Cls},
 			{"HotCenter",API_HotCenter},
 			{"Color",API_Color},
-			{"ColorHSV",API_ColorHSV}		
+			{"ColorHSV",API_ColorHSV},
+			{"Width",API_SWidth},
+			{"Height",API_SHeight}
 		};
 		InstallAPI("Graphics", IAPI);
 	}

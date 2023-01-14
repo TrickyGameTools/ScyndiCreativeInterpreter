@@ -109,6 +109,23 @@ const delegate ColorHSV = Lua.Graphics.ColorHSV
 global const delegate SetColorHSV=Lua.Graphics.ColorHSV
 
 
+get int Width
+	return Lua.Graphics.Width(0)
+end
+
+Get Int TrueWidth
+	return Lua.Graphics.Width(1)
+end
+
+get int Height
+	return Lua.Graphics.Height(0)
+end
+
+Get Int TrueHeight
+	return Lua.Graphics.Height(1)
+end
+
+
 Init
 	Lua.Graphics.LoadImage = LoadImage
 End

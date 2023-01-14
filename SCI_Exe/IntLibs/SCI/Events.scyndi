@@ -17,4 +17,13 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // End License Information
+
 Module
+
+// Just making sure this comes first. GewoonNiks will contain 'nil' as result, but that doesn't matter!
+Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Events")
+
+Const Delegate Poll = Lua.Events.Poll
+Const Delegate KeyDown = Lua.Events.KeyDown
+Const Delegate KeyHit = Lua.Events.KeyUp
+Const Delegate AppTerminate = Lua.Events.AppTerminate

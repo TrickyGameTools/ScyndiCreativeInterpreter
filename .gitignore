@@ -27,3 +27,9 @@ SCI_Run/x64/Release/SCI_Run.vcxproj.FileListAbsolute.txt
 
 # Generated before build, so this can spook things up 
 SCI_Run/srf/ID/Identify.ini
+
+
+# The stuff created by C# that I definitely don't need
+GenAPIHeader/bin
+GenAPIHeader/Units
+GenAPIHeader/obj

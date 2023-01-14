@@ -53,8 +53,8 @@ namespace Scyndi_CI {
 			AskList(PrjDat,"Directory", "Libraries", "Name your directories to search for libraries:");
 			PrjDat->AddNew("Directory", "Libraries", ExtractDir(ChReplace(CLI_Args.myexe, '\\', '/')) + "/IntLibs");
 			auto cmd{ Scyndi() }; cmd += " ";
-			if (CLI_Args.bool_flags["scyndidebug"]) cmd += "-debug ";
-			if (CLI_Args.bool_flags["scyndiforce"]) cmd += "-force ";
+			if (CLI_Args.bool_flags["scyndidebug"]) cmd += " -dbg ";
+			if (CLI_Args.bool_flags["scyndiforce"]) cmd += " -force ";
 			cmd += Prj->File();
 			QCol->Doing("==>", cmd);
 			QCol->Reset(); std::cout << "\n\n\n";

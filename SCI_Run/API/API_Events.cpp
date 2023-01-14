@@ -25,11 +25,13 @@
 // EndLic
 
 #include <TQSE.hpp>
+#include <TQSG.hpp>
 
 #include "../SCI_Script.hpp"
 
 using namespace Slyvina;
 using namespace TQSE;
+using namespace TQSG;
 
 
 namespace Scyndi_CI {
@@ -39,13 +41,33 @@ namespace Scyndi_CI {
 	static int API_Events_KeyHit(lua_State* L) { lua_pushboolean(L, KeyHit((SDL_KeyCode)luaL_checkinteger(L, 1))); return 1; }
 	static int API_Events_KeyDown(lua_State* L) { lua_pushboolean(L, KeyDown((SDL_KeyCode)luaL_checkinteger(L, 1))); return 1; }
 
+	static int API_Events_MouseX(lua_State* L) {
+		auto TrueX{ luaL_checkinteger(L,1) };
+		if (TrueX || ScreenWidth(false) == ScreenWidth(true))
+			lua_pushinteger(L, MouseX());
+		else
+			lua_pushinteger(L, floor(((double)MouseX() / ScreenWidth(true)) * ScreenWidth(false)));
+		return 1;		
+	}
+
+	static int API_Events_MouseY(lua_State* L) {
+		auto TrueY{ luaL_checkinteger(L,1) };
+		if (TrueY || ScreenHeight(false) == ScreenHeight(true))
+			lua_pushinteger(L, MouseY());
+		else
+			lua_pushinteger(L, floor(((double)MouseY() / ScreenHeight(true)) * ScreenHeight(false)));
+		return 1;
+
+	}
 
 	void Init_API_Events() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Poll",API_Events_Poll},
 			{"AppTerminate",API_Events_AppTerminate},
 			{"KeyHit",API_Events_KeyHit},
-			{"KeyDown",API_Events_KeyDown}
+			{"KeyDown",API_Events_KeyDown},
+			{"MouseX",API_Events_MouseX},
+			{"MouseY",API_Events_MouseY}
 		};
 		InstallAPI("Events", IAPI);
 	}

@@ -27,3 +27,19 @@ Const Delegate Poll = Lua.Events.Poll
 Const Delegate KeyDown = Lua.Events.KeyDown
 Const Delegate KeyHit = Lua.Events.KeyUp
 Const Delegate AppTerminate = Lua.Events.AppTerminate
+
+get int MouseX
+	return Lua.Events.MouseX(0)
+end
+
+get int MouseY
+	return Lua.Events.MouseY(0)
+end
+
+get int TrueMouseX
+	return Lua.Events.MouseX(1)
+end
+
+get int TrueMouseY
+	return Lua.Events.MouseY(1)
+end

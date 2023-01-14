@@ -24,8 +24,12 @@
 // Version: 23.01.13
 // EndLic
 
+// Debug tag! Should be off in release
+#define SCI_NOFULL
+
 #include <SlyvString.hpp>
 #include <SlyvQCol.hpp>
+#include <SlyvSTOI.hpp>
 
 #include <TQSG.hpp>
 
@@ -48,6 +52,7 @@ namespace Scyndi_CI {
 	}
 
 	std::string WindowCaption() { return GameID_GINIE()->Value("Window", "Caption"); }
+
 
 	TImage Img(std::string Tag, bool crash) {
 		Trans2Upper(Tag);
@@ -111,22 +116,54 @@ namespace Scyndi_CI {
 
 	void Fnt(std::string Tag, std::string File) { Fnt(Tag, Resource(), File); }
 
+	bool UseAlt() {
+		return Upper(GameID_GINIE()->Value("Alt", "Use")) == "TRUE";
+	}
+
+	int AltWidth(bool force) {
+		if (force || UseAlt())
+			return GameID_GINIE()->IntValue("Alt", "Width");
+		return 0;
+	}
+
+	int AltHeight(bool force) {
+		if (force || UseAlt())
+			return GameID_GINIE()->IntValue("Alt", "Height");
+		return 0;
+	}
+
 	void StartGraphics() {
 		if (WantFullScreen()) {
 			QCol->Doing("Entering", "FullScreen");
 			QCol->Doing("Caption", WindowCaption());
+#ifdef SCI_NOFULL
+			QCol->Warn("DEBUG lockout on fullscreen.");
+			int
+				snfw{ (int)floor(DesktopWidth() * .99) },
+				snfh{ (int)floor(DesktopHeight() * .96) };
+			QCol->Doing("Desktop", TrSPrintF("%04dx%04d", DesktopWidth(), DesktopHeight()));
+			QCol->Doing("DebugWin", TrSPrintF("%04dx%04d", snfw, snfh));
+			Graphics(snfw, snfh, WindowCaption());
+#else
 			Graphics(WindowCaption());
+#endif
 		} else {
 			QCol->Error("Windowed mode not yet implemented");
 			exit(500);
 		}
+		InitJCRPaniek();
 		Img("*SCIPOWER", SRF(), "GFX/PoweredBySCI.png");
 		Img("*SCIPOWER")->HotCenter();
 		Fnt("*SYSFONT", SRF(), "Font/DosFont.jfbf");
 		Cls();
+		SetColor(0, 0, 105); Rect(0, 0, ScreenWidth(), ScreenHeight()); SetColor(255, 255, 255);
 		Img("*SCIPOWER")->Draw(ScreenWidth() / 2, ScreenHeight() / 2);
 		Flip();
 		Img("*DEATH", SRF(), "GFX/Death.png");
+		if (AltWidth() && AltHeight()) {
+			QCol->Doing("AltScreen", TrSPrintF("%05dx%05d", AltWidth(), AltHeight()));
+			SetAltScreen(AltWidth(), AltHeight());
+		}
 		// SDL_Delay(4000); // debug
 	}
 

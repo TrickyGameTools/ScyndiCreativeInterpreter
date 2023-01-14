@@ -56,7 +56,7 @@ namespace Scyndi_CI {
 				FileName,
 				ResDir;
 			string ResFileName(bool wantbytecode) { 
-				auto FN{ StripExt(FileName) }; if (CLI_Args.bool_flags["scyndidebug"]) FN = StripExt(FileName); 
+				auto FN{ StripExt(FileName) }; if (CLI_Args.bool_flags["scyndidebug"]) FN = StripExt(FN); 
 				if (wantbytecode) FN += ".lbc"; else FN += ".lua";
 				return ResDir + "/" + FN; 
 			}
@@ -129,7 +129,7 @@ namespace Scyndi_CI {
 			//cout << " GGRR!\n"; // debug
 			if (_debug) {
 				QCol->Doing("Script Link", bundle);
-				OutputJQL += "From:" + bundle + "\n";
+				OutputJQL += "From:" + bundle + "\n";				
 				if (bytecode) {
 					//OutputJQL += "Steal:Bytecode.lbc>" + directory + "/" + entry + ".lbc\n";
 					OutputJQL += "Steal:Bytecode.lbc>" + entry + "\n";

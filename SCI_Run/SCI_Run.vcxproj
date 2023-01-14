@@ -268,6 +268,7 @@
     <ClInclude Include="..\SCI_Share\SCI_GlobalConfig.hpp" />
     <ClInclude Include="..\SCI_Share\SCI_Header.hpp" />
     <ClInclude Include="..\SCI_Share\Version.hpp" />
+    <ClInclude Include="API\SCI_InstallAPIs.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SCI_Config.hpp" />
     <ClInclude Include="SCI_Crash.hpp" />

@@ -111,6 +111,7 @@ int main(int c, char** cli_args) {
 		}
 #endif
 	} else { return 1; }
-	return 0;
-	
+	QCol->Doing("Ending", "Scyndi's Creative Interpreter");
+	StateCheck(false); // Force State Checks off.
+	return 0;	
 }

@@ -23,5 +23,30 @@
 // 
 // Version: 23.01.14
 // EndLic
-// For now just empty
-// The actual code comes later!
+
+#include <TQSE.hpp>
+
+#include "../SCI_Script.hpp"
+
+using namespace Slyvina;
+using namespace TQSE;
+
+
+namespace Scyndi_CI {
+
+	static int API_Events_Poll(lua_State* L) { Poll(); return 0; }
+	static int API_Events_AppTerminate(lua_State* L) { lua_pushboolean(L, AppTerminate()); return 1; }
+	static int API_Events_KeyHit(lua_State* L) { lua_pushboolean(L, KeyHit((SDL_KeyCode)luaL_checkinteger(L, 1))); return 1; }
+	static int API_Events_KeyDown(lua_State* L) { lua_pushboolean(L, KeyDown((SDL_KeyCode)luaL_checkinteger(L, 1))); return 1; }
+
+
+	void Init_API_Events() {
+		std::map<std::string, lua_CFunction>IAPI{
+			{"Poll",API_Events_Poll},
+			{"AppTerminate",API_Events_AppTerminate},
+			{"KeyHit",API_Events_KeyHit},
+			{"KeyDown",API_Events_KeyDown}
+		};
+		InstallAPI("Events", IAPI);
+	}
+}

@@ -38,6 +38,7 @@ namespace Scyndi_CI {
 	void Img(std::string Tag, Slyvina::TQSG::TImage _Img);
 	void Img(std::string Tag, Slyvina::JCR6::JT_Dir J, std::string File);
 	void Img(std::string Tag, std::string File);
+	bool HasImg(std::string Tag);
 
 	Slyvina::TQSG::TImageFont Fnt(std::string Tag, bool crash = true);
 	void Fnt(std::string Tag, Slyvina::TQSG::TImageFont _Fnt);

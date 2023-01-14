@@ -120,6 +120,11 @@ namespace Scyndi_CI {
 
 	void Fnt(std::string Tag, std::string File) { Fnt(Tag, Resource(), File); }
 
+	bool HasFnt(std::string Tag) {
+		Trans2Upper(Tag);
+		return FontRegister.count(Tag);
+	}
+
 	bool UseAlt() {
 		return Upper(GameID_GINIE()->Value("Alt", "Use")) == "TRUE";
 	}

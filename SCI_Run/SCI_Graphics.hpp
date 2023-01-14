@@ -44,6 +44,7 @@ namespace Scyndi_CI {
 	void Fnt(std::string Tag, Slyvina::TQSG::TImageFont _Fnt);
 	void Fnt(std::string Tag, Slyvina::JCR6::JT_Dir J, std::string File);
 	void Fnt(std::string Tag, std::string File);
+	bool HasFnt(std::string Tag);
 
 	bool UseAlt();
 	int AltWidth(bool force = false);

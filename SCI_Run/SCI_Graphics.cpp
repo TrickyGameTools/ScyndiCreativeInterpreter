@@ -85,6 +85,10 @@ namespace Scyndi_CI {
 
 	void Img(std::string Tag, std::string File) { Img(Tag, Resource(), File); }
 
+	bool HasImg(std::string Tag) {
+		return ImageRegister.count(Upper(Tag));
+	}
+
 	Slyvina::TQSG::TImageFont Fnt(std::string Tag, bool crash) {
 		Trans2Upper(Tag);
 		if (!FontRegister.count(Tag)) {
@@ -140,7 +144,7 @@ namespace Scyndi_CI {
 			QCol->Warn("DEBUG lockout on fullscreen.");
 			int
 				snfw{ (int)floor(DesktopWidth() * .99) },
-				snfh{ (int)floor(DesktopHeight() * .96) };
+				snfh{ (int)floor(DesktopHeight() * .94) };
 			QCol->Doing("Desktop", TrSPrintF("%04dx%04d", DesktopWidth(), DesktopHeight()));
 			QCol->Doing("DebugWin", TrSPrintF("%04dx%04d", snfw, snfh));
 			Graphics(snfw, snfh, WindowCaption());

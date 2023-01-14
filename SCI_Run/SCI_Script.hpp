@@ -31,6 +31,8 @@
 
 #include <string>
 
+#include "SCI_JCR.hpp"
+
 namespace Scyndi_CI {
 	std::string MainScript();
 
@@ -44,7 +46,13 @@ namespace Scyndi_CI {
 	inline Slyvina::Lunatic::SLunatic Flow(std::string _State) { return State("FLOW_" + _State); }
 	inline void Flow(std::string _State, Slyvina::Lunatic::SLunatic _Lun) { State("FLOW_" + _State, _Lun); }
 	inline void Flow(std::string _State, Slyvina::JCR6::JT_Dir _Res, std::string _Entry) { State("FLOW_" + _State, _Res, _Entry); }
-	inline void Flow(std::string _State, std::string _Entry) { Flow(_State, _Entry); }
+	inline void Flow(std::string _State, std::string _Entry) { Flow(_State, Resource(), _Entry); }
 
 	void GoToFlow(std::string State);
+
+	void Call(std::string _State, std::string Func, std::string Para = "");
+
+	void InstallAPI(std::string _API, std::map<std::string, lua_CFunction> _Funcs);
+
+	void RunGame();
 }

@@ -52,6 +52,9 @@
     <Filter Include="Source Files\Slyvina\Lunatic\Lua">
       <UniqueIdentifier>{a70b1ae4-2ed5-4a8f-b506-c9ee4bf901e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Slyvina\TQSL">
+      <UniqueIdentifier>{e2cdd891-702a-4f69-912e-6728481795b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SCI_Run.cpp">
@@ -418,6 +421,15 @@
     </ClInclude>
     <ClInclude Include="SCI_Script.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSA.hpp">
+      <Filter>Header Files\Slyvina\TQSL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSE.hpp">
+      <Filter>Header Files\Slyvina\TQSL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSG.hpp">
+      <Filter>Header Files\Slyvina\TQSL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

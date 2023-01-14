@@ -242,6 +242,9 @@
     <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lvm.h" />
     <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lzio.h" />
     <ClInclude Include="..\..\..\Libs\Lunatic\Lunatic.hpp" />
+    <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSA.hpp" />
+    <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSE.hpp" />
+    <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSG.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvArgParse.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvAsk.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvBank.hpp" />

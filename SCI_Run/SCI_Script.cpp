@@ -36,6 +36,8 @@
 #include "SCI_JCR.hpp"
 #include "SCI_Config.hpp"
 
+#include "API/SCI_InstallAPIs.hpp"
+
 using namespace Slyvina;
 using namespace Units;
 using namespace Lunatic;
@@ -50,7 +52,7 @@ namespace Scyndi_CI {
 	
 	static std::map<std::string, std::map<std::string, lua_CFunction>> API{};
 
-	
+#pragma region Paniek	
 
 	static int PaniekLua(lua_State* L) {
 		auto Uitleg{ NewVecString() };
@@ -77,7 +79,11 @@ namespace Scyndi_CI {
 		Crash("Lua went in a state of panic", Uitleg);
 		return 0;
 	}
+#pragma endregion
 
+#pragma region "Core APIs"
+	// These APIs must always be loaded, regardless if the script to shortcut them is loaded or not.
+	// Scyndi will still be able to find them anyway (if you know what you are doing).
 	static int SYS_Exit(lua_State* L) { EndRun = true; return 0; }
 	static int DBG_OnOff(lua_State* L) {
 		auto St{ std::string(luaL_checkstring(L,1)) };
@@ -98,19 +104,37 @@ namespace Scyndi_CI {
 		State(St)->Trace.push_back(k);
 		*/
 		k.Func = luaL_checkstring(L, 2);
-		State(luaL_checkstring(L, 1))->Trace.push_back(k);
+		auto state = luaL_checkstring(L, 1);
+		if (HasState(state)) {
+			State(state)->Trace.push_back(k);
+		}
 		return 0;
 	}
-	static int DBG_Line(lua_State* L) {
+	static int DBG_Line(lua_State* L) {		
 		auto St{ luaL_checkstring(L,1) };
-		auto S{ State(St) };
-		auto k{ &(S->Trace[S->Trace.size() - 1]) };
-		k->File = luaL_checkstring(L, 2);
-		k->Line = luaL_checkinteger(L, 3);
+		if (HasState(St)) {
+			auto S{ State(St) };
+			if (!S->Trace.size()) {
+				QCol->Error("Trace data empty!");
+				return 0;
+			}
+			//auto k{ &(S->Trace[S->Trace.size() - 1]) };
+			//if (!k) {
+			//	QCol->Error("Trace data caught is null");
+			//	return 0;
+			//}
+			S->Trace[S->Trace.size() - 1].File = luaL_checkstring(L, 2);
+			S->Trace[S->Trace.size() - 1].Line = luaL_checkinteger(L, 3);
+		}
 		return 0;
 	}
 
-	static int DBG_Pop(lua_State* L) { State(luaL_checkstring(L, 1))->Trace.pop_back(); }
+	static int DBG_Pop(lua_State* L) { 
+		auto St{ luaL_checkstring(L, 1) };
+		if (HasState(St)) {
+			State(St)->Trace.pop_back();
+		}
+	}
 
 	static int SYS_Crash(lua_State* L) {
 		auto
@@ -118,22 +142,75 @@ namespace Scyndi_CI {
 			Er{ luaL_checkstring(L,2) };
 		auto
 			Uitleg{ NewVecString() };
-		for (auto& k : State(St)->Trace) {
-			Uitleg->push_back(TrSPrintF("%s:Line %05d: %s", k.File.c_str(), k.Line, k.Func.c_str()));
+		if (!HasState(St)) {
+			Uitleg->push_back(TrSPrintF("It looks like state '%s' where the error occurred does not exist.", St));
+			Uitleg->push_back("Nothing to worry about, this can be normal.");
+			Uitleg->push_back("When the state is already unliked from the memory, so leftover destructors in the script");
+			Uitleg->push_back("could need to be taken care of. It is possible the error happened in one of those destructors.");
+			Uitleg->push_back("Unfortunately, no traceback data can be retreived as a result. Sorry!");
+		} else {
+			for (auto& k : State(St)->Trace) {
+				Uitleg->push_back(TrSPrintF("%s:Line %05d: %s", k.File.c_str(), k.Line, k.Func.c_str()));
+			}
 		}
 		Crash(TrSPrintF("Lua Error: %s", Er), Uitleg);
 		return 0; // Should never be executed, but hey, this way I can at least play safe, eh?
 	}
-	
+
+	static int SYS_InitAPI(lua_State* L) {
+		auto
+			St{ luaL_checkstring(L,1) },
+			Ap{ luaL_checkstring(L,2) };
+		
+		std::string
+			ApS{ Ap },
+			APU{ Upper(Ap) },
+			Scrippie{ TrSPrintF("-- Init: %s --\n\n%s, UC_%s = {}, {}\n",Ap,Ap,Ap) };
+
+		if (!API.count(APU)) {
+			Crash("API '" + APU + "' does not exist!");
+			return 0;
+		}
+		auto _S{ State(St) };
+		for (auto k : API[APU]) {
+			_S->Register("SCI_MOD_" + ApS + "_" + k.first, k.second);
+			Scrippie += TrSPrintF("%s.%s = SCI_MOD_%s_%s\n", Ap, k.first.c_str(), Ap, k.first.c_str());
+			Scrippie += TrSPrintF("UC_%s.%s = SCI_MOD_%s_%s\n", Ap, Upper(k.first).c_str(), Ap, k.first.c_str());
+		}
+		_S->QDoString(Scrippie);
+	}
+
+	static int SYS_Use(lua_State* L) {
+		auto
+			St{ Lunatic_CheckString(L,1) },
+			Md{ Lunatic_CheckString(L,2) };
+		auto _State{ State(St) };
+		if (Resource()->EntryExists(Md + ".lbc")) {
+			QCol->Doing("Using", Md + ".lbc");
+			auto buf{ Resource()->B(Md + ".lbc") };
+			_State->QDoByteCode(buf, Md);
+		} else if (Resource()->EntryExists(Md + ".lua")) {
+			QCol->Doing("Using", Md + ".lua");
+			auto src{ Resource()->GetString(Md + ".lua") };
+			QCol->Doing("Compiling", Md + ".lua");
+			_State->QDoString(src);
+		} else {
+			Crash("No module named '" + Md + "' has been found");
+		}
+	}
+#pragma endregion
 
 	static void InitScript() {
 		static bool done{ false };
 		if (done) return;
+		InstallAllAPIS();
 		QCol->Doing("Init", "Script engine");
 		_Lunatic::Panick = PaniekLua;
 		_Lunatic::Register4All({
 			{"SCI_Exit",SYS_Exit},
 			{"SCI_Crash",SYS_Crash},
+			{"SCI_Use",SYS_Use},
+			{"SCI_InitAPI",SYS_InitAPI},
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},
 			{"__DEBUG_PUSH",DBG_Push},
@@ -160,9 +237,18 @@ namespace Scyndi_CI {
 		Trans2Upper(_State);
 		return StateRegister.count(_State);
 	}
+	bool _statecheck{ true };
 	Slyvina::Lunatic::SLunatic State(std::string _State) {
 		Trans2Upper(_State);
-		if (!StateRegister.count(_State)) { throw std::runtime_error(TrSPrintF("State '%s' doesn't exist", _State.c_str())); }
+		if (!StateRegister.count(_State)) { 
+			//throw std::runtime_error(TrSPrintF("State '%s' doesn't exist", _State.c_str())); 
+			if (_statecheck) {
+				Crash(TrSPrintF("State '%s' doesn't exist", _State.c_str()));
+			} else {
+				QCol->Warn("A call has been done to non-existent state: " + _State);
+			}
+			return nullptr;
+		}
 		return StateRegister[_State];
 	}
 
@@ -185,6 +271,7 @@ namespace Scyndi_CI {
 		StateRegister[_State] = LunaticBySource(Core); 
 		std::string initscript{
 			"-- InitScript: " + _State + " --\n\n"
+			"SCI_StateName = '"+_State+"'\n\n"
 			"Exit=SCI_Exit\n\n"
 			"Scyndi.InitDebugFunctions(\n"
 			"function() -- SetDebug\n"
@@ -205,6 +292,11 @@ namespace Scyndi_CI {
 			"function Crash(err)\n"
 			"\tSCI_Crash('" + _State + "',err)\n"
 			"end\n\n"
+			"function Use(_module)\n"
+			"\tSCI_Use('"+_State+"',_module)\n"
+			"end\n\n"
+			"Scyndi.SetUseFunction(Use)\n"
+			"Scyndi.SetUseCaseSensitive(false)\n"
 		};
 		//std::cout << initscript << std::endl; // debug!
 		StateRegister[_State]->QDoString(initscript);
@@ -221,6 +313,14 @@ namespace Scyndi_CI {
 	}
 
 	void State(std::string _Stage, std::string _Entry) { State(_Stage, Resource(), _Entry); }
+
+	void StateCheck(bool s) {
+		_statecheck = s;
+	}
+
+	bool HasState(std::string _State) {
+		return StateRegister.count(Upper(_State));
+	}
 
 	void GoToFlow(std::string State) {
 		CFlow.Name = "FLOW_" + State;
@@ -245,6 +345,15 @@ namespace Scyndi_CI {
 		API[Upper(_API)] = _Funcs;
 	}
 
+	void ScriptError(std::string _State, std::string ErrorMessage) {
+		auto
+			Uitleg{ NewVecString() };
+		for (auto& k : State(_State)->Trace) {
+			Uitleg->push_back(TrSPrintF("%s:Line %05d: %s", k.File.c_str(), k.Line, k.Func.c_str()));
+		}
+		Crash(ErrorMessage, Uitleg);
+	}
+
 	void RunGame() {
 		auto RT{ GetRunType() };
 
@@ -257,7 +366,10 @@ namespace Scyndi_CI {
 				Call("Flow_Main", "Main");
 				return;
 			case RunType::Flow:
+				Cls();
+				Poll();
 				Call(CFlow.Name, "MainFlow");
+				Flip();
 				break;
 			case RunType::Callback: {
 				Cls();
@@ -281,6 +393,7 @@ namespace Scyndi_CI {
 				return;
 			}
 		} while (!EndRun);
+		QCol->Yellow("Sequence ended!\n");
 	}
 
 }

@@ -26,10 +26,12 @@
 namespace Scyndi_CI{
 
 	void Init_API_Events();
+	void Init_API_Graphics();
 
 
 	inline void InstallAllAPIS() {
 		Init_API_Events();
+		Init_API_Graphics();
 	}
 
 

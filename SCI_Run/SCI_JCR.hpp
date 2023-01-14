@@ -28,6 +28,8 @@
 
 namespace Scyndi_CI {
 
+	void InitJCRPaniek();
+
 	Slyvina::JCR6::JT_Dir SRF();
 	Slyvina::JCR6::JT_Dir Resource();
 

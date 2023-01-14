@@ -23,15 +23,18 @@
 // 
 // Version: 23.01.12
 // EndLic
+#include <Slyvina.hpp>
 #include <SlyvQCol.hpp>
 
 #include <JCR6_Core.hpp>
 #include <JCR6_JQL.hpp>
 #include <JCR6_zlib.hpp>
 
+#include "SCI_Crash.hpp"
 #include "SCI_JCR.hpp"
 #include "SCI_Config.hpp"
 
+using namespace Slyvina;
 using namespace Slyvina::JCR6;
 using namespace Slyvina::Units;
 
@@ -44,7 +47,19 @@ namespace  Scyndi_CI {
         done = true;
     }
 
+    static void JCRPaniek(std::string m) {
+        auto Uitleg = NewVecString();
+        Uitleg->push_back("Error message: " + m);
+        Uitleg->push_back("Main File:     " + Last()->MainFile);
+        Uitleg->push_back("Entry:         " + Last()->Entry);
+        Crash("JCR6 Error" + m);
+    }
+
     static JT_Dir _srf{nullptr};
+
+    void InitJCRPaniek() {
+        JCR6PANIC = JCRPaniek;
+    }
     JT_Dir SRF() {
         InitJCR6forSCI();
         if (!_srf) {

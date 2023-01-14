@@ -42,6 +42,8 @@ namespace Scyndi_CI {
 	void State(std::string _State, Slyvina::Lunatic::SLunatic _Lun);
 	void State(std::string _State, Slyvina::JCR6::JT_Dir _Res, std::string _Entry);
 	void State(std::string _State, std::string _Entry);
+	void StateCheck(bool s);
+	bool HasState(std::string _State);
 
 	inline Slyvina::Lunatic::SLunatic Flow(std::string _State) { return State("FLOW_" + _State); }
 	inline void Flow(std::string _State, Slyvina::Lunatic::SLunatic _Lun) { State("FLOW_" + _State, _Lun); }
@@ -53,6 +55,8 @@ namespace Scyndi_CI {
 	void Call(std::string _State, std::string Func, std::string Para = "");
 
 	void InstallAPI(std::string _API, std::map<std::string, lua_CFunction> _Funcs);
+
+	void ScriptError(std::string _State,std::string ErrorMessage);
 
 	void RunGame();
 }

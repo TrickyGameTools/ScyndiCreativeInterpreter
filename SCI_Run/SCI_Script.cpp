@@ -105,8 +105,10 @@ namespace Scyndi_CI {
 		*/
 		k.Func = luaL_checkstring(L, 2);
 		auto state = luaL_checkstring(L, 1);
+		//std::cout << "Push: " << state << "::" << k.Func << "!\n";
 		if (HasState(state)) {
 			State(state)->Trace.push_back(k);
+			//std::cout << "Done: " << State(state)->Trace.size() << "\n";
 		}
 		return 0;
 	}
@@ -115,7 +117,8 @@ namespace Scyndi_CI {
 		if (HasState(St)) {
 			auto S{ State(St) };
 			if (!S->Trace.size()) {
-				QCol->Error("Trace data empty!");
+				//QCol->Error("Trace data empty!");
+				//std::cout << "Trace " << luaL_checkstring(L, 1) << "::" << luaL_checkstring(L, 2) << "::" << luaL_checkinteger(L, 3) << "!\n"; // debug
 				return 0;
 			}
 			//auto k{ &(S->Trace[S->Trace.size() - 1]) };
@@ -132,7 +135,12 @@ namespace Scyndi_CI {
 	static int DBG_Pop(lua_State* L) { 
 		auto St{ luaL_checkstring(L, 1) };
 		if (HasState(St)) {
-			State(St)->Trace.pop_back();
+			//std::cout << "Pop " << St << " " << State(St)->Trace.size();
+			if (!State(St)->Trace.size()) {
+				//QCol->Warn("Trace pop on empty trace");
+			}  else
+				State(St)->Trace.pop_back();
+			//std::cout << " -> " << State(St)->Trace.size()<<"\n";
 		}
 	}
 

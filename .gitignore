@@ -33,3 +33,4 @@ SCI_Run/srf/ID/Identify.ini
 GenAPIHeader/bin
 GenAPIHeader/Units
 GenAPIHeader/obj
+SCI_Run/srf/Script/ScyndiCore.lua

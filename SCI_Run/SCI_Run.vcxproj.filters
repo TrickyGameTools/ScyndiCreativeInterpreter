@@ -55,6 +55,9 @@
     <Filter Include="Header Files\Slyvina\TQSL">
       <UniqueIdentifier>{e2cdd891-702a-4f69-912e-6728481795b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\API">
+      <UniqueIdentifier>{6ef76725-92b7-4003-b2aa-b8a2ba0ea2eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SCI_Run.cpp">
@@ -242,6 +245,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lzio.c">
       <Filter>Source Files\Slyvina\Lunatic\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="API\API_Events.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\API_Graphics.cpp">
+      <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -431,6 +440,9 @@
     <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSG.hpp">
       <Filter>Header Files\Slyvina\TQSL</Filter>
     </ClInclude>
+    <ClInclude Include="API\SCI_InstallAPIs.hpp">
+      <Filter>Source Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="..\..\..\Libs\JCR6\3rdParty\zlib\zlib.dll">
@@ -494,8 +506,5 @@
     <Image Include="..\..\..\..\Bubble\Games\The Secrets of Dyrt\DEV\Icon\Scyndi.ico">
       <Filter>Resource Files</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\Libs\Lunatic\Lua\Raw\src\Makefile" />
   </ItemGroup>
 </Project>

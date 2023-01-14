@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.12
+// Version: 23.01.14
 // EndLic
 #include <SlyvStream.hpp>
 #include <SlyvAsk.hpp>

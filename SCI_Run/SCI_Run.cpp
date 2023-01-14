@@ -99,7 +99,8 @@ int main(int c, char** cli_args) {
 			LoadAllStartStuff();			
 			Flow("MAIN", MainScript());
 			do { Poll(); } while (abs(TimeStamp() - StartTime) < 3);
-			
+			GoToFlow("MAIN");
+			RunGame();
 #ifndef SCI_NO_ERROR_CATCHING
 		} catch (runtime_error rte) {
 			if (!Crashed()) {

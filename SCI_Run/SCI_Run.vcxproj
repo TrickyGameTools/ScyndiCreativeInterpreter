@@ -337,9 +337,6 @@
   <ItemGroup>
     <Image Include="..\..\..\..\Bubble\Games\The Secrets of Dyrt\DEV\Icon\Scyndi.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\Libs\Lunatic\Lua\Raw\src\Makefile" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

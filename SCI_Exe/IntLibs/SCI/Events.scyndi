@@ -28,6 +28,8 @@ Const Delegate KeyDown = Lua.Events.KeyDown
 Const Delegate KeyHit = Lua.Events.KeyUp
 Const Delegate AppTerminate = Lua.Events.AppTerminate
 const Delegate MouseDown = Lua.Events.MouseDown
+const Delegate MouseHit = Lua.Events.MouseHit
+const Delegate MouseReleased = Lua.Events.MouseReleased
 
 get int MouseX
 	return Lua.Events.MouseX(0)

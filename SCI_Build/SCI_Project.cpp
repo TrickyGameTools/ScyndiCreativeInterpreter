@@ -21,13 +21,14 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.12
+// Version: 23.01.15
 // EndLic
 
 #include <SlyvQCol.hpp>
 #include <SlyvAsk.hpp>
 #include <SlyvTime.hpp>
 #include <SlyvVolumes.hpp>
+#include <SlyvMD5.hpp>
 
 #include "../SCI_Share/Version.hpp"
 
@@ -74,6 +75,11 @@ namespace Scyndi_CI {
 				ID->Value("Alt", "Height",Ask(Data, "SCI::Window", "AltHeight", "Alt Height", "1000"));				
 			}
 			ID->Value("Mouse", "Hide", boolstring(Yes(Data, "SCI::Mouse", "Hide", "Do you want to hide the system's mouse pointer")));
+			ID->Value("Save", "Dir", Ask(Data,"SCI::Save", "Dir", "Savegame dir:"));
+			if (!Data->HasValue("SCI::Save", "ID")) {
+				Data->Value("SCI::Save", "ID", md5(TrSPrintF("Scyndi %d %s", TimeStamp(), Data->Value("SCI::Save", "Dir").c_str())) + "-" + md5(CurrentDate()));
+			}
+			ID->Value("Save", "ID", Data->Value("SCI::Save", "ID"));
 			return true;
 		}
 

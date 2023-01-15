@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.14
+// Version: 23.01.15
 // EndLic
 
 #include <Lunatic.hpp>
@@ -206,6 +206,30 @@ namespace Scyndi_CI {
 			Crash("No module named '" + Md + "' has been found");
 		}
 	}
+
+	int SYS_GoToFlow(lua_State* L) {
+		auto St{ luaL_checkstring(L,1) };
+		if (!HasFlow(St)) { Crash(TrSPrintF("GoToFlow(\"%\"): That flow doesn't exist!", St)); return 0; }
+		GoToFlow(St);
+		return 0;
+	}
+
+	int SYS_LoadFlow(lua_State* L) {
+		auto
+			St{ luaL_checkstring(L,1) },
+			Fl{ luaL_checkstring(L,2) };
+		Flow(St, Fl);
+		return 0;
+	}
+
+	int SYS_LoadNewFlow(lua_State* L) { 
+		// The difference with above is that this function will only load a flow if it hasn't been loaded before.
+		auto
+			St{ luaL_checkstring(L,1) },
+			Fl{ luaL_checkstring(L,2) };
+		if (!HasFlow(St)) Flow(St, Fl);
+		return 0;
+	}
 #pragma endregion
 
 	static void InitScript() {
@@ -219,6 +243,9 @@ namespace Scyndi_CI {
 			{"SCI_Crash",SYS_Crash},
 			{"SCI_Use",SYS_Use},
 			{"SCI_InitAPI",SYS_InitAPI},
+			{"SCI_GoToFlow",SYS_GoToFlow},
+			{"SCI_LoadFlow",SYS_LoadFlow},
+			{"SCI_LoadNewFlow",SYS_LoadNewFlow},
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},
 			{"__DEBUG_PUSH",DBG_Push},

@@ -23,6 +23,7 @@
 // 
 // Version: 23.01.15
 // EndLic
-namespace Scyndi_CI {
 
+namespace Scyndi_CI {
+	void Init_API_SGFile(){}
 }

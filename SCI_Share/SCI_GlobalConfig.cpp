@@ -21,13 +21,14 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.09
+// Version: 23.01.15
 // EndLic
 #include <SlyvStream.hpp>
 #include <SlyvGINIE.hpp>
 #include <SlyvDirry.hpp>
 #include <SlyvQCol.hpp>
 #include <SlyvTime.hpp>
+#include <SlyvVolumes.hpp>
 
 #include "SCI_GlobalConfig.hpp"
 
@@ -56,4 +57,18 @@ namespace Scyndi_CI {
 		}
 		return ret;
 	}
+
+	std::string GeneralSaveGameDir() {
+		std::string ret{ "" };
+		if (!GlobalConfig()->HasValue("Directory", "GlobSave"))
+			ret = SCIHome();
+		else
+			ret = AVolPath(GlobalConfig()->Value("Directory", "GlobSave"));
+		if (!DirectoryExists(ret)) {
+			QCol->Doing("Creating", ret);
+		}
+		return ret;
+	}
+
+
 }

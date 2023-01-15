@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.14
+// Version: 23.01.15
 // EndLic
 
 #include <TQSE.hpp>
@@ -56,12 +56,15 @@ namespace Scyndi_CI {
 	}
 
 	std::string GameGlobalHome() {
+		/*
 		auto ret = GlobalConfig()->Value("Runtime", "Home");
 		if (!DirectoryExists(ret)) {
 			QCol->Doing("Creating", ret);
 			MakeDir(ret);
 		}
 		return ret;
+		*/
+		return GeneralSaveGameDir();
 	}
 
 #pragma region SRF
@@ -103,6 +106,20 @@ namespace Scyndi_CI {
 			}
 			res_id = ParseGINIE(s);
 		}
+	}
+
+	std::string SaveGameDir() {
+		auto
+			sdb{ ChReplace(GameGlobalHome(),'\\','/') },
+			sdg{ ChReplace(GameID_GINIE()->Value("Save","Dir"),'\\','/') };
+		if (!Suffixed(sdb, "/")) sdb += "/";
+		if (!sdg.size()) sdg = "Anything";
+		auto ret{ sdb + sdg };
+		if (!DirectoryExists(ret)) {
+			QCol->Doing("Creating", ret);
+			MakeDir(ret);
+		}
+		return ret;
 	}
 
 	std::string GameTitle() {

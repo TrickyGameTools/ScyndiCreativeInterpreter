@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.09
+// Version: 23.01.15
 // EndLic
 #pragma once
 #include <SlyvGINIE.hpp>
@@ -33,4 +33,6 @@ namespace Scyndi_CI {
 	std::string SCIHome();
 	std::string GlobalConfigFile();
 	Slyvina::Units::GINIE GlobalConfig();
+	std::string GeneralSaveGameDir();
+	std::string SaveGameDir();
 }

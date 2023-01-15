@@ -1,0 +1,52 @@
+Module
+
+Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"InterVar")
+
+global const int ivt_bool = 1
+global const int ivt_int  = 2
+global const int ivt_str  = 3
+global const int ivt_boolean = 1
+global const int ivt_integer = 2
+global const int ivt_string  = 3
+
+plua IV_S(s,string K,V)
+	Lua.InterVar.Define(s["*__Tag"],K:upper(),s["*__Type"],V)
+end
+
+plua IV_G(s,string K)
+	return Lua.InterVar.Check(s["*__Tag"],K:upper(),s["*__Type"])
+end
+
+class TInterVar
+	ReadOnly String Tag
+	ReadOnly Table iInt
+	ReadOnly Table iBool
+	ReadOnly Table iStr
+	
+	Constructor(String _T)
+		Tag = _T
+		iInt  = SetMetaTable({["*__Tag"]=_T, ["*__Type"]=ivt_int },{["__newindex"]=IV_S,["__index"]=IV_G })
+		iBool = SetMetaTable({["*__Tag"]=_T, ["*__Type"]=ivt_bool},{["__newindex"]=IV_S,["__index"]=IV_G })
+		iStr  = SetMetaTable({["*__Tag"]=_T, ["*__Type"]=ivt_str },{["__newindex"]=IV_S,["__index"]=IV_G })
+	End
+End
+
+plua _ivglob = new TInterVar("*GENERAL")
+
+readonly table gBool = _ivglob.iBool
+readonly table gInt  = _ivglob.iInt
+readonly table gStr  = _ivglob.iStr
+
+QuickMeta Done
+	newindex
+		error("Done is readonly!")
+	end
+	
+	index
+		bool ret
+		ret = gbool[key]
+		gbool[key]=true
+		return ret
+	end
+end
+	

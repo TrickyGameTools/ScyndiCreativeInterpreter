@@ -60,6 +60,11 @@ namespace Scyndi_CI {
 
 	}
 
+	static int API_Events_MouseDown(lua_State* L) {
+		lua_pushboolean(L, MouseDown(luaL_optinteger(L, 1, 1)));
+		return 1;
+	}
+
 	void Init_API_Events() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Poll",API_Events_Poll},
@@ -67,7 +72,8 @@ namespace Scyndi_CI {
 			{"KeyHit",API_Events_KeyHit},
 			{"KeyDown",API_Events_KeyDown},
 			{"MouseX",API_Events_MouseX},
-			{"MouseY",API_Events_MouseY}
+			{"MouseY",API_Events_MouseY},
+			{"MouseDown",API_Events_MouseDown}
 		};
 		InstallAPI("Events", IAPI);
 	}

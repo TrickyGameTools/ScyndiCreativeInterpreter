@@ -173,6 +173,7 @@ namespace Scyndi_CI {
 			QCol->Doing("AltScreen", TrSPrintF("%05dx%05d", AltWidth(), AltHeight()));
 			SetAltScreen(AltWidth(), AltHeight());
 		}
+		if (HideSystemMouse()) SDL_ShowCursor(0);
 		// SDL_Delay(4000); // debug
 	}
 

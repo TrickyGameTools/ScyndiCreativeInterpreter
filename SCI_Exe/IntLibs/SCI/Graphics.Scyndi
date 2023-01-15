@@ -23,6 +23,7 @@ Module
 Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Graphics")
 
 PLUA _LoadImage = Lua.Graphics.LoadImage
+PLUA _LinkFont = Lua.Graphics.LinkFont
 
 const delegate Cls = Lua.Graphics.Cls
 global const delegate Cls = Lua.Graphics.Cls
@@ -52,6 +53,29 @@ Class TImage
 	Void HotCenter()
 		Lua.Graphics.HotCenter(Tag)
 	End
+	
+	Void TrueDraw(int x, int y, int Frame=0)
+		Lua.Graphics.TrueDraw(Tag,x,y,frame)
+	End
+	
+	Var GetFormat()
+		return Lua.Graphics.GetImageFormat(Tag)
+	End
+	
+	Get Int Width
+		int W
+		int H
+		W,H = Lua.Graphics.GetImageFormat(Tag)
+		Return W
+	End
+	
+	Get Int Height
+		int W
+		int H
+		W,H = Lua.Graphics.GetImageFormat(Tag)
+		Return H
+	End
+	
 
 	Static Var Load(String File, String Tag="")
 		String RTag 
@@ -63,7 +87,7 @@ Class TImage
 		
 	Static Var Obtain(String RTag)
 		if ! HasTag(RTag)
-			Lua.error(SPrintF("There is no image tagged '%s', so it cannot be obtained!",Tag))
+			Lua.error(SPrintF("There is no image tagged '%s', so it cannot be obtained!",RTag))
 		end
 		return New TImage(RTag)
 	End
@@ -102,6 +126,60 @@ End
 Global Var ObtainImage(String Tag)
 	Return New TImage(Tag)
 End
+
+Class TImageFont
+	ReadOnly String Tag
+	Static ReadOnly Delegate HasTag = Lua.Graphics.HasFontTag
+		
+		
+	Get Bool AutoDel
+		return Left(Tag,3)=="***"
+	End
+		
+	Constructor(String _Tag)
+		Tag = _Tag
+	End
+	
+	Destructor
+		if AutoDel
+			Lua.Graphics.KillFont(Tag)
+		End
+	End
+	
+	Static Var Load(String File, String _Tag="")
+		String RTag 
+		RTag = _LinkFont(File,_Tag)
+		Return New TImageFont(RTag)
+	End
+	
+	Static Var Obtain(String RTag)
+		if !HasTag(RTag)
+			Lua.error(SPrintF("There is no image tagged '%s', so it cannot be obtained!",RTag))
+		end
+		return New TImageFont(RTag)
+	end		
+
+	Void Text(string Txt,Int X,Int Y,Int Align=0)
+		Lua.Graphics.Text(Tag,Txt,X,Y,Align)
+	End
+End
+
+Var LinkFont(String F,String Tag="")
+	Return TImageFont.Load(F,Tag)
+End
+
+Global Var LinkFont(String F,String Tag="")
+	Return TImageFont.Load(F,Tag)
+End
+
+Var ObtainFont(String Tag)
+	Return TImageFont.Obtain(Tag)
+End
+
+Global Var ObtainFont(String Tag)
+	Return TImageFont.Obtain(Tag)
+End
+
 
 const delegate Color = Lua.Graphics.Color
 global const delegate SetColor=Lua.Graphics.Color

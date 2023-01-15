@@ -75,6 +75,16 @@ namespace Scyndi_CI {
 		Img(Tag)->Draw(x, y, frame);
 	}
 
+	static int API_TrueDrawImage(lua_State* L) {
+		auto
+			Tag{ Lunatic_CheckString(L,1) };
+		auto
+			x{ luaL_checkinteger(L,2) },
+			y{ luaL_checkinteger(L,3) },
+			frame{ luaL_optinteger(L,4,0) };
+		Img(Tag)->TrueDraw(x, y, frame);
+	}
+
 	static int API_HotCenter(lua_State* L) { Img(luaL_checkstring(L, 1))->HotCenter(); return 0; }
 	static int API_Color(lua_State* L) {
 		auto
@@ -111,6 +121,52 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	static int API_ImgFmt(lua_State* L) {
+		auto imgtag{ luaL_checkstring(L,1) };
+		auto _img{ Img(imgtag) };
+		int w{ 0 }, h{ 0 };
+		_img->GetFormat(&w, &h);
+		lua_pushinteger(L, w);
+		lua_pushinteger(L, h);
+		return 2;
+	}
+
+	static int API_LinkFont(lua_State* L) {
+		size_t Untagged{ 0 };
+		auto
+			File{ Lunatic_CheckString(L,1) },
+			Tag{ Lunatic_OptString(L,2,"") };
+		if (!Tag.size()) {
+			Tag = TrSPrintF("***TAG:%08x", Untagged++);
+		} else if (Prefixed(Tag, "*")) {
+			Crash("Tags for LoadImage may not be prefixed with *");
+			return 0;
+		}
+		Fnt(Tag, File);
+		Lunatic_PushString(L, Tag);
+		return 1;
+	}
+
+	static int API_Text(lua_State* L) {
+		auto
+			Tag{ Lunatic_CheckString(L,1) },
+			Text{ Lunatic_CheckString(L,2) };
+		auto
+			X{ luaL_checkinteger(L,3) },
+			Y{ luaL_checkinteger(L,4) },
+			Alignment{ luaL_optinteger(L,5,0) };
+		Fnt(Tag)->Text(Text, X, Y, (Align)Alignment);
+	}
+
+	static int API_KillFont(lua_State* L) {
+		Fnt(Lunatic_CheckString(L, 1), (TImageFont)nullptr);
+	}
+
+	static int API_HasFontTag(lua_State* L) {
+		lua_pushboolean(L, HasFnt(luaL_checkstring(L, 1)));
+		return 1;
+	}
+
 
 	void Init_API_Graphics() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -118,12 +174,18 @@ namespace Scyndi_CI {
 			{"LoadImage",API_LoadImage},
 			{"HasImageTag",API_HasImageTag},
 			{"Draw",API_DrawImage},
+			{"TrueDraw",API_TrueDrawImage},
 			{"Cls",API_Cls},
 			{"HotCenter",API_HotCenter},
 			{"Color",API_Color},
 			{"ColorHSV",API_ColorHSV},
 			{"Width",API_SWidth},
-			{"Height",API_SHeight}
+			{"Height",API_SHeight},
+			{"GetImageFormat",API_ImgFmt},
+			{"LinkFont",API_LinkFont},
+			{"Text",API_Text},
+			{"KillFont",API_KillFont},
+			{"HasFontTag",API_HasFontTag}
 		};
 		InstallAPI("Graphics", IAPI);
 	}

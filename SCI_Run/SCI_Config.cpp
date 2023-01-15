@@ -144,6 +144,10 @@ namespace Scyndi_CI {
 		return false;
 	}
 
+	bool HideSystemMouse() {
+		return Upper(GameID_GINIE()->Value("Mouse", "Hide")) == "TRUE";
+	}
+
 	RunType GetRunType() {
 		static RunType Ret{ RunType::Unknown };
 		if (Ret == RunType::Unknown) {

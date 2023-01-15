@@ -51,6 +51,8 @@ namespace Scyndi_CI {
 	std::string GameCopyright();
 
 	bool VersionMatch(bool ask = false);
+
+	bool HideSystemMouse();
 #pragma endregion
 
 	RunType GetRunType();

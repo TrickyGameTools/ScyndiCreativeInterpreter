@@ -38,6 +38,7 @@ namespace Scyndi_CI {
 			_State{ Lunatic_CheckString(L,1) },
 			_Func{ Lunatic_CheckString(L,2) },
 			_Args{ Lunatic_OptString(L,3,"nil") };
+		//std::cout << "Interstate call to State:" << _State << "; " << _Func << "(" << _Args << ")\n"; // debug
 		Call(_State, _Func, _Args);
 		return 0;
 	}
@@ -64,7 +65,7 @@ namespace Scyndi_CI {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Call",IS_Call},
 			{"Load",IS_LoadState},
-			{"LoadNew",IS_LoadState}
+			{"LoadNew",IS_LoadNewState}
 		
 		};
 		InstallAPI("InterState", IAPI);

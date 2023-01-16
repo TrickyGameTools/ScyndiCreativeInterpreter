@@ -48,6 +48,6 @@ Void Call(String State,String Func,Infinity)
 		if Args==""
 			Args="nil"
 		end
-		RawCall(State,Func,Args)
 	End	
+	RawCall(State,Func,Args)
 End

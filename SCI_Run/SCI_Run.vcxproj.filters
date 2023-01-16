@@ -258,6 +258,9 @@
     <ClCompile Include="API\API_SGFile.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
+    <ClCompile Include="API\API_InterState.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SCI_Share\Version.hpp">

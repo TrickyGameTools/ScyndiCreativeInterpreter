@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.15
+// Version: 23.01.16
 // EndLic
 
 #include <Lunatic.hpp>
@@ -40,6 +40,7 @@
 
 using namespace Slyvina;
 using namespace Units;
+using namespace JCR6;
 using namespace Lunatic;
 using namespace TQSG;
 using namespace TQSE;
@@ -341,7 +342,12 @@ namespace Scyndi_CI {
 			auto src{ _Res->GetString(_Entry) };
 			StateRegister[_State]->QDoString(src);
 		} else if (ext == "LBC") {
+			QCol->Doing("Obtaining", _Entry);			
 			auto bnk{ _Res->B(_Entry) };
+			if (Last()->Error) {
+				Crash("Load State JCR6 Error!", "Error:" + Last()->ErrorMessage + "\nMain:" + Last()->MainFile + "\nEntry:" + Last()->Entry); 
+				return;
+			}
 			StateRegister[_State]->QDoByteCode(bnk->Direct(), bnk->Size(), _Entry);
 		}
 
@@ -387,6 +393,14 @@ namespace Scyndi_CI {
 			Uitleg->push_back(TrSPrintF("%s:Line %05d: %s", k.File.c_str(), k.Line, k.Func.c_str()));
 		}
 		Crash(ErrorMessage, Uitleg);
+	}
+
+	void KillAllStates() {
+		for (auto& Victim : StateRegister) {
+			QCol->Doing("Killing state", Victim.first);
+			Victim.second->Kill();
+		}
+		StateRegister.clear();
 	}
 
 	void RunGame() {

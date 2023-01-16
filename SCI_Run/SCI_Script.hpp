@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.15
+// Version: 23.01.16
 // EndLic
 
 #pragma once
@@ -58,6 +58,8 @@ namespace Scyndi_CI {
 	void InstallAPI(std::string _API, std::map<std::string, lua_CFunction> _Funcs);
 
 	void ScriptError(std::string _State,std::string ErrorMessage);
+
+	void KillAllStates();
 
 	void RunGame();
 }

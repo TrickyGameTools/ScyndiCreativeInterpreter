@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.15
+// Version: 23.01.16
 // EndLic
 #include <SlyvString.hpp>
 
@@ -167,6 +167,19 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	static int API_Strech(lua_State* L) {
+		auto
+			Tag{ Lunatic_CheckString(L,1) };
+		auto
+			x{ luaL_checkinteger(L,2) },
+			y{ luaL_checkinteger(L,3) },
+			w{ luaL_checkinteger(L,4) },
+			h{ luaL_checkinteger(L,5) },
+			frame{ luaL_optinteger(L,6,0) };
+		Img(Tag)->StretchDraw(x, y, w, h, frame);
+		return 0;
+	}
+
 
 	void Init_API_Graphics() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -185,7 +198,8 @@ namespace Scyndi_CI {
 			{"LinkFont",API_LinkFont},
 			{"Text",API_Text},
 			{"KillFont",API_KillFont},
-			{"HasFontTag",API_HasFontTag}
+			{"HasFontTag",API_HasFontTag},
+			{"Stretch",API_Strech}
 		};
 		InstallAPI("Graphics", IAPI);
 	}

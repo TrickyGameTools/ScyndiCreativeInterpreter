@@ -1,0 +1,60 @@
+// License Information:
+// SCI_Exe/IntLibs/SCI/SGFile.Scyndi
+// Scyndi's Creative Interpreter - SGFile
+// version: 23.01.16
+// Copyright (C) 2023 Jeroen P. Broks
+// This software is provided 'as-is', without any express or implied
+// warranty.  In no event will the authors be held liable for any damages
+// arising from the use of this software.
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+// 1. The origin of this software must not be misrepresented; you must not
+// claim that you wrote the original software. If you use this software
+// in a product, an acknowledgment in the product documentation would be
+// appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+// misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+// End License Information
+Module
+
+Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"SGFile")
+
+const delegate Kill = Lua.SGFile.Kill
+const delegate SaveString = Lua.SGFile.SaveString
+const delegate LoadString = Lua.SGFile.LoadString
+const delegate FileExists = Lua.SGFile.FileExists
+
+
+QuickMeta SGDir
+
+	newindex
+		error("SGDir is completely read-only!")
+	end
+	
+	index
+		if Lua.type(key)=="number"
+			return Lua.SGFile.DirEntry(key)
+		elif Lua.type(key)=="string"
+			switch Upper(Key)
+			case "SIZE", "LEN", "LENGTH"
+				return Lua.SGFile.DirSize()
+			case "RESET"
+				Lua.SGFile.ResetDir()
+			default
+				error(sprintf("Unknown dir key: %s",key))
+			end
+		end
+	end
+end
+
+//const var Dir=SGDir
+
+Table GetDir()
+	Table Ret
+	for i=0,SGDir.Size-1
+		Ret[0] = SGDir[i]
+	end
+	Return Ret
+End

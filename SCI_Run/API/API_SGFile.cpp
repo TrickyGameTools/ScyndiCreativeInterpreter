@@ -21,9 +21,10 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.15
+// Version: 23.01.16
 // EndLic
 
+#include <SlyvDir.hpp>
 #include <SlyvQCol.hpp>
 
 #include "../SCI_Config.hpp"
@@ -36,6 +37,12 @@ using namespace Units;
 
 namespace Scyndi_CI {
 
+	static VecString SG_Tree;
+	inline void MakeTree() {
+		if (!SG_Tree) SG_Tree = GetTree(SaveGameDir());
+	}
+	
+
 	static int SG_SaveString(lua_State* L) {
 		auto
 			File{ SaveGameDir() + "/" + Lunatic_CheckString(L,1) },
@@ -45,6 +52,7 @@ namespace Scyndi_CI {
 			QCol->Doing("Creating", Dir);
 		}
 		SaveString(File, Content);
+		SG_Tree = nullptr;
 		return 0;
 	}
 
@@ -66,9 +74,51 @@ namespace Scyndi_CI {
 			lua_pushboolean(L, false);
 		} else {
 			lua_pushboolean(L, FileDelete(FFile));
+			SG_Tree = nullptr;
 		}
 		return 1;
 	}
 
-	void Init_API_SGFile(){}
+	static int SG_DirCount(lua_State* L) {
+		MakeTree();
+		lua_pushinteger(L, SG_Tree->size());
+		return 1;
+	}
+
+	static int SG_DirEntry(lua_State* L) {
+		MakeTree();
+		auto idx{ luaL_checkinteger(L,1) };
+		if (!(idx > 0 && idx < SG_Tree->size())) {
+			luaL_error(L, "Directory index out of bounds (%d/%d)", idx, SG_Tree->size());
+			return 0;
+		}
+		lua_pushstring(L, (*SG_Tree)[idx].c_str());
+		return 1;
+	}
+
+	static int SG_FileExists(lua_State* L) {
+		lua_pushboolean(L, FileExists(SaveGameDir() + "/" + luaL_checkstring(L, 1)));
+		return 1;
+	}
+
+	static int SG_ResetDir(lua_State* L) {
+		SG_Tree = nullptr;
+		return 0;
+	}
+	
+
+	void Init_API_SGFile() {
+		std::map<std::string, lua_CFunction>IAPI{
+			{"DirCount", SG_DirCount},
+			{"DirEntry", SG_DirEntry},
+			{"Delete", SG_DeleteFile},
+			{"Kill", SG_DeleteFile},
+			{"LoadString", SG_LoadString},
+			{"SaveString", SG_SaveString},
+			{"FileExists",SG_FileExists},
+			{"ResetDir",SG_ResetDir},
+			{"FileExists",SG_FileExists}
+		};
+		InstallAPI("SGFile", IAPI);
+	}
 }

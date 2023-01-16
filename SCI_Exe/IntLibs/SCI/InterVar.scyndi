@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/InterVar.scyndi
 // Scyndi's Creative Interpreter - InterVar linkup code
-// version: 23.01.15
+// version: 23.01.16
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -41,6 +41,14 @@ class TInterVar
 	ReadOnly Table iInt
 	ReadOnly Table iBool
 	ReadOnly Table iStr
+		
+	Get String Source
+		return Lua.InterVar.UnParse(Tag)
+	End
+	
+	Set String Source
+		Lua.InterVar.Parse(Tag,Value)
+	End
 	
 	Constructor(String _T)
 		Tag = _T

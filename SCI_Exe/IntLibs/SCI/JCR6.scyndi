@@ -1,0 +1,31 @@
+
+Module
+
+class JCR6Entry
+	readonly string Entry
+	readonly int RealSize
+	readonly int CompressedSize
+	readonly string Storage
+	
+	Constructor(String E,int RS, int CS,String S)
+		Entry,RealSize,CompressedSize,Storage = E,RS,CS,S
+	End
+End
+	
+Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"JCR6")
+
+const delegate Dir = Lua.JCR6.GetJCR
+
+const delegate DirSize = Lua.JCRGetSize
+
+Var DirIndex(int idx,string Tag="*MAIN")
+	return Lua.JCRGetEntry(idx,Tag)
+end
+
+Var DirEntry(int idx, string Tag="*MAIN")
+	return New JCR6Entry(DirIndex(idx,Tag))
+End
+
+String GetString(string Ent,String Tag="*MAIN")
+	return Lua.JCR6.JCRGetString(Tag,Ent)
+End

@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/InterVar.scyndi
 // Scyndi's Creative Interpreter - InterVar linkup code
-// version: 23.01.16
+// version: 23.01.17
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -17,6 +17,7 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // End License Information
+
 Module
 
 Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"InterVar")
@@ -48,6 +49,14 @@ class TInterVar
 	
 	Set String Source
 		Lua.InterVar.Parse(Tag,Value)
+	End
+	
+	Get String SFQLocal
+		error("Property SFQLocal cannot be read. Only be written")
+	End
+	
+	Set String SFQLocal
+		Lua.InterVar.LocalParse(Tag,Value)
 	End
 	
 	Constructor(String _T)

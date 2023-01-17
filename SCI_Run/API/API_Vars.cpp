@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.15
+// Version: 23.01.17
 // EndLic
 #include <Lunatic.hpp>
 
@@ -135,6 +135,34 @@ namespace Scyndi_CI {
 		}
 	}
 
+	int API_GvSFQLocal(lua_State* L) {
+		// This is just a quick routine to load the localisation files of "Scyndi's Forest Quest".
+		auto
+			Tag{ Upper(luaL_checkstring(L,1)) },
+			Src{ Lunatic_CheckString(L,2) };
+		auto
+			Merge{ luaL_optinteger(L,3,0) };
+		if (!Merge) {
+			GvRegister[Tag]._Bool.clear();
+			GvRegister[Tag]._Str.clear();
+			GvRegister[Tag]._Int.clear();
+		}
+		auto
+			SSrc{ Split(Src,'\n') };
+		for (size_t i = 0; i < SSrc->size(); i++) {
+			auto Line{ (*SSrc)[i] };
+			auto LineNumber{ i + 1ui64 };
+			if (Line.size() && (!Prefixed(Line, "//"))) {
+				auto p{ FindFirst(Line, '=') }; if (p < 0) { luaL_error(L, "Localisation syntax error in line #%d", LineNumber); return 0; }
+				auto
+					LTag{ Upper(Line.substr(0, p)) },
+					LTxt{ StReplace(Line.substr(p),"\\n","\n") };
+				GvRegister[Tag]._Str[LTag] = LTxt;
+			}
+		}
+		return 0;
+	}
+
 
 	void Init_API_Vars() {
 		GvParse("*GENERAL", "# Nothing"); // Just makes sure the record exists!
@@ -143,7 +171,8 @@ namespace Scyndi_CI {
 			{"Parse",API_GvParse},
 			{"Kill",API_GvKill},
 			{"Define",API_GvDefine},
-			{"Check",API_GvCheck}
+			{"Check",API_GvCheck},
+			{"LocalParse",API_GvSFQLocal}
 		};
 		InstallAPI("InterVar", IAPI);
 	}

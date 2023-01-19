@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/State.scyndi
 // Scyndi's Creative Interpreter - InterState
-// version: 23.01.16
+// version: 23.01.18
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -28,22 +28,23 @@ Const Delegate LoadNew = Lua.InterState.LoadNew
 Void Call(String State,String Func,Infinity)
 	string Args
 	for i,v in Lua.ipairs{ Infinity }
+		// print(i,Lua.type(v),v) // debug only!
 		if (i>1)
 			Args = Args .. ", "
-			switch(Lua.type(v))
-				case "number"
-					Args = Args .. v
-				case "boolean"
-					if v
-						Args = Args .. "true"
-					else
-						Args = Args .. "false"
-					end
-				case "string"
-					Args = Args .. sprintf("\"%s\"",v)
-				default
-					error(sprintf("State.Call.%s.%s: Argument %d is of type %s which cannot be parsed",State,Func,i,Lua.type(v)))
-			end
+		end
+		switch(Lua.type(v))
+			case "number"
+				Args = Args .. v
+			case "boolean"
+				if v
+					Args = Args .. "true"
+				else
+					Args = Args .. "false"
+				end
+			case "string"
+				Args = Args .. sprintf("\"%s\"",v)
+			default
+				error(sprintf("State.Call.%s.%s: Argument %d is of type %s which cannot be parsed",State,Func,i,Lua.type(v)))			
 		end
 		if Args==""
 			Args="nil"

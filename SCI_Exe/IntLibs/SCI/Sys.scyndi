@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/Sys.scyndi
 // Scyndi's Creative Interpreter - Sys Module
-// version: 23.01.15
+// version: 23.01.19
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -24,5 +24,10 @@ const delegate Exit = Lua.Exit
 const delegate GoToFlow = Lua.SCI_GoToFlow
 const delegate LoadFlow = Lua.SCI_LoadFlow
 const delegate LoadNewFlow = Lua.SCI_LoadNewFlow
+const delegate DontFlip = Lua.SCI_DontFlip
+
+get string BuildState
+	return Lua.SCI_BuildState()
+end
 
 global const delegate GoToFlow = Lua.SCI_GoToFlow

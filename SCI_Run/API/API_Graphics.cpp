@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.16
+// Version: 23.01.18
 // EndLic
 #include <SlyvString.hpp>
 
@@ -156,6 +156,16 @@ namespace Scyndi_CI {
 			Y{ luaL_checkinteger(L,4) },
 			Alignment{ luaL_optinteger(L,5,0) };
 		Fnt(Tag)->Text(Text, X, Y, (Align)Alignment);
+		return 0;
+	}
+
+	static int API_TextSize(lua_State* L) {
+		auto
+			Tag{ Lunatic_CheckString(L,1) },
+			Text{ Lunatic_CheckString(L,2) };
+		lua_pushinteger(L, Fnt(Tag)->Width(Text));
+		lua_pushinteger(L, Fnt(Tag)->Height(Text));
+		return 2;
 	}
 
 	static int API_KillFont(lua_State* L) {
@@ -180,6 +190,16 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_Rect(lua_State* L) {
+		ARect(
+			luaL_checkinteger(L, 1),
+			luaL_checkinteger(L, 2),
+			luaL_checkinteger(L, 3),
+			luaL_checkinteger(L, 4)
+		);
+		return 0;
+	}
+
 
 	void Init_API_Graphics() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -197,9 +217,11 @@ namespace Scyndi_CI {
 			{"GetImageFormat",API_ImgFmt},
 			{"LinkFont",API_LinkFont},
 			{"Text",API_Text},
+			{"TextSize",API_TextSize},
 			{"KillFont",API_KillFont},
 			{"HasFontTag",API_HasFontTag},
-			{"Stretch",API_Strech}
+			{"Stretch",API_Strech},
+			{"Rect",API_Rect}
 		};
 		InstallAPI("Graphics", IAPI);
 	}

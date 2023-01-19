@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.15
+// Version: 23.01.18
 // EndLic
 
 #include <SlyvQCol.hpp>
@@ -32,6 +32,7 @@
 
 #include "../SCI_Share/Version.hpp"
 
+#include "SCI_Build_Config.hpp"
 #include "SCI_Project.hpp"
 #include "SCI_Script.hpp"
 
@@ -59,6 +60,10 @@ namespace Scyndi_CI {
 		}
 
 		bool SCI_Project::WindowSettings() {
+			if (DebugFlag()) 
+				ID->Value("BUILD", "TYPE", "debug"); 
+			else
+				ID->Value("BUILD", "TYPE", "release");
 			ID->Value("Engine", "Engine", "SCI");
 			ID->Value("Engine", "Version", QVersion.Version());
 			ID->Value("Window", "Caption", Ask(Data, "SCI::WINDOW", "Caption", "Window - Caption: ", Title()));

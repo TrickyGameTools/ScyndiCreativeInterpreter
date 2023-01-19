@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/Graphics.Scyndi
 // Scyndi's Creative Interpreter - Graphics linkup
-// version: 23.01.16
+// version: 23.01.18
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -17,6 +17,7 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // End License Information
+
 Module
 
 // Just making sure this comes first. GewoonNiks will contain 'nil' as result, but that doesn't matter!
@@ -214,6 +215,9 @@ const delegate Color = Lua.Graphics.Color
 global const delegate SetColor=Lua.Graphics.Color
 const delegate ColorHSV = Lua.Graphics.ColorHSV
 global const delegate SetColorHSV=Lua.Graphics.ColorHSV
+
+const delegate Rect = Lua.Graphics.Rect
+global const delegate Rect = Lua.Graphics.Rect
 
 
 get int Width

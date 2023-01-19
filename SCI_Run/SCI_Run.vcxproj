@@ -210,6 +210,7 @@
     <ClCompile Include="API\API_JCR.cpp" />
     <ClCompile Include="API\API_SGFile.cpp" />
     <ClCompile Include="API\API_Vars.cpp" />
+    <ClCompile Include="API\SCI_String.cpp" />
     <ClCompile Include="SCI_Config.cpp" />
     <ClCompile Include="SCI_Crash.cpp" />
     <ClCompile Include="SCI_Graphics.cpp" />

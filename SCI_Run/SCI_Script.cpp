@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.16
+// Version: 23.01.19
 // EndLic
 
 #include <Lunatic.hpp>
@@ -49,6 +49,7 @@ namespace Scyndi_CI {
 	struct SCFlow { std::string Name; SLunatic State{ nullptr }; };
 	SCFlow CFlow;
 	bool EndRun{ false };
+	int DontFlip{ 0 };
 	static std::map < std::string, SLunatic > StateRegister{};
 	
 	static std::map<std::string, std::map<std::string, lua_CFunction>> API{};
@@ -231,6 +232,18 @@ namespace Scyndi_CI {
 		if (!HasFlow(St)) Flow(St, Fl);
 		return 0;
 	}
+
+	int SYS_BuildState(lua_State* L) {
+		auto s = GameID_GINIE()->Value("BUILD", "TYPE");
+		if (!s.size()) s = "debug";
+		Lunatic_PushString(L, s);
+		return 1;
+	}
+
+	static int SYS_DontFlip(lua_State* L) {
+		DontFlip += std::max(1, (int)luaL_optinteger(L, 1, 1));
+		return 1;
+	}
 #pragma endregion
 
 	static void InitScript() {
@@ -247,6 +260,8 @@ namespace Scyndi_CI {
 			{"SCI_GoToFlow",SYS_GoToFlow},
 			{"SCI_LoadFlow",SYS_LoadFlow},
 			{"SCI_LoadNewFlow",SYS_LoadNewFlow},
+			{"SCI_BuildState",SYS_BuildState},
+			{"SCI_DontFlip",SYS_DontFlip},
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},
 			{"__DEBUG_PUSH",DBG_Push},
@@ -418,12 +433,18 @@ namespace Scyndi_CI {
 				Cls();
 				Poll();
 				Call(CFlow.Name, "MainFlow");
-				Flip();
+				if (DontFlip)
+					DontFlip--;
+				else
+					Flip();
 				break;
 			case RunType::Callback: {
 				Cls();
 				Call(CFlow.Name, "CB_Draw");
-				Flip();
+				if (DontFlip)
+					DontFlip--;
+				else
+					Flip();
 				Poll();
 				Call(CFlow.Name, "CB_Update");
 				static auto keys{ KeyArray() };

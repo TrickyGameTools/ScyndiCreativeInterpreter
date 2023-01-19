@@ -360,7 +360,7 @@ namespace Scyndi_CI {
 			QCol->Doing("Obtaining", _Entry);			
 			auto bnk{ _Res->B(_Entry) };
 			if (Last()->Error) {
-				Crash("Load State JCR6 Error!", "Error:" + Last()->ErrorMessage + "\nMain:" + Last()->MainFile + "\nEntry:" + Last()->Entry); 
+				Crash("Load State JCR6 Error!", "Error: " + Last()->ErrorMessage + "\nMain:" + Last()->MainFile + "\nEntry:" + Last()->Entry); 
 				return;
 			}
 			StateRegister[_State]->QDoByteCode(bnk->Direct(), bnk->Size(), _Entry);

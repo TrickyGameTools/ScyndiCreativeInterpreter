@@ -75,6 +75,8 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	static int API_Events_Flush(lua_State* L) { Flush(); return 0; }
+
 	void Init_API_Events() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Poll",API_Events_Poll},
@@ -85,7 +87,8 @@ namespace Scyndi_CI {
 			{"MouseY",API_Events_MouseY},
 			{"MouseDown",API_Events_MouseDown},
 			{"MouseHit",API_Events_MouseHit},
-			{"MouseReleased",API_Events_MouseReleased}
+			{"MouseReleased",API_Events_MouseReleased},
+			{"Flush",API_Events_Flush}
 		};
 		InstallAPI("Events", IAPI);
 	}

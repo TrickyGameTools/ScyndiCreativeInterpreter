@@ -30,6 +30,7 @@ Const Delegate AppTerminate = Lua.Events.AppTerminate
 const Delegate MouseDown = Lua.Events.MouseDown
 const Delegate MouseHit = Lua.Events.MouseHit
 const Delegate MouseReleased = Lua.Events.MouseReleased
+const Delegate Flush = Lua.Events.Flush
 
 get int MouseX
 	return Lua.Events.MouseX(0)

@@ -52,7 +52,7 @@ namespace  Scyndi_CI {
         Uitleg->push_back("Error message: " + m);
         Uitleg->push_back("Main File:     " + Last()->MainFile);
         Uitleg->push_back("Entry:         " + Last()->Entry);
-        Crash("JCR6 Error" + m);
+        Crash("JCR6 Error:" + m, Uitleg);
     }
 
     static JT_Dir _srf{nullptr};

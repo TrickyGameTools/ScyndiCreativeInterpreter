@@ -264,8 +264,8 @@
     <ClCompile Include="API\API_JCR.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
-    <ClCompile Include="API\SCI_String.cpp">
-      <Filter>Header Files</Filter>
+    <ClCompile Include="API\API_String.cpp">
+      <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

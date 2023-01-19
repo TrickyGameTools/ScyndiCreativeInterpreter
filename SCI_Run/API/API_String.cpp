@@ -1,6 +1,6 @@
 // Lic:
 // Scyndi's Creative Interpreter
-// Super String API
+// Super String
 // 
 // 
 // 
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.18
+// Version: 23.01.19
 // EndLic
 #include "../SCI_Script.hpp"
 
@@ -52,7 +52,7 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
-	void Init_SCI_String() {
+	void Init_API_String() {
 		std::map<std::string, lua_CFunction> IAPI{
 			{"Replace",API_StReplace},
 			{"Repeat",API_Repeat}

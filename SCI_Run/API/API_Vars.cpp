@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.17
+// Version: 23.01.18
 // EndLic
 #include <Lunatic.hpp>
 
@@ -155,8 +155,9 @@ namespace Scyndi_CI {
 			if (Line.size() && (!Prefixed(Line, "//"))) {
 				auto p{ FindFirst(Line, '=') }; if (p < 0) { luaL_error(L, "Localisation syntax error in line #%d", LineNumber); return 0; }
 				auto
-					LTag{ Upper(Line.substr(0, p)) },
-					LTxt{ StReplace(Line.substr(p),"\\n","\n") };
+					LTag{ Trim(Upper(Line.substr(0, p))) },
+					LTxt{ Trim(StReplace(Line.substr(p+1),"\\n","\n")) };
+				//std::cout << "LSFG." << Tag << "." << LTag << " = \"" << LTxt << "\"\n"; // debug
 				GvRegister[Tag]._Str[LTag] = LTxt;
 			}
 		}

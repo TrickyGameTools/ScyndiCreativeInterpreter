@@ -166,6 +166,31 @@ Class TImageFont
 	Void Text(string Txt,Int X,Int Y,Int Align=0)
 		Lua.Graphics.Text(Tag,Txt,X,Y,Align)
 	End
+	
+	Var Size(string Txt)
+		//Return Lua.Graphics.TextSize(Tag,Txt)
+		int x
+		int y
+		//print("Size",Tag,Txt,Lua.Graphics.TextSize(Tag,Txt)) // debug
+		x,y = Lua.Graphics.TextSize(Tag,Txt)
+		//print("Return",x,y)
+		return x,y
+	end
+	
+	Int Width(string Txt)
+		int x
+		int y
+		x,y = Lua.Graphics.TextSize(Tag,Txt)
+		return x
+	end
+	
+	Int Height(string Txt)
+		int x
+		int y
+		x,y = Lua.Graphics.TextSize(Tag,Txt)
+		return y
+	end
+
 End
 
 Var LinkFont(String F,String Tag="")

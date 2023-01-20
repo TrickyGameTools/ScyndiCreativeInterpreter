@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.15
+// Version: 23.01.20
 // EndLic
 
 #include <TQSE.hpp>
@@ -132,8 +132,8 @@ namespace Scyndi_CI {
 		return res_id->Value("ID", "Copyright");
 	}
 
-	GINIE GameID() {
-		return GINIE();
+	std::string SaveGameID() {
+		return res_id->Value("Save","ID");
 	}
 
 	bool VersionMatch(bool ask) {

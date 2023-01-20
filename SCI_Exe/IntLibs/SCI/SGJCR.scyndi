@@ -1,0 +1,102 @@
+// License Information:
+// SCI_Exe/IntLibs/SCI/SGJCR.scyndi
+// Scyndi's Creative Interpreter
+// version: 23.01.20
+// Copyright (C) 2023 Jeroen P. Broks
+// This software is provided 'as-is', without any express or implied
+// warranty.  In no event will the authors be held liable for any damages
+// arising from the use of this software.
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+// 1. The origin of this software must not be misrepresented; you must not
+// claim that you wrote the original software. If you use this software
+// in a product, an acknowledgment in the product documentation would be
+// appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+// misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+// End License Information
+Module
+
+Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"SGJCR")
+
+String TxIndex(Tab,String Key)
+	Return Lua.SGJCR.GetText(Tab.Tag,Key)
+End
+
+Void TxNewIndex(Tab,String Key,String Value)
+	Lua.SGJCR.SetText(Tab.Tag,Key,Value)
+End
+
+Class TSGJCR
+	ReadOnly String Tag
+	ReadOnly Table Text
+		
+	Get Bool AutoDelete
+		Return Left(Tag,3)=="***"
+	End
+	
+	Void SetBank(Bnk,String File)
+		if !Lua.Bank
+			error("S:Saving banks in savegames requires 'Libs/SCI/Bank' to be imported with #use")
+		end
+		if Lua.type(Bnk)=="string"
+			Lua.SGJCR.SetBank(Tag,File,Bnk)
+		else
+			Lua.SGJCR.SetBank(Tag,File,Bnk.Tag)
+		end
+	End
+	
+	Var GetBank(String File,String BnkTag)
+		if !Lua.Bank
+			error("S:Saving banks in savegames requires 'Libs/SCI/Bank' to be imported with #use")
+		end
+		Lua.SGJCR.GetBank(Tag,File,BnkTag)
+		Return Lua.Scyndi["NEW"](-999,BnkTag)
+	End
+	
+	Void DoType(String _Type)
+		Lua.SGJCR.DoType(Tag,_Type)
+	End
+	
+	Void Mutilate()
+		Lua.SGJCR.Mutilate(Tag)
+	End
+	
+	Void Clear()
+		Lua.SGJCR.Clear(Tag)
+	End
+	
+	Void Assign(String File)
+		Lua.SGJCR.Assign(Tag,File)
+	End
+	
+	Constructor(string _Tag="",obtain)
+		if obtain
+			Tag = _Tag
+		else
+			Tag  = Lua.SGJCR.Create(_Tag)
+		end
+		Text = SetMetaTable({["Tag"]=Tag},{["__index"]=TxIndex,["__newindex"]=TxNewIndex})
+	End
+	
+	Destructor
+		If AutoDelete
+			Lua.SGJCR.Kill(Tag)
+		End
+	End
+	
+	Static ReadOnly Delegate Exists = Lua.SGJCR.Exists
+	
+End
+
+ReadOnly Delegate Exists = Lua.SGJCR.Exists
+
+Var Create(string T="")
+	return New TSGJCR(T)
+End
+
+Var Obtain(string T)
+	return New TSGJCR(T,true)
+End

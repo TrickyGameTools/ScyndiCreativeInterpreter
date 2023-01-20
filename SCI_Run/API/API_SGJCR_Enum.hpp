@@ -24,13 +24,15 @@
 // Version: 23.01.20
 // EndLic
 // Generated header
+// Do not modify manually but use the API_SGJCR_Enum.py script for Python in stead!
+
 
 #include <map>
 #include <string>
 
 namespace Scyndi_CI {
 
-	enum class SGJCR_Types { ID, TxtData, BinData, RPGStat };
+	enum class SGJCR_Types { ID, TxtData, BinData, RPGStat};
 
 	static std::map<SGJCR_Types, std::string> En2Nm {
 		{SGJCR_Types::ID,"ID"},
@@ -41,7 +43,7 @@ namespace Scyndi_CI {
 
 	static std::map<std::string, SGJCR_Types> Nm2En {
 		{"ID",SGJCR_Types::ID},
-		{"TxtData",SGJCR_Types::TxtData},
-		{"BinData",SGJCR_Types::BinData},
-		{"RPGStat",SGJCR_Types::RPGStat}
+		{"TXTDATA",SGJCR_Types::TxtData},
+		{"BINDATA",SGJCR_Types::BinData},
+		{"RPGSTAT",SGJCR_Types::RPGStat}
 	};

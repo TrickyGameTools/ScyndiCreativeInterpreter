@@ -57,7 +57,7 @@ First = True
 for E in ENUM:                                                 
 	if not First: HPP+=",\n"                                 
 	First = False
-	HPP += "\t\t{\"%s\",SGJCR_Types::%s}"%(E,E)           
+	HPP += "\t\t{\"%s\",SGJCR_Types::%s}"%(E.upper(),E)           
 HPP += "\n\t};\n\n"                                             
 
 print(HPP)

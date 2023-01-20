@@ -21,10 +21,12 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.19
+// Version: 23.01.20
 // EndLic
 namespace Scyndi_CI{
 
+	void Init_AP_SGJCR();
+	void Init_API_Bank();
 	void Init_API_Events();
 	void Init_API_Graphics();
 	void Init_API_InterState();
@@ -35,6 +37,8 @@ namespace Scyndi_CI{
 
 
 	inline void InstallAllAPIS() {
+		Init_AP_SGJCR();
+		Init_API_Bank();
 		Init_API_Events();
 		Init_API_Graphics();
 		Init_API_InterState();

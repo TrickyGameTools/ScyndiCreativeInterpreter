@@ -1,0 +1,95 @@
+MODULE
+
+VAR GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Bank")
+
+CLASS TBank
+
+	READONLY STRING Tag
+		
+	GET BOOL AutoDelete
+		RETURN Prefixed(Tag,"***AUTO")
+	END
+		
+
+	CONSTRUCTOR(INT size,STRING _Tag="")
+		if (size<=16) 
+			error("A bank must be at least 16 bytes")
+		end
+		Tag = Lua.Bank.Create(Tag,size)
+	END
+	
+	DESTRUCTOR
+		IF AutoDelete
+			Lua.Bank.Kill(Tag)
+		END
+	END
+	
+	VOID Poke(INT ADDR,INT VALUE,INT BITS=8)
+		Lua.Bank.Poke(ADDR,VALUE,BITS)
+	END
+	
+	VOID PokeS8(Int ADDR,INT VALUE)
+		Lua.Bank.Poke(ADDR,VALUE,-8)
+	END
+	
+	VOID PokeU8(INT ADDR,BYTE VALUE)
+		Lua.Bank.Poke(ADDR,VALUE,8)
+	END
+	
+	VOID PokeS16(Int ADDR,INT VALUE)
+		Lua.Bank.Poke(ADDR,VALUE,-16)
+	END
+	
+	VOID PokeU16(INT ADDR,INT VALUE)
+		Lua.Bank.Poke(ADDR,VALUE,16)
+	END
+	
+	VOID PokeS32(Int ADDR,INT VALUE)
+		Lua.Bank.Poke(ADDR,VALUE,-32)
+	END
+	
+	VOID PokeU32(INT ADDR,INT VALUE)
+		Lua.Bank.Poke(ADDR,VALUE,32)
+	END		
+	
+	VOID PokeS64(Int ADDR,INT VALUE)
+		Lua.Bank.Poke(ADDR,VALUE,-64)
+	END
+	
+	VOID PokeU64(INT ADDR,INT VALUE)
+		Lua.Bank.Poke(ADDR,VALUE,64)
+	END		
+	
+	INT Peek(INT ADDR,INT BITS=8)
+		RETURN Lua.Bank.Peek(ADDR,BITS)
+	END
+	
+	BYTE PeekS8(INT ADDR)
+		RETURN Lua.Bank.Peek(ADDR,8)
+	END
+	INT PeekU8(INT ADDR)
+		RETURN Lua.Bank.Peek(ADDR,-8)
+	END
+	
+	INT PeekS16(INT ADDR)
+		RETURN Lua.Bank.Peek(ADDR,16)
+	END
+	INT PeekU16(INT ADDR)
+		RETURN Lua.Bank.Peek(ADDR,-16)
+	END
+	
+	INT PeekS32(INT ADDR)
+		RETURN Lua.Bank.Peek(ADDR,32)
+	END
+	INT PeekU32(INT ADDR)
+		RETURN Lua.Bank.Peek(ADDR,-32)
+	END
+	
+	INT PeekS64(INT ADDR)
+		RETURN Lua.Bank.Peek(ADDR,64)
+	END
+	INT PeekU64(INT ADDR)
+		RETURN Lua.Bank.Peek(ADDR,-64)
+	END
+	
+END

@@ -87,7 +87,7 @@ namespace Scyndi_CI {
 		case -8:lua_pushinteger(L, Bnk->PeekChar(Address)); break;
 		case -16:lua_pushinteger(L, Bnk->PeekInt16(Address)); break;
 		case -32:lua_pushinteger(L, Bnk->PeekInt32(Address)); break;
-		case -64:lua_pushinteger(L, Bnk->PeekInt32(Address)); break;
+		case -64:lua_pushinteger(L, Bnk->PeekInt64(Address)); break;
 		default: luaL_error(L, "Unknown bitrate for peek (%d)", Bits); return 0;
 		}
 		return 1;
@@ -99,9 +99,9 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
-	Bank SGGet(std::string Tag) { return BankRegister[Upper(Tag)]; } // Needed for the savegame system
-
-
+	Bank SGBank(std::string Tag) { return BankRegister[Upper(Tag)]; } // Needed for the savegame system
+	void SGBank(std::string Tag, Bank Bnk) { BankRegister[Upper(Tag)] = Bnk; }
+ 
 	void Init_API_Events() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Create",API_CreateBank},

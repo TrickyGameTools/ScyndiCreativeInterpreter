@@ -17,6 +17,7 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // End License Information
+
 MODULE
 
 VAR GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Bank")
@@ -29,8 +30,15 @@ CLASS TBank
 		RETURN Prefixed(Tag,"***AUTO")
 	END
 		
+	STATIC VAR Obtain(STRING _Tag)
+		RETURN NEW TBank(-999,_Tag)
+	END
 
 	CONSTRUCTOR(INT size,STRING _Tag="")
+		if (size==-999) && (_Tag!="")
+			Tag = _Tag
+			Return
+		End
 		if (size<=16) 
 			error("A bank must be at least 16 bytes")
 		end

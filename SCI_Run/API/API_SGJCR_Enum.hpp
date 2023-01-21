@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.20
+// Version: 23.01.21
 // EndLic
 // Generated header
 // Do not modify manually but use the API_SGJCR_Enum.py script for Python in stead!
@@ -32,18 +32,20 @@
 
 namespace Scyndi_CI {
 
-	enum class SGJCR_Types { ID, TxtData, BinData, RPGStat};
+	enum class SGJCR_Types { ID, TxtData, BinData, RPGStat };
 
-	static std::map<SGJCR_Types, std::string> En2Nm {
+	static std::map<SGJCR_Types, std::string> En2Nm{
 		{SGJCR_Types::ID,"ID"},
 		{SGJCR_Types::TxtData,"TxtData"},
 		{SGJCR_Types::BinData,"BinData"},
 		{SGJCR_Types::RPGStat,"RPGStat"}
 	};
 
-	static std::map<std::string, SGJCR_Types> Nm2En {
+	static std::map<std::string, SGJCR_Types> Nm2En{
 		{"ID",SGJCR_Types::ID},
 		{"TXTDATA",SGJCR_Types::TxtData},
 		{"BINDATA",SGJCR_Types::BinData},
 		{"RPGSTAT",SGJCR_Types::RPGStat}
 	};
+
+}

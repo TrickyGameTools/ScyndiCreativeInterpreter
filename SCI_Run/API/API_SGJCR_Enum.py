@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Please note that some references to data like pictures or audio, do not automatically
 fall under this licenses. Mostly this is noted in the respective files.
 
-Version: 23.01.20
+Version: 23.01.21
 -- End License block   """
 # Quick Python script. Will safe me a lot of work when expanding the SGJCR system
 
@@ -58,7 +58,7 @@ for E in ENUM:
 	if not First: HPP+=",\n"                                 
 	First = False
 	HPP += "\t\t{\"%s\",SGJCR_Types::%s}"%(E.upper(),E)           
-HPP += "\n\t};\n\n"                                             
+HPP += "\n\t};\n\n}\n\n"                                             
 
 print(HPP)
 

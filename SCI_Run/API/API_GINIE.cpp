@@ -145,7 +145,7 @@ namespace Scyndi_CI {
 			{"SetValue",API_GINIE_SetValue},
 			{"UnParse",API_UnParse},
 			{"Parse",API_Parse},
-			{"Kill",API_GINIEKill}
+			{"Kill",API_GINIEKill},
 		};
 		InstallAPI("GINIE", IAPI);
 	}

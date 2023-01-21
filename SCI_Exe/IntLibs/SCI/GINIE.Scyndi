@@ -78,7 +78,8 @@ Var Parse(string src,string _Tag="")
 		Lua.SCI_InitAPI(Lua.SCI_StateName,"GINIE")
 		Loaded = true
 	End
-	String T=Lua.GINIE.Create(_Tag)
+	String T
+	T=Lua.GINIE.Create(_Tag)
 	Ret = New TGINIE(T)
 	Ret.Source=src
 	return ret
@@ -89,7 +90,8 @@ Var Create(string _Tag="")
 		Lua.SCI_InitAPI(Lua.SCI_StateName,"GINIE")
 		Loaded = true
 	End
-	String T=Lua.GINIE.Create(_Tag)
+	String T
+	T=Lua.GINIE.Create(_Tag)
 	Return New TGINIE(T)
 End
 

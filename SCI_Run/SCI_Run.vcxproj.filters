@@ -267,6 +267,15 @@
     <ClCompile Include="API\API_String.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
+    <ClCompile Include="API\API_Bank.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\API_SGJCR.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\API_GINIE.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SCI_Share\Version.hpp">
@@ -458,6 +467,12 @@
     <ClInclude Include="API\SCI_InstallAPIs.hpp">
       <Filter>Source Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="API\API_SGJCR_Enum.hpp">
+      <Filter>Source Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\API_Bank.hpp">
+      <Filter>Source Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="..\..\..\Libs\JCR6\3rdParty\zlib\zlib.dll">
@@ -521,5 +536,10 @@
     <Image Include="..\..\..\..\Bubble\Games\The Secrets of Dyrt\DEV\Icon\Scyndi.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="API\API_SGJCR_Enum.py">
+      <Filter>Source Files\API</Filter>
+    </None>
   </ItemGroup>
 </Project>

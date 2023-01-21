@@ -68,7 +68,7 @@ Class TGINIE
 	End
 	
 	Void Merge(String Src)
-		Lua.GINIE.Parse(Tag,Value,1)
+		Lua.GINIE.Parse(Tag,Src,1)
 	End
 End
 

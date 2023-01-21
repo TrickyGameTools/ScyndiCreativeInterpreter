@@ -28,6 +28,7 @@ namespace Scyndi_CI{
 	void Init_AP_SGJCR();
 	void Init_API_Bank();
 	void Init_API_Events();
+	void Init_API_GINIE();
 	void Init_API_Graphics();
 	void Init_API_InterState();
 	void Init_API_JCR();
@@ -40,6 +41,7 @@ namespace Scyndi_CI{
 		Init_AP_SGJCR();
 		Init_API_Bank();
 		Init_API_Events();
+		Init_API_GINIE();
 		Init_API_Graphics();
 		Init_API_InterState();
 		Init_API_JCR();

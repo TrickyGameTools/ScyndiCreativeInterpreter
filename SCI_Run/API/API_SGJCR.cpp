@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.20
+// Version: 23.01.21
 // EndLic
 #include <SlyvString.hpp>
 #include <SlyvStream.hpp>
@@ -275,6 +275,18 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	static int API_HasText(lua_State* L) {
+		AutoRec;
+		lua_pushboolean(L, Rec->TextEntries.count(Upper(luaL_checkstring(L, 2))));
+		return 1;
+	}
+
+	static int API_HasBin(lua_State* L) {
+		AutoRec;
+		lua_pushboolean(L, Rec->Banks.count(Upper(luaL_checkstring(L, 2))));
+		return 1;
+	}
+
 
 	void Init_API_SGFile(){
 		std::map<std::string, lua_CFunction>IAPI{
@@ -289,7 +301,9 @@ namespace Scyndi_CI {
 			{"Save",API_SGJCRSave},
 			{"Load",API_SGJCRLoad},
 			{"Clear",API_SGJCRClear},
-			{"Exists",API_SGExists}
+			{"Exists",API_SGExists},
+			{"HasText",API_HasText},
+			{"HasBin",API_HasBin}
 		};
 		InstallAPI("SGJCR", IAPI);
 	}

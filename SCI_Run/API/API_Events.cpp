@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.19
+// Version: 23.01.21
 // EndLic
 
 #include <TQSE.hpp>
@@ -77,6 +77,11 @@ namespace Scyndi_CI {
 
 	static int API_Events_Flush(lua_State* L) { Flush(); return 0; }
 
+	static int API_Events_Yes(lua_State* L) {
+		lua_pushboolean(L, Yes(luaL_checkstring(L, 1)));
+		return 1;
+	}
+
 	void Init_API_Events() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Poll",API_Events_Poll},
@@ -88,7 +93,8 @@ namespace Scyndi_CI {
 			{"MouseDown",API_Events_MouseDown},
 			{"MouseHit",API_Events_MouseHit},
 			{"MouseReleased",API_Events_MouseReleased},
-			{"Flush",API_Events_Flush}
+			{"Flush",API_Events_Flush},
+			{"Yes",API_Events_Yes}		
 		};
 		InstallAPI("Events", IAPI);
 	}

@@ -25,7 +25,6 @@
 // EndLic
 namespace Scyndi_CI{
 
-	void Init_AP_SGJCR();
 	void Init_API_Bank();
 	void Init_API_Events();
 	void Init_API_GINIE();
@@ -33,12 +32,12 @@ namespace Scyndi_CI{
 	void Init_API_InterState();
 	void Init_API_JCR();
 	void Init_API_SGFile();
+	void Init_API_SGJCR();
 	void Init_API_String();
 	void Init_API_Vars();
 
 
 	inline void InstallAllAPIS() {
-		Init_AP_SGJCR();
 		Init_API_Bank();
 		Init_API_Events();
 		Init_API_GINIE();
@@ -46,6 +45,7 @@ namespace Scyndi_CI{
 		Init_API_InterState();
 		Init_API_JCR();
 		Init_API_SGFile();
+		Init_API_SGJCR();
 		Init_API_String();
 		Init_API_Vars();
 	}

@@ -17,6 +17,7 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // End License Information
+
 Module
 
 Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"SGJCR")
@@ -70,6 +71,14 @@ Class TSGJCR
 	
 	Void Assign(String File)
 		Lua.SGJCR.Assign(Tag,File)
+	End
+	
+	Bool HasText(string TxTag)
+		Return Lua.SGJCR.HasText(TxTag)
+	End
+	
+	Bool HasBin(string BnTag)
+		Return Lua.SGJCR.HasBin(BnTag)
 	End
 	
 	Constructor(string _Tag="",obtain)

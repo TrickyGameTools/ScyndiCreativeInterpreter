@@ -19,6 +19,8 @@
 // End License Information
 Module
 
+Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"GINIE")
+
 Plua Loaded
 
 Class TGINIE
@@ -42,14 +44,28 @@ Class TGINIE
 		End
 	End
 	
-	Var Value(string Cat,string Key,Value)
+	String Value(string Cat,string Key,Value)
 		if Value
 			Lua.GINIE.SetValue(Tag,Cat,Key,Value)
-			return nil
-		else
+			//printf("Value set! %s/%s/%s -> %s\n",Tag,Cat,Key,Lua.tostring(Value))
+			// return nil
 			return Lua.GINIE.GetStringValue(Tag,Cat,Key)
+		else
+			string ret
+			ret = Lua.tostring(Lua.GINIE.GetStringValue(Tag,Cat,Key))
+			//printf("Return %s/%s/%s -> %s\n",Tag,Cat,Key,ret) 
+			//return Lua.GINIE.GetStringValue(Tag,Cat,Key)
+			return ret
 		end
 	end
+	
+	Void NewValue(string Cat,string Key, Value)
+		Lua.GINIE.SetValue(Tag,Cat,Key,Value,1)
+	End
+	
+	String StringValue(string Cat,String Key)
+		Return Lua.GINIE.GetStringValue(Tag,Cat,Key)
+	End
 	
 	Int IntValue(string Cat,String Key)
 		Return Lua.GINIE.GetIntegerValue(Tag,Cat,Key)
@@ -109,5 +125,31 @@ Var CreateNew(string _Tag)
 		Return Obtain(_Tag)
 	else
 		Return Create(_Tag)
+	End
+End
+
+Var Load(string _File,String _Tag)
+	Lua.GINIE.Load(_File,_Tag)
+	Return Obtain(_Tag)
+End
+	
+Var LoadNew(string _File,String _Tag)
+	If Lua.GINIE.Has(_Tag)
+		Return Obtain(_Tag)
+	Else
+		Return Load(_Tag)
+	End
+End
+
+Var LoadHome(String _File,String _Tag,String AutoSF="",String AutoSC="")
+	Lua.GINIE.LoadHome(_File,_Tag,AutoSF,AutoSC)
+	Return Obtain(_Tag)
+End
+	
+Var LoadHomeNew(string _File,String _Tag,String AutoSF="",String AutoSC="")
+	If Lua.GINIE.Has(_Tag)
+		Return Obtain(_Tag)
+	Else
+		Return LoadHome(_Tag,AutoSF,AutoSC)
 	End
 End

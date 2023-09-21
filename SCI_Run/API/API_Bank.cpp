@@ -102,7 +102,7 @@ namespace Scyndi_CI {
 	Bank SGBank(std::string Tag) { return BankRegister[Upper(Tag)]; } // Needed for the savegame system
 	void SGBank(std::string Tag, Bank Bnk) { BankRegister[Upper(Tag)] = Bnk; }
  
-	void Init_API_Events() {
+	void Init_API_Bank() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Create",API_CreateBank},
 			{"Kill",API_KillBank},

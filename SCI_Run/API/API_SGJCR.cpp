@@ -288,7 +288,7 @@ namespace Scyndi_CI {
 	}
 
 
-	void Init_API_SGFile(){
+	void Init_API_SGJCR(){
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Create",API_SGJCRCreate},
 			{"Assign",API_SGJCRAssign},

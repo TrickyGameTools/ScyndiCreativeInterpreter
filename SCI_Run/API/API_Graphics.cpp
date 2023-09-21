@@ -170,6 +170,7 @@ namespace Scyndi_CI {
 
 	static int API_KillFont(lua_State* L) {
 		Fnt(Lunatic_CheckString(L, 1), (TImageFont)nullptr);
+		return 0;
 	}
 
 	static int API_HasFontTag(lua_State* L) {

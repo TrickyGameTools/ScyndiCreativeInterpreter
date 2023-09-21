@@ -82,9 +82,9 @@ Class TImage
 	End
 	
 
-	Static Var Load(String File, String Tag="")
+	Static Var Load(String File, String _Tag="")
 		String RTag 
-		RTag = _LoadImage(File,Tag)
+		RTag = _LoadImage(File,_Tag)
 		Return New TImage(RTag)
 	End
 	
@@ -104,7 +104,10 @@ Class TImage
 		if HasTag(_Tag)
 			return New TImage(_Tag)
 		End
-		Return Self.Load(File,_Tag)
+		//Return Self.Load(File,_Tag)
+		String RTag 
+		RTag = _LoadImage(File,_Tag)
+		Return New TImage(RTag)
 	End
 End
 

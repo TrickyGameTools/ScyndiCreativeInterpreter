@@ -23,10 +23,12 @@
 // 
 // Version: 23.01.21
 // EndLic
+
 #include <SlyvGINIE.hpp>
 
 #include "../SCI_Script.hpp"
-
+#include "../SCI_Config.hpp"
+#include "../SCI_Crash.hpp"
 
 #define AutoTag auto Tag{ Upper(luaL_checkstring(L,1))}; if (!GINREG.count(Tag)) {luaL_error(L,"There is no GINIE tagged '%s",Tag.c_str()); return 0; } auto REC{GINREG[Tag]}
 
@@ -54,12 +56,15 @@ namespace Scyndi_CI {
 		auto
 			Cat{ luaL_checkstring(L,2) },
 			Key{ luaL_checkstring(L,3) };
+		auto
+			NewValue{ luaL_optinteger(L,5,0) > 0 };
+		if (NewValue && REC->HasValue(Cat, Key)) return 0;
 		switch (lua_type(L, 4)) {
 			case LUA_TSTRING:
 				REC->Value(Cat, Key, luaL_checkstring(L, 4));
 				break;
 			case LUA_TNUMBER:
-				REC->Value(Cat, Key, luaL_checkinteger(L, 5));
+				REC->Value(Cat, Key, luaL_checkinteger(L, 4));
 				break;
 			case LUA_TFUNCTION:
 				luaL_error(L, "Functions cannot be set as a GINIE value");
@@ -133,6 +138,36 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_GINIELoad(lua_State* L) {
+		auto
+			File{ Lunatic_CheckString(L,1) },
+			Tag{ Upper(Lunatic_CheckString(L,2)) },
+			src{ Resource()->GetString(File) };
+		auto
+			REC = ParseGINIE(src);
+		GINREG[Tag] = REC;
+		return 0;
+	}
+
+	static int API_GINIELoadHome(lua_State* L) {
+		auto
+			PFile{ Lunatic_CheckString(L,1) },
+			FFile{ SaveGameDir() + "/" + PFile },
+			Tag{ Upper(Lunatic_CheckString(L,2)) },
+			AutoSaveFile{ SaveGameDir() + "/" + Lunatic_OptString(L,3,"") },
+			AutoSaveHead{ Lunatic_OptString(L,4,"") };			
+		if (!FileExists(FFile)) { // { Crash("File not found: " + PFile, "Full File Name: " + FFile); return 0; }
+			GINREG[Tag] = ParseGINIE("");
+			if (AutoSaveFile.size()) GINREG[Tag]->AutoSave = AutoSaveFile;
+			if (AutoSaveHead.size()) GINREG[Tag]->AutoSaveHeader = AutoSaveHead;
+		} else {
+			auto
+				REC = LoadGINIE(FFile, AutoSaveFile, AutoSaveHead);
+			GINREG[Tag] = REC;
+		}
+		return 0;
+	}
+
 
 
 	void Init_API_GINIE() {
@@ -146,6 +181,8 @@ namespace Scyndi_CI {
 			{"UnParse",API_UnParse},
 			{"Parse",API_Parse},
 			{"Kill",API_GINIEKill},
+			{"Load",API_GINIELoad},
+			{"LoadHome",API_GINIELoadHome}
 		};
 		InstallAPI("GINIE", IAPI);
 	}

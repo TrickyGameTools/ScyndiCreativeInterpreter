@@ -210,8 +210,12 @@ namespace Scyndi_CI {
 	}
 
 	int SYS_GoToFlow(lua_State* L) {
-		auto St{ luaL_checkstring(L,1) };
-		if (!HasFlow(St)) { Crash(TrSPrintF("GoToFlow(\"%\"): That flow doesn't exist!", St)); return 0; }
+		auto St{ Lunatic_CheckString(L,1) };
+		//if (!Prefixed(St, "FLOW_")) St = "FLOW_" + St;
+		if (!HasFlow(St)) { 		
+			//for (auto sr : StateRegister) QCol->Doing("DEBUG.STATE", sr.first); // debug only!
+			Crash(TrSPrintF("GoToFlow(\"%s\"): That flow doesn't exist!", St.c_str())); return 0; 
+		}
 		GoToFlow(St);
 		return 0;
 	}
@@ -244,6 +248,42 @@ namespace Scyndi_CI {
 		DontFlip += std::max(1, (int)luaL_optinteger(L, 1, 1));
 		return 1;
 	}
+
+	static map<string, string> CSayData  { {"ALLOW", "DEBUGONLY"} };
+	static int SYS_CSaySetConfig(lua_State* L) {
+		auto
+			key{ Upper(Lunatic_CheckString(L, 1)) },
+			val{ Lunatic_CheckString(L, 2) };
+		CSayData[key] = val;
+		return 0;
+	}
+
+	static int SYS_CSay(lua_State* L) {
+		auto
+			St{ Lunatic_CheckString(L,1) },
+			Msg{ Lunatic_CheckString(L,2) },
+			Al{ Upper(CSayData["ALLOW"]) };
+		auto
+			Allow{ false };
+		if (Al == "ALWAYS")
+			Allow = true;
+		else if (Al == "NEVER")
+			Allow = false;
+		else if (Al == "DEBUG" || Al == "DEBUGONLY")
+			Allow = State(St)->Debug;
+		else if (Al == "RELEASE" || Al == "RELEASEONLY" || Al == "NODEBUG")
+			Allow = !State(St)->Debug;
+		else
+			Crash("Unknown CSay condition (" + Al + ")");
+		if (Allow) {
+			QCol->Doing("CSay", Msg);
+			auto SMsg{ StReplace(Msg,"\"","\\\"") };
+			SMsg = StReplace(SMsg, "\t", "\\t");
+			SMsg = StReplace(SMsg, "\n", "\\n");
+			SMsg = StReplace(SMsg, "\r", "\\r");
+			if (CSayData["CBSTATE"] != "" && CSayData["CBFUNC"] != "") Call(CSayData["CBSTATE"], CSayData["CBFUNC"], "\"" + SMsg + "\"");
+		}
+	}
 #pragma endregion
 
 	static void InitScript() {
@@ -262,6 +302,8 @@ namespace Scyndi_CI {
 			{"SCI_LoadNewFlow",SYS_LoadNewFlow},
 			{"SCI_BuildState",SYS_BuildState},
 			{"SCI_DontFlip",SYS_DontFlip},
+			{"SCI_CSay",SYS_CSay},
+			{"SCI_CSaySetConfig",SYS_CSaySetConfig},
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},
 			{"__DEBUG_PUSH",DBG_Push},
@@ -314,7 +356,7 @@ namespace Scyndi_CI {
 
 	void State(std::string _State, Slyvina::JCR6::JT_Dir _Res, std::string _Entry) {
 		Trans2Upper(_State);
-		if (!_Res->EntryExists(_Entry)) throw std::runtime_error(TrSPrintF("There is no script named '%s'"));
+		if (!_Res->EntryExists(_Entry)) throw std::runtime_error(TrSPrintF("There is no script named '%s'",_Entry.c_str()));
 		auto Buf{ _Res->B(_Entry) };
 		static auto Core{ SRF()->GetString("Script/ScyndiCore.lua") };
 		//StateRegister[_State] = LunaticByByteCode(Buf,_Entry);
@@ -346,6 +388,14 @@ namespace Scyndi_CI {
 			"function Use(_module)\n"
 			"\tSCI_Use('"+_State+"',_module)\n"
 			"end\n\n"
+			"function CSay(...)\n"
+			"\tfor _,m in ipairs{...} do\n"
+			"\t\tSCI_CSay(\""+_State+"\",m)\n"
+			"\tend\n"
+			"end\n"
+			"function CSayF(fmt,...)\n"
+			"\tCSay(string.format(fmt,...))\n"
+			"end\n"
 			"Scyndi.SetUseFunction(Use)\n"
 			"Scyndi.SetUseCaseSensitive(false)\n"
 		};

@@ -141,6 +141,17 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int WV(string v, int dv) {
+		if (Suffixed(v, "%")) {
+			int vi{ ToInt(Left(v,v.size()-1)) };
+			double vd{ (double)vi };
+			double pd{ vd / 100.0 };
+			double sz{ dv * pd };
+			return (int)floor(sz);
+		}
+		return ToInt(v);
+	}
+
 	void StartGraphics() {
 		if (WantFullScreen()) {
 			QCol->Doing("Entering", "FullScreen");
@@ -157,8 +168,15 @@ namespace Scyndi_CI {
 			Graphics(WindowCaption());
 #endif
 		} else {
-			QCol->Error("Windowed mode not yet implemented");
-			exit(500);
+			auto
+				WS{ GameID_GINIE()->Value("Window","Width") },
+				HS{ GameID_GINIE()->Value("Window","Height") };
+			auto
+				WI{ WV(WS,DesktopWidth()) },
+				HI{ WV(HS,DesktopHeight()) };
+			Graphics(WI, HI, WindowCaption());
+			//QCol->Error("Windowed mode not yet implemented");
+			//exit(500);
 		}
 		InitJCRPaniek();
 		Img("*SCIPOWER", SRF(), "GFX/PoweredBySCI.png");

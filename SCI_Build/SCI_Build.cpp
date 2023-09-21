@@ -21,10 +21,11 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.10
+// Version: 23.09.21
 // EndLic
 #include <SlyvArgParse.hpp>
 #include <SlyvString.hpp>
+#include <JCR6_JQL.hpp>
 #include "../SCI_Share/SCI_Header.hpp"
 #include "SCI_Build_Config.hpp"
 #include "SCI_Project.hpp"
@@ -52,11 +53,13 @@ int main(int ac, char** args) {
 		QCol->Reset();
 		return 0;
 	}
+	Slyvina::JCR6::InitJQL();
 	for (auto prj : CLI_Args.arguments) {
 		auto LozeTroep{ SCI_Project(prj) };
 	}
 	QCol->OnlyVal("Processed", SCI_Project::Processed);
 	QCol->OnlyVal("Success", SCI_Project::Success);
 	QCol->OnlyVal("Failed", SCI_Project::Fail);
+	QCol->Reset();
 	return SCI_Project::Fail;
 }

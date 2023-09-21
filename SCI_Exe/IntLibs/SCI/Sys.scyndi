@@ -17,6 +17,7 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // End License Information
+
 module
 
 
@@ -25,6 +26,9 @@ const delegate GoToFlow = Lua.SCI_GoToFlow
 const delegate LoadFlow = Lua.SCI_LoadFlow
 const delegate LoadNewFlow = Lua.SCI_LoadNewFlow
 const delegate DontFlip = Lua.SCI_DontFlip
+global const delegate CSay = Lua.CSay
+global const delegate CSayF = Lua.CSayF
+global const delegate CSaySetConfig = Lua.SCI_CSaySetConfig
 
 get string BuildState
 	return Lua.SCI_BuildState()

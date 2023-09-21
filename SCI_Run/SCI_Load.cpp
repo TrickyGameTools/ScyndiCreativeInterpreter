@@ -50,7 +50,7 @@ namespace Scyndi_CI {
 			}
 		}
 		if (!Ent) {
-			QCol->Doing("Start Load", "* NOT FOUND*");
+			QCol->Doing("Start Load", "* NOT FOUND *");
 			return;
 		}
 		QCol->Doing("Start Load", Ent->Name());

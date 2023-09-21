@@ -26,6 +26,7 @@
 
 #include <TQSE.hpp>
 #include <TQSG.hpp>
+#include <SlyvQCol.hpp>
 
 #include "../SCI_Script.hpp"
 
@@ -82,6 +83,14 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	static int API_Events_KeyFromName(lua_State* L) {
+		auto name{ luaL_checkstring(L,1) };
+		SDL_Keycode ret{ SDL_GetKeyFromName(name) };
+		if (ret == SDLK_UNKNOWN) { Units::QCol->Warn(TrSPrintF("Key name '%s' was not recognized!\7",name)); }
+		lua_pushinteger(L, (int)ret);
+		return 1;
+	}
+
 	void Init_API_Events() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Poll",API_Events_Poll},
@@ -93,6 +102,7 @@ namespace Scyndi_CI {
 			{"MouseDown",API_Events_MouseDown},
 			{"MouseHit",API_Events_MouseHit},
 			{"MouseReleased",API_Events_MouseReleased},
+			{"KeyFromName",API_Events_KeyFromName},
 			{"Flush",API_Events_Flush},
 			{"Yes",API_Events_Yes}		
 		};

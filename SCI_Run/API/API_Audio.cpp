@@ -46,7 +46,7 @@ namespace Scyndi_CI {
 			Crash("Tags for LoadImage may not be prefixed with *");
 			return 0;
 		}
-		Aud(Tag, File);
+		Aud(Tag, Resource(), File);
 		Lunatic_PushString(L, Tag);
 		return 1;
 	}
@@ -78,13 +78,19 @@ namespace Scyndi_CI {
 		lua_pushinteger(L, 1);
 		return 1;
 	}
+	static int API_StopChannel(lua_State* L) {
+		Mix_HaltChannel(luaL_checkinteger(L, 1));
+		return 0;
+	}
+
 
 	void Init_API_Audio() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{ "KillAudio", API_KillAudio},
 			{ "LoadAudio",API_LoadAudio },
 			{ "HasAudio",API_HasAudio },
-			{ "PlayAudio",API_PlayAudio }
+			{ "PlayAudio",API_PlayAudio },
+			{ "StopChannel",API_StopChannel }
 		};
 		InstallAPI("Audio", IAPI);
 	}

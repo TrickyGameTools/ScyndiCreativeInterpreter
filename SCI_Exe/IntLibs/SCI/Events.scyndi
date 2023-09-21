@@ -34,6 +34,10 @@ const Delegate KeyFromName = Lua.Events.KeyFromName
 const Delegate Flush = Lua.Events.Flush
 const Delegate Yes = Lua.Events.Yes
 
+const Int MouseLeftButton = Lua.Events.MouseButtonFromName("LEFT")
+const Int MouseRightButton = Lua.Events.MouseButtonFromName("LEFT")
+const Int MouseMiddleButton = Lua.Events.MouseButtonFromName("MIDDLE")
+
 get int MouseX
 	return Lua.Events.MouseX(0)
 end

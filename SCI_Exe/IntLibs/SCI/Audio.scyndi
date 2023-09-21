@@ -77,4 +77,3 @@ Const Delegate StopChannel = Lua.Audio.StopChannel
 Const Delegate HaltChannel = Lua.Audio.StopChannel
 Const Delegate Kill = Lua.Audio.KillAudio
 Const Delegate Has = Lua.Audio.Has
-	

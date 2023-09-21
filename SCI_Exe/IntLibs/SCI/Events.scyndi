@@ -25,7 +25,7 @@ Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Events")
 
 Const Delegate Poll = Lua.Events.Poll
 Const Delegate KeyDown = Lua.Events.KeyDown
-Const Delegate KeyHit = Lua.Events.KeyUp
+Const Delegate KeyHit = Lua.Events.KeyHit
 Const Delegate AppTerminate = Lua.Events.AppTerminate
 const Delegate MouseDown = Lua.Events.MouseDown
 const Delegate MouseHit = Lua.Events.MouseHit

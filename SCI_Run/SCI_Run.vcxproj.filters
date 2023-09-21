@@ -279,6 +279,9 @@
     <ClCompile Include="API\API_Audio.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
+    <ClCompile Include="SCI_Audio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SCI_Share\Version.hpp">
@@ -475,6 +478,9 @@
     </ClInclude>
     <ClInclude Include="API\API_Bank.hpp">
       <Filter>Source Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="SCI_Audio.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

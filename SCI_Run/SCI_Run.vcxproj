@@ -215,6 +215,7 @@
     <ClCompile Include="API\API_Vars.cpp" />
     <ClCompile Include="API\API_String.cpp" />
     <ClCompile Include="API\API_SGJCR.cpp" />
+    <ClCompile Include="SCI_Audio.cpp" />
     <ClCompile Include="SCI_Config.cpp" />
     <ClCompile Include="SCI_Crash.cpp" />
     <ClCompile Include="SCI_Graphics.cpp" />
@@ -283,6 +284,7 @@
     <ClInclude Include="API\API_SGJCR_Enum.hpp" />
     <ClInclude Include="API\SCI_InstallAPIs.hpp" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SCI_Audio.hpp" />
     <ClInclude Include="SCI_Config.hpp" />
     <ClInclude Include="SCI_Crash.hpp" />
     <ClInclude Include="SCI_Graphics.hpp" />

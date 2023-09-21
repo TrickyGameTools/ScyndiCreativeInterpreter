@@ -21,4 +21,60 @@
 Module
 
 // Just making sure this comes first. GewoonNiks will contain 'nil' as result, but that doesn't matter!
-Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Events")
+Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Audio")
+
+
+
+Class TAudio
+	ReadOnly String Tag
+	ReadOnly Bool AutoKill
+	
+	Constructor(String _T)
+		Tag = _T
+		AutoKill = Left(_T,3)=="***"
+	End
+	
+	Int Play(int Channel=0)
+		Return Lua.Audio.PlayAudio(Tag,Channel)
+	End
+	
+	Int Loop(int Channel=0,int Loops=0)
+		If Loops==0
+			Loops=-1
+		End
+		Return Lua.Audio.PlayAudio(Tag,Channel,Loops)
+	End
+	
+	Destructor
+		if AutoKill
+			Lua.Audio.KillAudio(TAG)
+		end
+	end
+End
+
+Var Obtain(string Tag)
+	If !Lua.Audio.HasAudio(Tag)
+		Lua.error(sprintf("No audio loaded with tag '%s'",Tag))
+	end
+	Return new TAudio(Tag)
+End
+
+Var Load(string file,string Tag="")
+	String RTag 
+	RTag = Lua.Audio.LoadAudio(File,Tag)
+	return Obtain(RTag)
+End
+
+Var LoadNew(string file, string Tag)
+	If Lua.Audio.HasAudio(Tag)
+		Return Obtain(Tag)
+	Else
+		Return Load(File,Tag)
+	End
+End
+
+Const Delegate StopChannel = Lua.Audio.StopChannel
+Const Delegate HaltChannel = Lua.Audio.StopChannel
+Const Delegate Kill = Lua.Audio.KillAudio
+Const Delegate Has = Lua.Audio.Has
+	

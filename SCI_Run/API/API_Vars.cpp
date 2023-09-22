@@ -99,10 +99,10 @@ namespace Scyndi_CI {
 		if (Prefixed(Tag, "*") && (!GvRegister.count(Tag))) { Crash("InterVar '" + Tag + "' cannot be created like this"); return 0; }
 		switch(luaL_checkinteger(L,2)){
 		case 1:
-			GvRegister[Tag]._Bool[VarN] = luaL_checkinteger(L, 4);
+			GvRegister[Tag]._Bool[VarN] = luaL_checkinteger(L, 5);
 			break;
 		case 2:
-			GvRegister[Tag]._Int[VarN] = luaL_checkinteger(L, 4);
+			GvRegister[Tag]._Int[VarN] = luaL_checkinteger(L, 5);
 			break;
 		case 3:
 			GvRegister[Tag]._Str[VarN] = luaL_checkstring(L, 5);
@@ -127,6 +127,7 @@ namespace Scyndi_CI {
 			lua_pushinteger(L, GvRegister[Tag]._Int[VarN]);
 			return 1;
 		case 3:
+			// std::cout << "Get String " << Tag << "::" << VarN << "\n"; // debug only
 			Lunatic_PushString(L, GvRegister[Tag]._Str[VarN]);
 			return 1;
 		default:
@@ -164,16 +165,25 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_GvClear(lua_State* L) {
+		auto Tag{ Upper(luaL_optstring(L,1,"*GENERAL")) };
+		GvRegister[Tag]._Bool.clear();
+		GvRegister[Tag]._Int.clear();
+		GvRegister[Tag]._Str.clear();
+		return 0;
+	}
+
 
 	void Init_API_Vars() {
-		GvParse("*GENERAL", "# Nothing"); // Just makes sure the record exists!
+		if (!GvRegister.count("*GENERAL")) GvParse("*GENERAL", "# Nothing"); // Just makes sure the record exists!
 		std::map<std::string, lua_CFunction>IAPI{
 			{"UnParse",API_GvUnParse},
 			{"Parse",API_GvParse},
 			{"Kill",API_GvKill},
 			{"Define",API_GvDefine},
 			{"Check",API_GvCheck},
-			{"LocalParse",API_GvSFQLocal}
+			{"LocalParse",API_GvSFQLocal},
+			{"Clear",API_GvClear}
 		};
 		InstallAPI("InterVar", IAPI);
 	}

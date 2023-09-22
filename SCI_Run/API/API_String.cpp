@@ -23,6 +23,8 @@
 // 
 // Version: 23.01.19
 // EndLic
+
+#include <SlyvMD5.hpp>
 #include "../SCI_Script.hpp"
 
 using namespace Slyvina;
@@ -52,10 +54,18 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	int API_MD5(lua_State* L) {
+		Lunatic_PushString(L,
+			md5(Lunatic_CheckString(L, 1))
+		);
+		return 1;
+	}
+
 	void Init_API_String() {
 		std::map<std::string, lua_CFunction> IAPI{
-			{"Replace",API_StReplace},
-			{"Repeat",API_Repeat}
+			{"Replace", API_StReplace},
+			{ "Repeat",API_Repeat },
+			{ "MD5",API_MD5 }
 		};
 		InstallAPI("SString", IAPI);
 	}

@@ -27,6 +27,7 @@ const delegate LoadFlow = Lua.SCI_LoadFlow
 const delegate LoadNewFlow = Lua.SCI_LoadNewFlow
 const delegate DontFlip = Lua.SCI_DontFlip
 const delegate OpenURL = Lua.SCI_OpenURL
+const delegate Call = Lua.SCI_Call
 global const delegate CSay = Lua.CSay
 global const delegate CSayF = Lua.CSayF
 global const delegate CSaySetConfig = Lua.SCI_CSaySetConfig

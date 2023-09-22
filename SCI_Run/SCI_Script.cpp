@@ -52,7 +52,7 @@ namespace Scyndi_CI {
 	bool EndRun{ false };
 	int DontFlip{ 0 };
 	static std::map < std::string, SLunatic > StateRegister{};
-	
+
 	static std::map<std::string, std::map<std::string, lua_CFunction>> API{};
 
 #pragma region Paniek	
@@ -65,13 +65,13 @@ namespace Scyndi_CI {
 			auto line{ TrSPrintF("Arg #%d/%d:\t",i,lua_gettop(L)) };
 			switch (lua_type(L, i)) {
 			case LUA_TSTRING:
-				line += TrSPrintF("String: \"%s\"",luaL_checkstring(L, i)); 
+				line += TrSPrintF("String: \"%s\"", luaL_checkstring(L, i));
 				break;
 			case LUA_TNUMBER:
 				line += TrSPrintF("Number: %f", luaL_checknumber(L, i));
 				break;
 			case LUA_TFUNCTION:
-				line+= "Function";
+				line += "Function";
 				break;
 			default:
 				line += TrSPrintF("Unknown: %d", lua_type(L, i));
@@ -91,7 +91,8 @@ namespace Scyndi_CI {
 	static int DBG_OnOff(lua_State* L) {
 		auto St{ std::string(luaL_checkstring(L,1)) };
 		State(St)->Debug = luaL_checkinteger(L, 2);
-		return 0; }
+		return 0;
+	}
 	static int DBG_Push(lua_State* L) {
 		_LunDbg k;
 		/*
@@ -115,7 +116,7 @@ namespace Scyndi_CI {
 		}
 		return 0;
 	}
-	static int DBG_Line(lua_State* L) {		
+	static int DBG_Line(lua_State* L) {
 		auto St{ luaL_checkstring(L,1) };
 		if (HasState(St)) {
 			auto S{ State(St) };
@@ -135,13 +136,13 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
-	static int DBG_Pop(lua_State* L) { 
+	static int DBG_Pop(lua_State* L) {
 		auto St{ luaL_checkstring(L, 1) };
 		if (HasState(St)) {
 			//std::cout << "Pop " << St << " " << State(St)->Trace.size();
 			if (!State(St)->Trace.size()) {
 				//QCol->Warn("Trace pop on empty trace");
-			}  else
+			} else
 				State(St)->Trace.pop_back();
 			//std::cout << " -> " << State(St)->Trace.size()<<"\n";
 		}
@@ -172,7 +173,7 @@ namespace Scyndi_CI {
 		auto
 			St{ luaL_checkstring(L,1) },
 			Ap{ luaL_checkstring(L,2) };
-		
+
 		std::string
 			ApS{ Ap },
 			APU{ Upper(Ap) },
@@ -213,9 +214,9 @@ namespace Scyndi_CI {
 	int SYS_GoToFlow(lua_State* L) {
 		auto St{ Lunatic_CheckString(L,1) };
 		//if (!Prefixed(St, "FLOW_")) St = "FLOW_" + St;
-		if (!HasFlow(St)) { 		
+		if (!HasFlow(St)) {
 			//for (auto sr : StateRegister) QCol->Doing("DEBUG.STATE", sr.first); // debug only!
-			Crash(TrSPrintF("GoToFlow(\"%s\"): That flow doesn't exist!", St.c_str())); return 0; 
+			Crash(TrSPrintF("GoToFlow(\"%s\"): That flow doesn't exist!", St.c_str())); return 0;
 		}
 		GoToFlow(St);
 		return 0;
@@ -229,7 +230,7 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
-	int SYS_LoadNewFlow(lua_State* L) { 
+	int SYS_LoadNewFlow(lua_State* L) {
 		// The difference with above is that this function will only load a flow if it hasn't been loaded before.
 		auto
 			St{ luaL_checkstring(L,1) },
@@ -287,6 +288,42 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int SYS_Call(lua_State* L) {
+		auto
+			State{ Lunatic_CheckString(L,1) },
+			Func{ Lunatic_CheckString(L,2) },
+			Param{ (string)"" };
+
+		for (int i = 3; i <= lua_gettop(L); i++) {
+			if (i > 3) Param += ", ";
+			switch (lua_type(L, i)) {
+			case LUA_TSTRING: {
+				string A{ "\"" };
+				auto B{ Lunatic_CheckString(L, i) };
+				for (int j = 0; j < B.size(); ++j) A += TrSPrintF("\\x%02x", B[j]);
+				A += "\"";
+				Param += A;
+				// This may seem a bit over the top, but trust me, 
+				// the more direct approach led me to many many crashes in the Apollo engine, 
+				// and I wanted to make sure that was NOT gonna happen again!
+			} break;
+			case LUA_TNUMBER:
+				Param += TrSPrintF("%f", luaL_checknumber(L, i));
+				break;
+			case LUA_TFUNCTION:
+				Crash("Call to other states cannot transfer functions!");
+				break;
+			default:
+				Crash(TrSPrintF("Unknown argument for interstate call: %d (argument #%d)", lua_type(L, i), i));
+				break;
+			}
+		}
+		if (!Param.size()) Param = "nil";
+		Call(State, Func, Param);
+		return 0;
+	}
+
+
 	static int SYS_OpenURL(lua_State* L) {
 		OpenURL(luaL_checkstring(L, 1));
 		return 0;
@@ -312,6 +349,7 @@ namespace Scyndi_CI {
 			{"SCI_CSay",SYS_CSay},
 			{"SCI_CSaySetConfig",SYS_CSaySetConfig},
 			{"SCI_OpenURL",SYS_OpenURL},
+			{"SCI_Call",SYS_Call},
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},
 			{"__DEBUG_PUSH",DBG_Push},

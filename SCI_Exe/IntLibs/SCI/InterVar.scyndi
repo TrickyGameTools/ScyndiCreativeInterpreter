@@ -30,10 +30,19 @@ global const int ivt_integer = 2
 global const int ivt_string  = 3
 
 plua IV_S(s,string K,V)
-	Lua.InterVar.Define(s["*__Tag"],s["*__Type"],upper(K),s["*__Type"],V)
+	If s["*__Type"]==ivt_bool
+		if V
+			Lua.InterVar.Define(s["*__Tag"],s["*__Type"],upper(K),s["*__Type"],1)
+		else
+			Lua.InterVar.Define(s["*__Tag"],s["*__Type"],upper(K),s["*__Type"],0)
+		end
+	Else
+		Lua.InterVar.Define(s["*__Tag"],s["*__Type"],upper(K),s["*__Type"],V)
+	end
 end
 
 plua IV_G(s,string K)
+	// printf("IV_G %s::%d::%s\n",s["*__Tag"],s["*__Type"],K)
 	return Lua.InterVar.Check(s["*__Tag"],s["*__Type"],upper(K),s["*__Type"])
 end
 
@@ -64,15 +73,67 @@ class TInterVar
 		iInt  = SetMetaTable({["*__Tag"]=_T, ["*__Type"]=ivt_int },{["__newindex"]=IV_S,["__index"]=IV_G })
 		iBool = SetMetaTable({["*__Tag"]=_T, ["*__Type"]=ivt_bool},{["__newindex"]=IV_S,["__index"]=IV_G })
 		iStr  = SetMetaTable({["*__Tag"]=_T, ["*__Type"]=ivt_str },{["__newindex"]=IV_S,["__index"]=IV_G })
+		// printf("intervar %s created\n",_T)
 	End
 End
 
-plua _ivglob = new TInterVar("*GENERAL")
+//plua _ivglob = new TInterVar("*GENERAL")
 
-readonly table gBool = _ivglob.iBool
-readonly table gInt  = _ivglob.iInt
-readonly table gStr  = _ivglob.iStr
+//readonly table gBool = _ivglob.iBool
+//readonly table gInt  = _ivglob.iInt
+//readonly table gStr  = _ivglob.iStr
 
+//global readonly table gBool   = _ivglob.iBool
+//global readonly table gInt    = _ivglob.iInt
+//global readonly table gStr    = _ivglob.iStr
+//global readonly table gString = _ivglob.iStr
+
+plua _ivglob
+init
+	_ivglob = new TInterVar("*GENERAL")
+end
+
+get var gbool
+	return _ivglob.iBool
+end
+
+get var gint
+	return _ivglob.iint
+end	
+
+get var gstr
+	return _ivglob.istr
+end	
+
+get var gstring
+	return _ivglob.istr
+end	
+
+
+global get var gbool
+	return _ivglob.iBool
+end
+
+global get var gint
+	return _ivglob.iint
+end	
+
+global get var gstr
+	return _ivglob.istr
+end	
+
+global get var gstring
+	return _ivglob.istr
+end	
+
+	
+readonly delegate Clear = Lua.InterVar.Clear
+	
+global void gClear()
+	Lua.InterVar.Clear()
+End
+	
+	
 QuickMeta Done
 	newindex
 		error("Done is readonly!")

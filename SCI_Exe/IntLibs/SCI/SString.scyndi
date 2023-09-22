@@ -25,3 +25,4 @@ Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"SString")
 
 Global ReadOnly Delegate Replace = Lua.SString.Replace
 Global ReadOnly Delegate RepStr = Lua.SString["Repeat"]
+Global ReadOnly Delegate MD5 = Lua.SString.MD5 

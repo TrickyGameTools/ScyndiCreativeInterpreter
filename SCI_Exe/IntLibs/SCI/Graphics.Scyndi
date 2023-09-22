@@ -194,6 +194,52 @@ Class TImageFont
 		x,y = Lua.Graphics.TextSize(Tag,Txt)
 		return y
 	end
+	
+	// Multi line by width
+	Var MLBW(string _txt,int wd)
+		string txt
+		var Ret = NewArray()
+		string L
+		string W
+		txt=_txt
+		for i=1,Len(txt)
+			string C
+			C=Mid(txt,i,1)
+			Switch C
+				case " "
+					If W!=""
+						if Self.Width(sprintf("%s %s",L,W))<wd
+							L = sprintf("%s %s",L,W)
+							W = ""
+						else
+							Ret[len(ret)]=Trim(L)
+							L = W
+							W = ""
+						end
+					end
+				case "\n" 
+					If W!=""
+						if Self.Width(sprintf("%s %s",L,W))<wd
+							L = sprintf("%s %s",L,W)
+							W = ""
+						end
+						Ret[len(ret)]=Trim(L)
+						L = W						
+					end
+				default
+					W = sprintf("%s%s",W,C)
+			end
+		end
+		If W!=""
+			if Self.Width(sprintf("%s %s",L,W))<wd
+				Ret[len(ret)] = sprintf("%s %s",L,W)
+			Else
+				Ret[len(ret)] = Trim(L)
+				Ret[len(ret)] = W
+			end
+			Return Ret
+		End
+	End
 
 End
 

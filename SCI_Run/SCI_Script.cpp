@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.09.21
+// Version: 23.09.22
 // EndLic
 
 #include <Lunatic.hpp>
@@ -30,6 +30,7 @@
 #include <TQSE.hpp>
 
 #include <SlyvQCol.hpp>
+#include <SlyvOpenURL.hpp>
 
 #include "SCI_Crash.hpp"
 #include "SCI_Script.hpp"
@@ -283,6 +284,12 @@ namespace Scyndi_CI {
 			SMsg = StReplace(SMsg, "\r", "\\r");
 			if (CSayData["CBSTATE"] != "" && CSayData["CBFUNC"] != "") Call(CSayData["CBSTATE"], CSayData["CBFUNC"], "\"" + SMsg + "\"");
 		}
+		return 0;
+	}
+
+	static int SYS_OpenURL(lua_State* L) {
+		OpenURL(luaL_checkstring(L, 1));
+		return 0;
 	}
 #pragma endregion
 
@@ -304,6 +311,7 @@ namespace Scyndi_CI {
 			{"SCI_DontFlip",SYS_DontFlip},
 			{"SCI_CSay",SYS_CSay},
 			{"SCI_CSaySetConfig",SYS_CSaySetConfig},
+			{"SCI_OpenURL",SYS_OpenURL},
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},
 			{"__DEBUG_PUSH",DBG_Push},

@@ -282,6 +282,9 @@
     <ClCompile Include="SCI_Audio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Libs\Units\Source\SlyvOpenURL.cpp">
+      <Filter>Source Files\Slyvina\Units</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SCI_Share\Version.hpp">

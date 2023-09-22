@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.09.21
+// Version: 23.09.22
 // EndLic
 
 #include <TQSE.hpp>
@@ -41,6 +41,7 @@ namespace Scyndi_CI {
 	static int API_Events_AppTerminate(lua_State* L) { lua_pushboolean(L, AppTerminate()); return 1; }
 	static int API_Events_KeyHit(lua_State* L) { lua_pushboolean(L, KeyHit((SDL_KeyCode)luaL_checkinteger(L, 1))); return 1; }
 	static int API_Events_KeyDown(lua_State* L) { lua_pushboolean(L, KeyDown((SDL_KeyCode)luaL_checkinteger(L, 1))); return 1; }
+	static int API_Events_GetKey(lua_State* L) { lua_pushinteger(L, GetKey()); return 1; }
 
 	static int API_Events_MouseX(lua_State* L) {
 		auto TrueX{ luaL_checkinteger(L,1) };
@@ -91,6 +92,12 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	static int API_Events_KeyName(lua_State* L) {
+		auto code{ luaL_checkinteger(L,1) };
+		lua_pushstring(L,SDL_GetKeyName(code));
+		return 1;
+	}
+
 	static int API_Events_MouseButtonFromName(lua_State* L) {
 		auto n{ Trim(Upper(luaL_checkstring(L,1))) };
 		auto c{ 0 };
@@ -107,12 +114,14 @@ namespace Scyndi_CI {
 			{ "AppTerminate",API_Events_AppTerminate },
 			{ "KeyHit",API_Events_KeyHit },
 			{ "KeyDown",API_Events_KeyDown },
+			{ "GetKey",API_Events_GetKey },
 			{ "MouseX",API_Events_MouseX },
 			{ "MouseY",API_Events_MouseY },
 			{ "MouseDown",API_Events_MouseDown },
 			{ "MouseHit",API_Events_MouseHit },
 			{ "MouseReleased",API_Events_MouseReleased },
 			{ "KeyFromName",API_Events_KeyFromName },
+			{ "KeyName",API_Events_KeyName },
 			{ "Flush",API_Events_Flush },
 			{ "Yes",API_Events_Yes },
 			{ "MouseButtonFromName",API_Events_MouseButtonFromName }

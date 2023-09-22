@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.09.21
+// Version: 23.09.22
 // EndLic
+
 #include <SlyvString.hpp>
 
 #include "../SCI_Crash.hpp"
@@ -201,6 +202,10 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_Flip(lua_State* L) {
+		Flip();
+		return 0;
+	}
 
 	void Init_API_Graphics() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -222,7 +227,8 @@ namespace Scyndi_CI {
 			{"KillFont",API_KillFont},
 			{"HasFontTag",API_HasFontTag},
 			{"Stretch",API_Strech},
-			{"Rect",API_Rect}
+			{"Rect",API_Rect},
+			{"Flip",API_Flip}
 		};
 		InstallAPI("Graphics", IAPI);
 	}

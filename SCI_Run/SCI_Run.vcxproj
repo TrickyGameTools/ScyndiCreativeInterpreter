@@ -81,7 +81,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>E:\Projects\Applications\Slyvina\Libs\TQSL\SDL2\include;E:\Projects\Applications\Slyvina\Libs\Lunatic;E:\Projects\Applications\Slyvina\Libs\TQSL\Headers;E:\Projects\Applications\Slyvina\Libs\Kthura\Headers;E:\Projects\Applications\Slyvina\Libs\JCR6\Headers;E:\Projects\Applications\Slyvina\Libs\Units\Headers;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Projects\Applications\Slyvina\Libs\Statistician;E:\Projects\Applications\Slyvina\Libs\TQSL\SDL2\include;E:\Projects\Applications\Slyvina\Libs\Lunatic;E:\Projects\Applications\Slyvina\Libs\TQSL\Headers;E:\Projects\Applications\Slyvina\Libs\Kthura\Headers;E:\Projects\Applications\Slyvina\Libs\JCR6\Headers;E:\Projects\Applications\Slyvina\Libs\Units\Headers;$(IncludePath)</IncludePath>
     <OutDir>../SCI_Exe</OutDir>
     <LibraryPath>E:\Projects\Applications\Slyvina\Libs\TQSL\SDL2;E:\Projects\Applications\Slyvina\Libs\JCR6\3rdParty\zlib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -187,6 +187,9 @@
     <ClCompile Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lvm.c" />
     <ClCompile Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lzio.c" />
     <ClCompile Include="..\..\..\Libs\Lunatic\Lunatic.cpp" />
+    <ClCompile Include="..\..\..\Libs\Statistician\Statistician.cpp" />
+    <ClCompile Include="..\..\..\Libs\Statistician\Statistician_LoadJCR6.cpp" />
+    <ClCompile Include="..\..\..\Libs\Statistician\Statistician_SaveJCR6.cpp" />
     <ClCompile Include="..\..\..\Libs\TQSL\Source\TQSA.cpp" />
     <ClCompile Include="..\..\..\Libs\TQSL\Source\TQSE.cpp" />
     <ClCompile Include="..\..\..\Libs\TQSL\Source\TQSG.cpp" />
@@ -213,6 +216,7 @@
     <ClCompile Include="API\API_InterState.cpp" />
     <ClCompile Include="API\API_JCR.cpp" />
     <ClCompile Include="API\API_SGFile.cpp" />
+    <ClCompile Include="API\API_Statistician.cpp" />
     <ClCompile Include="API\API_Vars.cpp" />
     <ClCompile Include="API\API_String.cpp" />
     <ClCompile Include="API\API_SGJCR.cpp" />
@@ -255,6 +259,9 @@
     <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lvm.h" />
     <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lzio.h" />
     <ClInclude Include="..\..\..\Libs\Lunatic\Lunatic.hpp" />
+    <ClInclude Include="..\..\..\Libs\Statistician\Statistician.hpp" />
+    <ClInclude Include="..\..\..\Libs\Statistician\Statistician_LoadJCR6.hpp" />
+    <ClInclude Include="..\..\..\Libs\Statistician\Statistician_SaveJCR6.hpp" />
     <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSA.hpp" />
     <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSE.hpp" />
     <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSG.hpp" />

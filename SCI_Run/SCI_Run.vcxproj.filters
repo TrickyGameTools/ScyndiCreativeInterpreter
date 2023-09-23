@@ -58,6 +58,12 @@
     <Filter Include="Source Files\API">
       <UniqueIdentifier>{6ef76725-92b7-4003-b2aa-b8a2ba0ea2eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Slyvina\Statistician">
+      <UniqueIdentifier>{af8e5e92-5c35-44e1-90b9-832ae65b97d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Slyvina\Statistician">
+      <UniqueIdentifier>{6f4dda6a-95c6-4b9a-bab8-5b9aac246bcc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SCI_Run.cpp">
@@ -285,6 +291,18 @@
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvOpenURL.cpp">
       <Filter>Source Files\Slyvina\Units</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Libs\Statistician\Statistician.cpp">
+      <Filter>Source Files\Slyvina\Statistician</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\Statistician\Statistician_LoadJCR6.cpp">
+      <Filter>Source Files\Slyvina\Statistician</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\Statistician\Statistician_SaveJCR6.cpp">
+      <Filter>Source Files\Slyvina\Statistician</Filter>
+    </ClCompile>
+    <ClCompile Include="API\API_Statistician.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SCI_Share\Version.hpp">
@@ -484,6 +502,15 @@
     </ClInclude>
     <ClInclude Include="SCI_Audio.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Statistician\Statistician.hpp">
+      <Filter>Header Files\Slyvina\Statistician</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Statistician\Statistician_LoadJCR6.hpp">
+      <Filter>Header Files\Slyvina\Statistician</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Statistician\Statistician_SaveJCR6.hpp">
+      <Filter>Header Files\Slyvina\Statistician</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

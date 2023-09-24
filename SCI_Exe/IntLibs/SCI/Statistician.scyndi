@@ -150,12 +150,41 @@ Void DataSet(s,string Key,string Value)
 End
 
 
+var ListIndexGet(s,Int Idx)
+	plua parent
+	plua Key
+	parent = s["*_Parent_*"]
+	Key = s["*_Key_*"]
+	return Me.StatListGet(parent.PartyTag,parent.CharTag,Key,Idx)
+end
+
+var ListIndexSet(s,int Idx, String Value)
+	plua parent
+	plua Key
+	parent = s["*_Parent_*"]
+	Key = s["*_Key_*"]
+	return Me.StatListSet(parent.PartyTag,parent.CharTag,Key,Idx,Value)
+end
+
+Var ListGet(s,string Key)
+	plua r
+	plua parent
+	r=s["*_Parent_*"]
+	r=s["*_Reg_*"]
+	Key = Upper(Key)
+	if !r[Key]
+		r[Key] = SetMetaTable({["*_Parent_*"]=parent, ["*_Key_*"]=Key},{["__index"]=ListIndexGet,["__newindex"]=ListIndexSet})
+	end
+	return r[Key]
+End
+
 
 Class StatChar
 	ReadOnly Var Parent
 	ReadOnly String CharTag
 	ReadOnly Var Data
 	ReadOnly Var Point
+	ReadOnly Var List
 	
 	Get String PartyTag
 		Return Parent.PartyTag
@@ -169,8 +198,12 @@ Class StatChar
 		return Me.GetBaseStat(PartyTag,CharTag,Key)
 	End	
 
-	Var Stat
-	Var XStat
+	ReadOnly Var Stat
+	ReadOnly Var XStat
+		
+	Void ListAdd(String Key,String Value)
+		Me.StatListSet(PartyTag,CharTag,Key,Value)
+	End
 	
 	Constructor(P,String _T)
 		Parent=P
@@ -179,6 +212,7 @@ Class StatChar
 		Stat  = SetMetaTable({["*_PartyTag*_"]=PartyTag,["*_CharTag_*"]=CharTag},{["__index"]=StatIndex,["__newindex"]=StatNewIndex})
 		XStat = SetMetaTable({["*_Parent_*"]=Self},{["__newindex"]=DontWrite,["__index"]=XStatIndex})
 		Point = SetMetaTable({["*_Parent_*"]=Self, ["*_Reg_*"]={}},{["__newindex"]=DontWrite,["__index"]=PointsGet})
+		List  = SetMetaTable({["*_Parent_*"]=Self, ["*_Reg_*"]={}},{["__newindex"]=DontWrite,["__index"]=ListGet})
 	End
 End
 

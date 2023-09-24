@@ -198,6 +198,27 @@ namespace Scyndi_CI {
 		}
 	}
 
+	static int API_StatListAdd(lua_State* L) {
+		BaseTag;
+		auto Lst{ CharData->GetList(luaL_checkstring(L,3)) };
+		*Lst += Lunatic_CheckString(L, 4);
+		return 0;
+	}
+
+	static int API_StatListGet(lua_State* L) {
+		BaseTag;
+		auto Lst{ CharData->GetList(luaL_checkstring(L,3)) };
+		Lunatic_PushString(L, (*Lst)[luaL_checkinteger(L, 4)]);
+		return 1;
+	}
+
+	static int API_StatListSet(lua_State* L) {
+		BaseTag;
+		auto Lst{ CharData->GetList(luaL_checkstring(L,3)) };
+		(*Lst)[luaL_checkinteger(L, 4)] = luaL_checkstring(L, 4);
+		return 0;
+	}
+
 
 	void Init_API_Statistician() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -217,7 +238,10 @@ namespace Scyndi_CI {
 			{ "GetParty",API_StatGetParty },
 			{ "SetParty",API_StatSetParty },
 			{ "StatPointsSet",API_StatPointsSet },
-			{ "StatPointsGet",API_StatPointsGet }
+			{ "StatPointsGet",API_StatPointsGet },
+			{ "StatListAdd",API_StatListAdd },
+			{ "StatListGet",API_StatListGet },
+			{ "StatListSet",API_StatListSet }
 		};
 		InstallAPI("Statistician", IAPI);
 	}

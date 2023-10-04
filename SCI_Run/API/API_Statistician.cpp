@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.09.23
+// Version: 23.10.04
 // EndLic
 
 #include <Lunatic.hpp>
@@ -96,6 +96,7 @@ namespace Scyndi_CI {
 	}
 
 	static int API_StatSetBaseStat(lua_State* L) {
+		//printf("StatBaseStat!\n"); // debug
 		GetStatTag;
 		CharData->BStat[StatTag] = luaL_checkinteger(L, 4);
 		return 0;
@@ -127,7 +128,7 @@ namespace Scyndi_CI {
 			Name{ Lunatic_CheckString(L,3) };
 		auto
 			AutoAdd{ luaL_checkinteger(L,4) };
-		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database")); 
+		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
 		PartyReg[PartyTag]->NewChar(AutoAdd, CharTag, Name);
 		return 0;
 	}
@@ -165,11 +166,11 @@ namespace Scyndi_CI {
 	}
 
 	static int API_StatGetPartySize(lua_State* L) {
-			auto
-				PartyTag{ Upper(luaL_checkstring(L,1)) };
-			if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
-			lua_pushinteger(L, PartyReg[PartyTag]->Size());
-			return 1;
+		auto
+			PartyTag{ Upper(luaL_checkstring(L,1)) };
+		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
+		lua_pushinteger(L, PartyReg[PartyTag]->Size());
+		return 1;
 	}
 
 	static int API_StatPointsSet(lua_State* L) {
@@ -189,7 +190,7 @@ namespace Scyndi_CI {
 		BaseTag;
 		auto Pnt{ CharData->GetPoints(luaL_checkstring(L,3)) };
 		switch (luaL_checkinteger(L, 4)) {
-		case 0: Pnt->Have(luaL_checkinteger(L,5)); return 0;
+		case 0: Pnt->Have(luaL_checkinteger(L, 5)); return 0;
 		case 1: Pnt->Max(luaL_checkinteger(L, 5)); return 0;
 		case 2: Pnt->Min(luaL_checkinteger(L, 5)); return 0;
 		case 3: Pnt->MaxCopy = luaL_checkstring(L, 5); return 0;
@@ -219,6 +220,19 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_StatGetCharName(lua_State* L) {
+		BaseTag;
+		Lunatic_PushString(L, CharData->Name);
+		return 1;
+	}
+
+	static int API_StatSetCharName(lua_State* L) {
+		BaseTag;
+		//printf("Naming char %s -> %s\n", CharTag.c_str(), luaL_checkstring(L, 3)); // Debug only.
+		CharData->Name = luaL_checkstring(L, 3);
+		return 0;
+	}
+
 
 	void Init_API_Statistician() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -241,9 +255,10 @@ namespace Scyndi_CI {
 			{ "StatPointsGet",API_StatPointsGet },
 			{ "StatListAdd",API_StatListAdd },
 			{ "StatListGet",API_StatListGet },
-			{ "StatListSet",API_StatListSet }
+			{ "StatListSet",API_StatListSet },
+			{ "StatSetCharName",API_StatSetCharName },
+			{ "StatGetCharName",API_StatGetCharName }
 		};
 		InstallAPI("Statistician", IAPI);
 	}
-
 }

@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.17
+// Version: 23.10.04
 // EndLic
 
 #include "../SCI_Script.hpp"
@@ -66,7 +66,7 @@ namespace Scyndi_CI {
 
 	static int API_JCRSize(lua_State* L) {
 		auto Tag{ Upper(luaL_optstring(L,1,"*MAIN")) };
-		if (!JCR_Register.count(Tag)) { luaL_error(L,"There is no JCR6 resource loaded on tag '%s'", Tag.c_str()); return 0; }
+		if (!JCR_Register.count(Tag)) { luaL_error(L, "There is no JCR6 resource loaded on tag '%s'", Tag.c_str()); return 0; }
 		lua_pushinteger(L, JCR_Register[Tag].Entries->size());
 		return 1;
 	}
@@ -109,14 +109,47 @@ namespace Scyndi_CI {
 	}
 
 
+	std::vector<std::string> FoundFiles{};
+	size_t FoundFilesIndex{ 0 };
+	static int API_JCRFindFirst(lua_State* L) {
+		auto
+			Tag{ Upper(luaL_checkstring(L,1)) },
+			Dir{ Upper(ChReplace(luaL_checkstring(L,2),'\\','/')) }; if (!Suffixed(Dir, "/")) Dir += "/";
+		if (!JCR_Register.count(Tag)) { luaL_error(L, "There is no JCR6 resource loaded on tag '%s'", Tag.c_str()); return 0; }
+		FoundFiles.clear();
+		FoundFilesIndex = 1;
+		auto entries{ JCR_Register[Tag].Res->Entries() };
+		for (auto e : *entries) {
+			auto UName{ Upper(e->Name()) };
+			//std::cout << "FindFirst in " << Tag << " Directory: " << Dir << " --> " << e->Name() << "(Allow: "<< (Prefixed(UName, Dir)) <<")\n"; // DEBUG!
+			if (Prefixed(UName, Dir)) FoundFiles.push_back(e->Name());
+		}
+		if (FoundFiles.size()) {
+			Lunatic_PushString(L, FoundFiles[0]);
+			return 1;
+		}
+		return 0;
+	}
+
+	static int API_JCRFindNext(lua_State* L) {
+		if (FoundFilesIndex < FoundFiles.size()) {
+			Lunatic_PushString(L, FoundFiles[FoundFilesIndex++]);
+			return 1;
+		}
+		return 0;
+	}
+
+
 	void Init_API_JCR() {
 		JCR_Register["*MAIN"] = RegJCR(Resource());
 		std::map<std::string, lua_CFunction> IAPI {
-			{"GetJCR",API_GetJCR},
-			{"JCRSize",API_JCRSize},
-			{"JCREntry",API_JCREntry},
-			{"JCREntryExists",API_JCREntryExists},
-			{"JCRGetString",API_JCRGetString}
+			{ "GetJCR", API_GetJCR},
+			{ "JCRSize",API_JCRSize },
+			{ "JCREntry",API_JCREntry },
+			{ "JCREntryExists",API_JCREntryExists },
+			{ "JCRGetString",API_JCRGetString },
+			{ "JCRFindFirst",API_JCRFindFirst },
+			{ "JCRFindNext", API_JCRFindNext }
 		};
 		InstallAPI("JCR6", IAPI);
 	}

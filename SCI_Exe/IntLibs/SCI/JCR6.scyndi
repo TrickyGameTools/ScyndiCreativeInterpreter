@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/JCR6.scyndi
 // Scyndi's Creative Interpreter - JCR6 Script
-// version: 23.01.17
+// version: 23.10.04
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -33,18 +33,29 @@ End
 	
 Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"JCR6")
 
-const delegate Dir = Lua.JCR6.GetJCR
+const delegate LoadDir = Lua.JCR6.GetJCR
 
 const delegate DirSize = Lua.JCRGetSize
 
 Var DirIndex(int idx,string Tag="*MAIN")
-	return Lua.JCRGetEntry(idx,Tag)
+	return Lua.JCR6.JCRGetEntry(idx,Tag)
 end
 
 Var DirEntry(int idx, string Tag="*MAIN")
-	return New JCR6Entry(DirIndex(idx,Tag))
+	return New JCREntry(DirIndex(idx,Tag))
 End
 
 String GetString(string Ent,String Tag="*MAIN")
 	return Lua.JCR6.JCRGetString(Tag,Ent)
+End
+
+Var Dir(String Directory,String Tag="*MAIN")
+	plua Ret = {}
+	plua fil
+	Fil = Lua.JCR6.JCRFindFirst(Tag,Directory)
+	While Fil
+		Ret[Len(Ret)] = Fil
+		Fil = Lua.JCR6.JCRFindNext()
+	End
+	Return Ret
 End

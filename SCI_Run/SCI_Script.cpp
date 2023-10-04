@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.09.23
+// Version: 23.10.04
 // EndLic
 
 #include <Lunatic.hpp>
@@ -239,6 +239,29 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+
+	int SYS_LoadState(lua_State* L) {
+		auto
+			St{ luaL_checkstring(L,1) },
+			Fl{ luaL_checkstring(L,2) };
+		State(St, Fl);
+		return 0;
+	}
+
+	int SYS_LoadNewState(lua_State* L) {
+		// The difference with above is that this function will only load a flow if it hasn't been loaded before.
+		auto
+			St{ luaL_checkstring(L,1) },
+			Fl{ luaL_checkstring(L,2) };
+		if (!HasState(St)) State(St, Fl);
+		return 0;
+	}
+
+	int SYS_HasState(lua_State* L) {
+		lua_pushboolean(L, HasState(luaL_checkstring(L, 1)));
+		return 1;
+	}
+
 	int SYS_BuildState(lua_State* L) {
 		auto s = GameID_GINIE()->Value("BUILD", "TYPE");
 		if (!s.size()) s = "debug";
@@ -344,12 +367,16 @@ namespace Scyndi_CI {
 			{"SCI_GoToFlow",SYS_GoToFlow},
 			{"SCI_LoadFlow",SYS_LoadFlow},
 			{"SCI_LoadNewFlow",SYS_LoadNewFlow},
+			{"SCI_LoadState",SYS_LoadState},
+			{"SCI_LoadNewState",SYS_LoadNewState},
 			{"SCI_BuildState",SYS_BuildState},
 			{"SCI_DontFlip",SYS_DontFlip},
 			{"SCI_CSay",SYS_CSay},
 			{"SCI_CSaySetConfig",SYS_CSaySetConfig},
 			{"SCI_OpenURL",SYS_OpenURL},
 			{"SCI_Call",SYS_Call},
+			{"SCI_HasState",SYS_HasState},
+
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},
 			{"__DEBUG_PUSH",DBG_Push},

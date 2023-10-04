@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/Statistician.scyndi
 // Statistician Support
-// version: 23.09.23
+// version: 23.10.04
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -85,6 +85,7 @@ Int StatIndex(s,string StatKey)
 End
 
 Void StatNewIndex(s, string StatKey, Int Value)
+	//print("NewIndex",StatKey,Value)
 	Me.SetBaseStat(s["*_PartyTag_*"],s["*_CharTag_*"],StatKey,Value)
 End
 
@@ -105,6 +106,8 @@ Init
 	PointReg.HAVE = 0
 	PointReg.MAX = 1
 	PointReg.MIN = 2
+	PointReg.MAXIMUM = 1
+	PointReg.MINIMUM = 2
 	PointReg.MAXCOPY = 3
 	PointReg.MINCOPY = 4
 End
@@ -136,7 +139,7 @@ Var PointsGet(s,string Key)
 	reg    = s["*_Reg_*"]
 	Key    = Upper(Key)
 	if !Reg[Key]
-		Reg[Key] = SetMetaTable({["*_Parent_*"]=parent,["*_Ley_*"]=Key},{["__index"]=PointsGetF,["__newindex"]=PointsSetF})
+		Reg[Key] = SetMetaTable({["*_Parent_*"]=parent,["*_Key_*"]=Key},{["__index"]=PointsGetF,["__newindex"]=PointsSetF})
 	end
 	Return Reg[Key]
 End
@@ -185,10 +188,19 @@ Class StatChar
 	ReadOnly Var Data
 	ReadOnly Var Point
 	ReadOnly Var List
+	ReadOnly Var Points
 	
 	Get String PartyTag
 		Return Parent.PartyTag
 	End
+	
+	Get String Name
+		Return Me.StatGetCharName(PartyTag,CharTag)
+	End
+	
+	Set String Name
+		Me.StatSetCharName(PartyTag,CharTag,Value)
+	end
 	
 	Int BaseStat(string Key,value)
 		if value
@@ -208,11 +220,12 @@ Class StatChar
 	Constructor(P,String _T)
 		Parent=P
 		CharTag=_T
-		Data  = SetMetaTable({["*_PartyTag*_"]=PartyTag,["*_CharTag_*"]=CharTag},{["__newindex"]=DataSet,["__index"]=DataGet})
-		Stat  = SetMetaTable({["*_PartyTag*_"]=PartyTag,["*_CharTag_*"]=CharTag},{["__index"]=StatIndex,["__newindex"]=StatNewIndex})
-		XStat = SetMetaTable({["*_Parent_*"]=Self},{["__newindex"]=DontWrite,["__index"]=XStatIndex})
-		Point = SetMetaTable({["*_Parent_*"]=Self, ["*_Reg_*"]={}},{["__newindex"]=DontWrite,["__index"]=PointsGet})
-		List  = SetMetaTable({["*_Parent_*"]=Self, ["*_Reg_*"]={}},{["__newindex"]=DontWrite,["__index"]=ListGet})
+		Data   = SetMetaTable({["*_PartyTag_*"]=PartyTag,["*_CharTag_*"]=CharTag},{["__newindex"]=DataSet,["__index"]=DataGet})
+		Stat   = SetMetaTable({["*_PartyTag_*"]=PartyTag,["*_CharTag_*"]=CharTag},{["__index"]=StatIndex,["__newindex"]=StatNewIndex})
+		XStat  = SetMetaTable({["*_Parent_*"]=Self},{["__newindex"]=DontWrite,["__index"]=XStatIndex})
+		Point  = SetMetaTable({["*_Parent_*"]=Self, ["*_Reg_*"]={}},{["__newindex"]=DontWrite,["__index"]=PointsGet})
+		List   = SetMetaTable({["*_Parent_*"]=Self, ["*_Reg_*"]={}},{["__newindex"]=DontWrite,["__index"]=ListGet})
+		Points = Point
 	End
 End
 
@@ -276,11 +289,13 @@ Class StatParty
 				end
 				Me.StatNewChar(PartyTag,b,c || b,a1)
 			case "string"
-				Me.StatNewChar(PartyTag,a,b || a,false)
+				Me.StatNewChar(PartyTag,a,b || a,0)
 			default
 				Lua.error("Illegal function call")
 		end
+		//print("Char created")
 	end
+	
 	Void KilLChar(String T)
 		Me.StatKilChar(PartyTag,T)
 	End

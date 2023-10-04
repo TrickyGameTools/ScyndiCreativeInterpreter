@@ -321,6 +321,9 @@
     <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Walk_Dijkstra.cpp">
       <Filter>Source Files\Slyvina\Kthura</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Libs\Units\Source\SlyvDijkstra.cpp">
+      <Filter>Source Files\Slyvina\Units</Filter>
+    </ClCompile>
     <ClCompile Include="SCI_Kthura.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -543,6 +546,9 @@
       <Filter>Header Files\Slyvina\Kthura</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Libs\Kthura\Headers\Kthura_Draw_TQSG.hpp">
+      <Filter>Header Files\Slyvina\Kthura</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Kthura\Headers\Kthura_Walk_Dijkstra.hpp">
       <Filter>Header Files\Slyvina\Kthura</Filter>
     </ClInclude>
     <ClInclude Include="SCI_Kthura.hpp">

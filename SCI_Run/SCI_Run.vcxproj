@@ -236,6 +236,10 @@
     <ClCompile Include="SCI_Script.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Libs\Kthura\Headers\Kthura_Core.hpp" />
+    <ClInclude Include="..\..\..\Libs\Kthura\Headers\Kthura_Draw.hpp" />
+    <ClInclude Include="..\..\..\Libs\Kthura\Headers\Kthura_Draw_TQSG.hpp" />
+    <ClInclude Include="..\..\..\Libs\Kthura\Headers\Kthura_Walk_Dijkstra.hpp" />
     <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lapi.h" />
     <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lauxlib.h" />
     <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lcode.h" />
@@ -303,6 +307,7 @@
     <ClInclude Include="SCI_Crash.hpp" />
     <ClInclude Include="SCI_Graphics.hpp" />
     <ClInclude Include="SCI_JCR.hpp" />
+    <ClInclude Include="SCI_Kthura.hpp" />
     <ClInclude Include="SCI_Load.hpp" />
     <ClInclude Include="SCI_Script.hpp" />
   </ItemGroup>

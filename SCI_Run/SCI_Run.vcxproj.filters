@@ -321,6 +321,12 @@
     <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Walk_Dijkstra.cpp">
       <Filter>Source Files\Slyvina\Kthura</Filter>
     </ClCompile>
+    <ClCompile Include="SCI_Kthura.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="API\API_Kthura.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SCI_Share\Version.hpp">
@@ -529,6 +535,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Libs\Statistician\Statistician_SaveJCR6.hpp">
       <Filter>Header Files\Slyvina\Statistician</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Kthura\Headers\Kthura_Core.hpp">
+      <Filter>Header Files\Slyvina\Kthura</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Kthura\Headers\Kthura_Draw.hpp">
+      <Filter>Header Files\Slyvina\Kthura</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Kthura\Headers\Kthura_Draw_TQSG.hpp">
+      <Filter>Header Files\Slyvina\Kthura</Filter>
+    </ClInclude>
+    <ClInclude Include="SCI_Kthura.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

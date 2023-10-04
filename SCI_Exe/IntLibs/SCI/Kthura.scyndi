@@ -1,0 +1,101 @@
+// License Information:
+// SCI_Exe/IntLibs/SCI/Kthura.scyndi
+// Kthura Link up for Scyndi's Creative Interpreter
+// version: 23.10.04
+// Copyright (C) 2023 Jeroen P. Broks
+// This software is provided 'as-is', without any express or implied
+// warranty.  In no event will the authors be held liable for any damages
+// arising from the use of this software.
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+// 1. The origin of this software must not be misrepresented; you must not
+// claim that you wrote the original software. If you use this software
+// in a product, an acknowledgment in the product documentation would be
+// appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+// misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+// End License Information
+
+Module
+
+// Just making sure this comes first. GewoonNiks will contain 'nil' as result, but that doesn't matter!
+Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Kthura")
+
+Const Delegate Load = Lua.Kthura.Load
+Const Delegate Pick = Lua.Kthura.Pick
+Const Delegate PickLayer = Lua.Kthura.PickLayer
+
+Void GoToMap(String Tag,String File="",string Layer="")
+	If File!=""
+		Load(File)
+	End
+	Pick(Tag)
+	If Layer!=""
+		Pick(Layer)
+	End
+End
+
+
+plua _ObjKeyIndex(s,string Key)
+	return Lua.GetObj(s.____objtag,Key)
+end
+
+plua _ObjKeyNewIndex(s,string Key,value)
+	if (Lua.type(value)=="boolean")
+		if value
+			Lua.SetObj(s.____objtag,Key,1)
+		else
+			Lua.SetObj(s.____objtag,Key,0)
+		end
+	else
+		Lua.SetObj(s.____objtag,Key,value)
+	end
+end
+
+plua _ObjIndex(s,string key)
+	key=key:upper()
+	if !s.____table[key] 
+		s.____table[key] = SetMetaTable({["____objtag"]=key},{["__index"]=_ObjKeyIndex, ["__newindex"]=_ObjKeyNewIndex})
+	end
+	return s.____table[key]
+end
+
+plua _ReadOnly(s,k)
+	Lua.error("Trying to write into a read only property")
+end
+
+const Var Obj = SetMetaTable({["____table"]={}},{["__index"]=_ObjIndex,["__newindex"]=_ReadOnly})
+	
+
+Get String CurrentMap
+	Return Lua.Kthura.CurrentMap()
+End
+
+Set String CurrentMap
+	Pick(Value)
+End
+
+Get String CurrentLayer
+	Return Lua.Kthura.CurrentLayer()
+End
+
+Set String CurrentLayer
+	PickLayer(Value)
+End
+
+
+Void ObjRGB(string Tag, Byte R,Byte G, Byte B)
+	Obj[Tag].R=R
+	Obj[Tag].G=G
+	Obj[Tag].B=B
+end
+
+Const Delegate ObjHSV = Lua.Kthura.ColorObjJSV
+
+Const Delegate WalkTo = Lua.Kthura.WalkTo
+Const Delegate MoveTo = Lua.Kthura.MoveTo
+
+Const Delegate Draw = Lua.Kthura.Draw
+Const Delegate Spawn = Lua.Kthura.Spawn

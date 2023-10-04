@@ -64,6 +64,12 @@
     <Filter Include="Header Files\Slyvina\Statistician">
       <UniqueIdentifier>{6f4dda6a-95c6-4b9a-bab8-5b9aac246bcc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Slyvina\Kthura">
+      <UniqueIdentifier>{e8ba33c7-bfa6-4b3f-bdfb-eceb71c646ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Slyvina\Kthura">
+      <UniqueIdentifier>{6d4ef2fa-faf2-4af3-adba-fcb0d66b81e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SCI_Run.cpp">
@@ -302,6 +308,18 @@
     </ClCompile>
     <ClCompile Include="API\API_Statistician.cpp">
       <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Core.cpp">
+      <Filter>Source Files\Slyvina\Kthura</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Draw.cpp">
+      <Filter>Source Files\Slyvina\Kthura</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Draw_TQSG.cpp">
+      <Filter>Source Files\Slyvina\Kthura</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Walk_Dijkstra.cpp">
+      <Filter>Source Files\Slyvina\Kthura</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

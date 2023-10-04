@@ -1,6 +1,6 @@
 // Lic:
 // Scyndi's Creative Interpreter
-// API install header
+// Kthura Manager (header)
 // 
 // 
 // 
@@ -23,38 +23,24 @@
 // 
 // Version: 23.10.02
 // EndLic
-namespace Scyndi_CI{
 
-	void Init_API_Audio();
-	void Init_API_Bank();
-	void Init_API_Events();
-	void Init_API_GINIE();
-	void Init_API_Graphics();
-	void Init_API_InterState();
-	void Init_API_JCR();
-	void Init_API_Kthura();
-	void Init_API_SGFile();
-	void Init_API_SGJCR();
-	void Init_API_Statistician();
-	void Init_API_String();
-	void Init_API_Vars();
+#pragma once
+#include <Kthura_Draw.hpp>
+
+namespace Scyndi_CI {
+	extern Slyvina::Kthura::KthuraDraw SCI_KthuraDraw;
 
 
-	inline void InstallAllAPIS() {
-		Init_API_Audio();
-		Init_API_Bank();
-		Init_API_Events();
-		Init_API_GINIE();
-		Init_API_Graphics();
-		Init_API_InterState();
-		Init_API_JCR();
-		Init_API_Kthura();
-		Init_API_SGFile();
-		Init_API_SGJCR();
-		Init_API_Statistician();
-		Init_API_String();
-		Init_API_Vars();
-	}
-
-
+	Slyvina::Kthura::Kthura GetKthura(std::string Tag);
+	Slyvina::Kthura::Kthura GetKthura();
+	void PickKthura(std::string Tag);
+	void SCI_LoadKthura(std::string Tag,std::string MapDir);	
+	//KthuraLayer* GetKthuraLayer(std::string MapTag, std::string LayerTag);
+	Slyvina::Kthura::KthuraLayer* GetKthuraLayer(std::string MapTag, std::string LayerTag);
+	Slyvina::Kthura::KthuraLayer* GetKthuraLayer(std::string LayerTag);
+	Slyvina::Kthura::KthuraLayer* GetKthuraLayer();
+	void PickKthuraLayer(std::string MapTag, std::string LayerTag);
+	void PickKthuraLayer(std::string LayerTag);
+	std::string PickedMap();
+	std::string PickedLayer();
 }

@@ -154,6 +154,10 @@
     <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_RealDir.cpp" />
     <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_Write.cpp" />
     <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_zlib.cpp" />
+    <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Core.cpp" />
+    <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Draw.cpp" />
+    <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Draw_TQSG.cpp" />
+    <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Walk_Dijkstra.cpp" />
     <ClCompile Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lapi.c" />
     <ClCompile Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lauxlib.c" />
     <ClCompile Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lbaselib.c" />
@@ -215,6 +219,7 @@
     <ClCompile Include="API\API_Graphics.cpp" />
     <ClCompile Include="API\API_InterState.cpp" />
     <ClCompile Include="API\API_JCR.cpp" />
+    <ClCompile Include="API\API_Kthura.cpp" />
     <ClCompile Include="API\API_SGFile.cpp" />
     <ClCompile Include="API\API_Statistician.cpp" />
     <ClCompile Include="API\API_Vars.cpp" />
@@ -225,6 +230,7 @@
     <ClCompile Include="SCI_Crash.cpp" />
     <ClCompile Include="SCI_Graphics.cpp" />
     <ClCompile Include="SCI_JCR.cpp" />
+    <ClCompile Include="SCI_Kthura.cpp" />
     <ClCompile Include="SCI_Load.cpp" />
     <ClCompile Include="SCI_Run.cpp" />
     <ClCompile Include="SCI_Script.cpp" />

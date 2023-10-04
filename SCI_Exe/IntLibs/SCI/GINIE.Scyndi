@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/GINIE.Scyndi
 // Scyndi's Creative Interpreter - Link - GINIE
-// version: 23.09.21
+// version: 23.10.04
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -137,7 +137,7 @@ Var LoadNew(string _File,String _Tag)
 	If Lua.GINIE.Has(_Tag)
 		Return Obtain(_Tag)
 	Else
-		Return Load(_Tag)
+		Return Load(_File,_Tag)
 	End
 End
 

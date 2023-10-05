@@ -105,6 +105,7 @@ namespace Scyndi_CI {
 	static int API_StatGetStat(lua_State* L) {
 		GetStatTag;
 		lua_pushinteger(L, CharData->Stats(StatTag));
+		return 1;
 	}
 
 	static int API_StatGetBuf(lua_State* L) {
@@ -151,6 +152,7 @@ namespace Scyndi_CI {
 		auto
 			ChTag{ luaL_checkstring(L,3) };
 		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
+		printf("Party %s index %d will have character %s", PartyTag.c_str(), Index, ChTag);
 		(*PartyReg[PartyTag])[Index] = ChTag;
 		return 0;
 	}
@@ -173,7 +175,18 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
-	static int API_StatPointsSet(lua_State* L) {
+	static int API_StatSetPartySize(lua_State* L) {
+		auto
+			PartyTag{ Upper(luaL_checkstring(L,1)) };
+		auto
+			sz{ luaL_checkinteger(L,2) };
+		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
+		// printf("Party size is now: %d\n", (int)sz);
+		PartyReg[PartyTag]->Size(sz);
+		return 0;
+	}
+
+	static int API_StatPointsGet(lua_State* L) {
 		BaseTag;
 		auto Pnt{ CharData->GetPoints(luaL_checkstring(L,3)) };
 		switch (luaL_checkinteger(L, 4)) {
@@ -186,7 +199,7 @@ namespace Scyndi_CI {
 		}
 	}
 
-	static int API_StatPointsGet(lua_State* L) {
+	static int API_StatPointsSet(lua_State* L) {
 		BaseTag;
 		auto Pnt{ CharData->GetPoints(luaL_checkstring(L,3)) };
 		switch (luaL_checkinteger(L, 4)) {
@@ -229,7 +242,7 @@ namespace Scyndi_CI {
 	static int API_StatSetCharName(lua_State* L) {
 		BaseTag;
 		//printf("Naming char %s -> %s\n", CharTag.c_str(), luaL_checkstring(L, 3)); // Debug only.
-		CharData->Name = luaL_checkstring(L, 3);
+		CharData->Name = luaL_checkstring(L, 2);
 		return 0;
 	}
 
@@ -249,6 +262,7 @@ namespace Scyndi_CI {
 			{ "StatNewChar",API_StatCreateChar },
 			{ "StatKillChar",API_StatKilLChar },
 			{ "GetPartySize",API_StatGetPartySize },
+			{ "SetPartySize",API_StatSetPartySize },
 			{ "GetParty",API_StatGetParty },
 			{ "SetParty",API_StatSetParty },
 			{ "StatPointsSet",API_StatPointsSet },

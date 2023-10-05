@@ -31,12 +31,16 @@ Void DontWrite()
 	Lua.error("Writing to a readonly property!")
 End
 
-int BufIndex(s,string Key,int value)
-	return Me.SetStatBuf(s.PartyTag,s.CharTag,s.StatKey,Key,value)
+void BufNewIndex(_s,string Key,int value)
+	plua s
+	s = _s["_*Parent*_"]
+	Me.SetStatBuf(s.PartyTag,s.CharTag,s.StatKey,Key,value)
 end
 
-void BufNewIndex(s,string Key)
-	Me.SetStatBuf(s.PartyTag,s.CharTag,s.StatKey,Key)
+int BufIndex(_s,string Key)
+	plua s	
+	s = _s["_*Parent*_"]	
+	return Me.GetStatBuf(s.PartyTag,s.CharTag,s.StatKey,Key)
 end
 
 Class StatStat
@@ -51,7 +55,7 @@ Class StatStat
 	End
 	Constructor(_P,string _K)
 		Parent=_P
-		StatKey=_K
+		StatKey=_K		
 		Buff = SetMetaTable({["_*Parent*_"]=self},{["__newindex"]=BufNewIndex,["__index"]=BufIndex})
 	End
 	
@@ -83,6 +87,11 @@ End
 Int StatIndex(s,string StatKey)
 	Return Me.GetTotalStat(s["*_PartyTag_*"],s["*_CharTag_*"],StatKey)
 End
+
+Int BStatIndex(s,string StatKey)
+	Return Me.GetBaseStat(s["*_PartyTag_*"],s["*_CharTag_*"],StatKey)
+End
+
 
 Void StatNewIndex(s, string StatKey, Int Value)
 	//print("NewIndex",StatKey,Value)
@@ -119,7 +128,7 @@ Var PointsGetF(s,String Fld)
 	Key    = s["*_Key_*"]
 	Fld    = Upper(Fld)
 	Lua.assert(PointReg[Fld],sprintf("No field named %s in a point record",Fld))
-	return Me.StatPointsGet(Parent.PartyTag,Parent.CharTag,Key,PointReg[Fld])
+	return Me.StatPointsGet( Parent.PartyTag, Parent.CharTag, Key, PointReg[Fld])
 End
 
 void PointsSetF(s,String Fld, Value)
@@ -211,6 +220,7 @@ Class StatChar
 	End	
 
 	ReadOnly Var Stat
+	ReadOnly Var BStat
 	ReadOnly Var XStat
 		
 	Void ListAdd(String Key,String Value)
@@ -222,7 +232,8 @@ Class StatChar
 		CharTag=_T
 		Data   = SetMetaTable({["*_PartyTag_*"]=PartyTag,["*_CharTag_*"]=CharTag},{["__newindex"]=DataSet,["__index"]=DataGet})
 		Stat   = SetMetaTable({["*_PartyTag_*"]=PartyTag,["*_CharTag_*"]=CharTag},{["__index"]=StatIndex,["__newindex"]=StatNewIndex})
-		XStat  = SetMetaTable({["*_Parent_*"]=Self},{["__newindex"]=DontWrite,["__index"]=XStatIndex})
+		BStat  = SetMetaTable({["*_PartyTag_*"]=PartyTag,["*_CharTag_*"]=CharTag},{["__index"]=BStatIndex,["__newindex"]=StatNewIndex})
+		XStat  = SetMetaTable({["*_Parent_*"]=Self, ["*_Register_*"]={}},{["__newindex"]=DontWrite,["__index"]=XStatIndex})
 		Point  = SetMetaTable({["*_Parent_*"]=Self, ["*_Reg_*"]={}},{["__newindex"]=DontWrite,["__index"]=PointsGet})
 		List   = SetMetaTable({["*_Parent_*"]=Self, ["*_Reg_*"]={}},{["__newindex"]=DontWrite,["__index"]=ListGet})
 		Points = Point
@@ -241,10 +252,10 @@ Var PartyGet(s,Key)
 	Switch Lua.type(key)
 		case "string"
 			if Upper(key)=="SIZE" || Upper(Key)=="LEN"
-				return Me.GetPartySize(s["*_Tag_*"]);
+				return Me.GetPartySize(s["_*Tag*_"]);
 			end
 		case "number"
-			return Me.GetParty(s["*_Tag_*"],key)
+			return Me.GetParty(s["_*Tag*_"],key)
 		default
 			Lua.error("Index error")
 	End
@@ -254,10 +265,11 @@ Void PartySet(s,Key,Value)
 	Switch Lua.type(key)
 		case "string"
 			if Upper(key)=="SIZE" || Upper(Key)=="LEN"
-				Me.SetPartySize(s["*_Tag_*"],Value);
+				Me.SetPartySize(s["_*Tag*_"],Value);
 			end
 		case "number"
-			Me.GetParty(s["*_Tag_*"],key,Value)
+			//printf("Party Set: %d => %s\n",key,value)
+			Me.SetParty(s["_*Tag*_"],key,Value)
 		default
 			Lua.error("Index error")
 	End

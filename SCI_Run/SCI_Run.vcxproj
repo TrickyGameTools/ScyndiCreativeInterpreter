@@ -215,6 +215,7 @@
     <ClCompile Include="..\SCI_Share\SCI_GlobalConfig.cpp" />
     <ClCompile Include="API\API_Audio.cpp" />
     <ClCompile Include="API\API_Bank.cpp" />
+    <ClCompile Include="API\API_DebugConsole.cpp" />
     <ClCompile Include="API\API_Events.cpp" />
     <ClCompile Include="API\API_GINIE.cpp" />
     <ClCompile Include="API\API_Graphics.cpp" />
@@ -300,6 +301,7 @@
     <ClInclude Include="..\SCI_Share\SCI_Header.hpp" />
     <ClInclude Include="..\SCI_Share\Version.hpp" />
     <ClInclude Include="API\API_Bank.hpp" />
+    <ClInclude Include="API\API_DebugConsole.hpp" />
     <ClInclude Include="API\API_SGJCR_Enum.hpp" />
     <ClInclude Include="API\SCI_InstallAPIs.hpp" />
     <ClInclude Include="resource.h" />

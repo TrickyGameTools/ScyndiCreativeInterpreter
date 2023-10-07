@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.09.21
+// Version: 23.10.07
 // EndLic
 
 // Debug tag! Should be off in release
@@ -180,7 +180,7 @@ namespace Scyndi_CI {
 		}
 		InitJCRPaniek();
 		Img("*SCIPOWER", SRF(), "GFX/PoweredBySCI.png");
-		Img("*SCIPOWER")->HotCenter();
+		Img("*SCIPOWER")->HotCenter();		
 		Fnt("*SYSFONT", SRF(), "Font/DosFont.jfbf");
 		Cls();
 		SetColor(0, 0, 105); Rect(0, 0, ScreenWidth(), ScreenHeight()); SetColor(255, 255, 255);

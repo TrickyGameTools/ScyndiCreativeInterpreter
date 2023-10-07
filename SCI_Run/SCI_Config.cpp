@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.20
+// Version: 23.10.07
 // EndLic
 
 #include <TQSE.hpp>
@@ -130,6 +130,10 @@ namespace Scyndi_CI {
 	std::string GameCopyright() {
 		LoadGameID();
 		return res_id->Value("ID", "Copyright");
+	}
+
+	bool DebugBuild() {
+		return Lower(res_id->Value("BUILD", "TYPE")) == "debug";
 	}
 
 	std::string SaveGameID() {

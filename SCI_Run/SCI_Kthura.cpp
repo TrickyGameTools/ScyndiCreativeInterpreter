@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.10.04
+// Version: 23.10.07
 // EndLic
 
 #include <SlyvQCol.hpp>
@@ -43,6 +43,7 @@ using namespace Units;
 namespace Scyndi_CI {
 
 	KthuraDraw SCI_KthuraDraw{ nullptr };
+	static std::string MapLastLoaded{""};
 	static std::string MapLastPicked{""};
 	static std::string LayerLastPicked{""};
 	static std::map<std::string, Slyvina::Kthura::Kthura> MapRegister;
@@ -52,6 +53,7 @@ namespace Scyndi_CI {
 	static void SCIKthuraCrash(std::string errormessage, std::string xdata) {
 		Crash("Kthura error: " + errormessage, xdata);
 	}
+	static void SCIKthuraDrawCrash(std::string em) { SCIKthuraCrash(em, "Error in Kthura_Draw_TQSG"); }
 
 	static void Init_SCI_Kthura() {
 		if (!SCI_KthuraDraw) {
@@ -62,6 +64,7 @@ namespace Scyndi_CI {
 			SCI_KthuraDraw = Init_TQSG_For_Kthura(Resource());
 			QCol->Doing("=>", "Panic");
 			KthuraPanic = SCIKthuraCrash;
+			TQSG_Kthura_Panic = SCIKthuraDrawCrash;
 			QCol->Doing("=>", "Done");
 		}
 	}
@@ -85,7 +88,10 @@ namespace Scyndi_CI {
 		QCol->Doing("Loading Kthura", MapDir, " ");
 		QCol->Doing("to", Tag);
 		MapRegister[Tag] = LoadKthura(Resource(), MapDir);
+		MapLastLoaded = MapDir;
 	}
+
+	std::string LastLoadedKthura() { return MapLastLoaded; }
 
 	KthuraLayer* GetKthuraLayer(std::string MapTag, std::string LayerTag) {
 		Init_SCI_Kthura();

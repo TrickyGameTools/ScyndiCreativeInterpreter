@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.09.21
+// Version: 23.10.07
 // EndLic
 
 #include <SlyvGINIE.hpp>
@@ -113,7 +113,7 @@ namespace Scyndi_CI {
 
 	static int API_Parse(lua_State* L) {
 		AutoTag;
-		auto Source = Lunatic_CheckString(L, 1);
+		auto Source = Lunatic_CheckString(L, 2);
 		auto Merge = luaL_optinteger(L, 3, 0);
 		REC->Parse(Source, Merge);
 		return 0;

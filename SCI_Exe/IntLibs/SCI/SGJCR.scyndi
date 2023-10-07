@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/SGJCR.scyndi
 // Scyndi's Creative Interpreter
-// version: 23.01.21
+// version: 23.10.07
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -51,10 +51,28 @@ Class TSGJCR
 	
 	Var GetBank(String File,String BnkTag)
 		if !Lua.Bank
-			error("S:Saving banks in savegames requires 'Libs/SCI/Bank' to be imported with #use")
+			error("L:Loading banks in savegames requires 'Libs/SCI/Bank' to be imported with #use")
 		end
 		Lua.SGJCR.GetBank(Tag,File,BnkTag)
 		Return Lua.Scyndi["NEW"](-999,BnkTag)
+	End
+	
+	Void SetStatistician(String StatTag,String Folder="Party")
+		Lua.SGJCR.SetStat(StatTag,Folder)
+	End
+	
+	Var GetStatistician(String StatTag)
+		// VAR and not string, because a nil must be returned if the StatTag is not registered.
+		Return Lua.SGJCR.GetStat(StatTag)
+	End
+	
+	Void SetStat(String StatTag,String Folder="Party")
+		Lua.SGJCR.SetStat(Tag,StatTag,Folder)
+	End
+	
+	Var GetStat(String StatTag)
+		// VAR and not string, because a nil must be returned if the StatTag is not registered.
+		Return Lua.SGJCR.GetStat(Tag,StatTag)
 	End
 	
 	Void DoType(String _Type)
@@ -79,6 +97,14 @@ Class TSGJCR
 	
 	Bool HasBin(string BnTag)
 		Return Lua.SGJCR.HasBin(BnTag)
+	End
+	
+	Void Save()
+		Lua.SGJCR.Save(Tag)
+	End
+	
+	Void Load()
+		Lua.SGJCR.Load(Tag)
 	End
 	
 	Constructor(string _Tag="",obtain)

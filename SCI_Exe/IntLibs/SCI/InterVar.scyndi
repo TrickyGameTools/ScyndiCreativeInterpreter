@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/InterVar.scyndi
 // Scyndi's Creative Interpreter - InterVar linkup code
-// version: 23.09.23
+// version: 23.10.07
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -126,6 +126,13 @@ global get var gstring
 	return _ivglob.istr
 end	
 
+global get string gsource
+	return _ivglob.source
+end
+
+global set string gsource
+	_ivglob.source = value
+end
 	
 readonly delegate Clear = Lua.InterVar.Clear
 	

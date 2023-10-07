@@ -330,6 +330,9 @@
     <ClCompile Include="API\API_Kthura.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
+    <ClCompile Include="API\API_DebugConsole.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SCI_Share\Version.hpp">
@@ -553,6 +556,9 @@
     </ClInclude>
     <ClInclude Include="SCI_Kthura.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="API\API_DebugConsole.hpp">
+      <Filter>Source Files\API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

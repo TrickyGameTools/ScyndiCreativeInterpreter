@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.21
+// Version: 23.10.07
 // EndLic
 // Generated header
 // Do not modify manually but use the API_SGJCR_Enum.py script for Python in stead!
@@ -42,10 +42,12 @@ namespace Scyndi_CI {
 	};
 
 	static std::map<std::string, SGJCR_Types> Nm2En{
-		{"ID",SGJCR_Types::ID},
-		{"TXTDATA",SGJCR_Types::TxtData},
-		{"BINDATA",SGJCR_Types::BinData},
-		{"RPGSTAT",SGJCR_Types::RPGStat}
+		{"ID", SGJCR_Types::ID},
+		{ "TXTDATA",SGJCR_Types::TxtData },
+		{ "TEXT",SGJCR_Types::TxtData },
+		{ "BINDATA",SGJCR_Types::BinData },
+		{ "RPGSTAT",SGJCR_Types::RPGStat }, // Deprecated from the start
+		{ "STATISTICIAN",SGJCR_Types::RPGStat }
 	};
 
 }

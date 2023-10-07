@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.09.21
+// Version: 23.10.07
 // EndLic
 
 #undef SCI_NO_ERROR_CATCHING
@@ -41,6 +41,8 @@
 #include "SCI_Load.hpp"
 #include "SCI_Script.hpp"
 #include "SCI_Crash.hpp"
+
+
 
 using namespace Slyvina;
 using namespace Units;

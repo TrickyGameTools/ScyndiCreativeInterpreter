@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/Sys.scyndi
 // Scyndi's Creative Interpreter - Sys Module
-// version: 23.10.04
+// version: 23.10.07
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -20,6 +20,9 @@
 
 module
 
+Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"DebugConsole")
+
+Const String StateName = Lua.SCI_StateName
 
 const delegate Exit = Lua.Exit
 const delegate GoToFlow = Lua.SCI_GoToFlow
@@ -32,6 +35,7 @@ const delegate DontFlip = Lua.SCI_DontFlip
 const delegate OpenURL = Lua.SCI_OpenURL
 const delegate HasState = Lua.SCI_HasState
 const delegate Call = Lua.SCI_Call
+const delegate Yes = Lua.SCI_Yes
 global const delegate CSay = Lua.CSay
 global const delegate CSayF = Lua.CSayF
 global const delegate CSaySetConfig = Lua.SCI_CSaySetConfig
@@ -39,5 +43,16 @@ global const delegate CSaySetConfig = Lua.SCI_CSaySetConfig
 get string BuildState
 	return Lua.SCI_BuildState()
 end
+
+void ConsoleGlobal(String Cmd,String Func)
+	Lua.DebugConsole.DefDebugConsole(Cmd,"DEBUG_GLOBAL",Func)
+end
+
+void ConsoleLocal(String Cmd,String Func)
+	Lua.DebugConsole.DefDebugConsole(Cmd,StateName,Func)
+end
+
+// It goes without saying that calling this in anything other than a debug console command is pretty pointless!
+Const Delegate EndConsole = Lua.DebugConsole.EndConsole 
 
 global const delegate GoToFlow = Lua.SCI_GoToFlow

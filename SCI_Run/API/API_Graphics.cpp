@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.09.22
+// Version: 23.10.07
 // EndLic
 
 #include <SlyvString.hpp>
@@ -75,6 +75,19 @@ namespace Scyndi_CI {
 			frame{ luaL_optinteger(L,4,0) };
 		Img(Tag)->Draw(x, y, frame);
 	}
+
+	static int API_TileImage(lua_State* L) {
+		auto
+			Tag{ Lunatic_CheckString(L,1) };
+		auto
+			x{ luaL_checkinteger(L,2) },
+			y{ luaL_checkinteger(L,3) },
+			w{ luaL_checkinteger(L,4) },
+			h{ luaL_checkinteger(L,5) },
+			frame{ luaL_optinteger(L, 6, 0) };
+		Img(Tag)->Tile(x, y, w, h, frame);
+	}
+
 
 	static int API_TrueDrawImage(lua_State* L) {
 		auto
@@ -209,26 +222,27 @@ namespace Scyndi_CI {
 
 	void Init_API_Graphics() {
 		std::map<std::string, lua_CFunction>IAPI{
-			{"KillImage",API_Kill},
-			{"LoadImage",API_LoadImage},
-			{"HasImageTag",API_HasImageTag},
-			{"Draw",API_DrawImage},
-			{"TrueDraw",API_TrueDrawImage},
-			{"Cls",API_Cls},
-			{"HotCenter",API_HotCenter},
-			{"Color",API_Color},
-			{"ColorHSV",API_ColorHSV},
-			{"Width",API_SWidth},
-			{"Height",API_SHeight},
-			{"GetImageFormat",API_ImgFmt},
-			{"LinkFont",API_LinkFont},
-			{"Text",API_Text},
-			{"TextSize",API_TextSize},
-			{"KillFont",API_KillFont},
-			{"HasFontTag",API_HasFontTag},
-			{"Stretch",API_Strech},
-			{"Rect",API_Rect},
-			{"Flip",API_Flip}
+			{ "KillImage", API_Kill},
+			{ "LoadImage",API_LoadImage },
+			{ "HasImageTag",API_HasImageTag },
+			{ "Draw",API_DrawImage },
+			{ "TrueDraw",API_TrueDrawImage },
+			{ "Tile",API_TileImage },
+			{ "Cls",API_Cls },
+			{ "HotCenter",API_HotCenter },
+			{ "Color",API_Color },
+			{ "ColorHSV",API_ColorHSV },
+			{ "Width",API_SWidth },
+			{ "Height",API_SHeight },
+			{ "GetImageFormat",API_ImgFmt },
+			{ "LinkFont",API_LinkFont },
+			{ "Text",API_Text },
+			{ "TextSize",API_TextSize },
+			{ "KillFont",API_KillFont },
+			{ "HasFontTag",API_HasFontTag },
+			{ "Stretch",API_Strech },
+			{ "Rect",API_Rect },
+			{ "Flip",API_Flip }
 		};
 		InstallAPI("Graphics", IAPI);
 	}

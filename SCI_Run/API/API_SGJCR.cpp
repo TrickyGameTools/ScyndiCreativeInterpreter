@@ -21,13 +21,17 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.09.21
+// Version: 23.10.07
 // EndLic
 #include <SlyvString.hpp>
 #include <SlyvStream.hpp>
 #include <SlyvRandom.hpp>
 #include <SlyvTime.hpp>
 #include <SlyvQCol.hpp>
+
+#include <Statistician.hpp>
+#include <Statistician_SaveJCR6.hpp>
+#include <Statistician_LoadJCR6.hpp>
 
 #include <JCR6_Write.hpp>
 
@@ -43,6 +47,7 @@
 using namespace std;
 using namespace Slyvina;
 using namespace Units;
+using namespace Statistician;
 using namespace Lunatic;
 using namespace JCR6;
 
@@ -51,19 +56,24 @@ using namespace JCR6;
 #define AutoRec AutoTag auto Rec{ _SGRec::Register[Tag] }
 
 namespace Scyndi_CI {
+
+	Party JSG_GetParty(string T, bool create = false); // This is merely a header for API_Statistician.cpp | One definition only used here, a .hpp header could do harm than good.
+	void JSG_SetParty(string t, Party P);
+
 	class _SGRec; typedef shared_ptr<_SGRec> SGRec;
 	class _SGRec {
 	public:
 		static map<string, SGRec> Register;
 		map<string, Bank> Banks{};
 		map<string, string> TextEntries{};
+		map<string, string> PartyEntries{};
 		map<SGJCR_Types, bool> DoType{};
 		string JCRFile{ "" };
 		//JT_Dir Res{ nullptr };
 		static SGRec Create(string Tag) {
 			Trans2Upper(Tag);
 			Register[Tag] = make_shared<_SGRec>();
-			Register[Tag]->DoType[SGJCR_Types::ID] = true;
+			Register[Tag]->DoType[SGJCR_Types::ID] = true;			
 			return Register[Tag];
 		}
 	};
@@ -116,6 +126,7 @@ namespace Scyndi_CI {
 	}
 
 	static int API_SGJCRSetText(lua_State* L) {
+		//printf("SGJCRSetText request received from Lua State at $%x", (int)L);
 		AutoRec;
 		auto EntryN{ Upper(Lunatic_CheckString(L,2)) }, Content{ Lunatic_CheckString(L,3) };
 		Rec->TextEntries[EntryN] = Content;
@@ -153,28 +164,61 @@ namespace Scyndi_CI {
 		auto Type{ Upper(Lunatic_CheckString(L,2)) };
 		if (!Nm2En.count(Type)) { luaL_error(L,"Unknown savegame datatype '%s'", Type.c_str()); return 0; }
 		auto EType{ Nm2En[Type] };
+		//printf("Do Tag: %s -> %d\n", Type.c_str(), (int)EType); // debug
 		Rec->DoType[EType] = true;
 		return 0;
 	}
 
+	static int API_SGJCRSetStat(lua_State* L) {
+		AutoRec;
+		auto
+			STag{ Upper(luaL_checkstring(L,2)) },
+			OutDir{ Lunatic_CheckString(L,3) };
+		Rec->PartyEntries[STag] = OutDir;
+		Rec->DoType[SGJCR_Types::RPGStat] = true;
+		return 0;
+	}
+
+	static int API_SGJCRGetStat(lua_State* L) {
+		AutoRec;
+		auto
+			STag{ Upper(luaL_checkstring(L,2)) };
+		if (!Rec->PartyEntries.count(STag)) return 0;
+		Lunatic_PushString(L, Rec->PartyEntries[STag]);
+		return 1;		
+	}
+
 	static int API_SGJCRSave(lua_State* L) {
 		AutoRec;
-		if (Rec->JCRFile.size()) { luaL_error(L, "S:No file assigned to savegame record!"); return 0; }
+		if (!Rec->JCRFile.size()) { luaL_error(L, "S:No file assigned to savegame record!"); return 0; }
 		Rec->DoType[SGJCR_Types::ID] = true;
 		QCol->Doing("Saving", Rec->JCRFile);
-		auto JO{ CreateJCR6(SaveGameDir() + Rec->JCRFile) };
+		auto FullOutFile{ SaveGameDir() +"/"+ Rec->JCRFile}, OutDir{ExtractDir(FullOutFile)};
+		if (!DirectoryExists(OutDir)) {
+			QCol->Doing("Creating Dir", OutDir);
+			MakeDir(OutDir);
+		}
+		auto JO{ CreateJCR6(FullOutFile) };
 		if (Last()->Error) { luaL_error(L, "Error creating savegame: %s", Last()->ErrorMessage.c_str()); return 0; }
 		for (auto& IJD : Rec->DoType) {
 			if (IJD.second) {
 				switch (IJD.first) {
-				case SGJCR_Types::ID:
+				case SGJCR_Types::ID: {
 					QCol->Doing("-> ID", "ID/Idenify.ini");
-					JO->AddString("ID/Identify.ini", TrSPrintF("# Savegame. Created: %s\n\n[ID]\nEngine=SCI\nEngineVersion=%s\nGameID=%s\n", CurrentDate().c_str()), QVersion.Version(false).c_str(), SaveGameID().c_str());
-					break;
+					// TrSPrintF("# Savegame. Created: %s\n\n[ID]\nEngine=SCI\nEngineVersion=%s\nGameID=%s\n", CurrentDate().c_str()), QVersion.Version(false).c_str(), SaveGameID().c_str()
+					std::string oID{ "# Savegame. Created:" + CurrentDate() + "\n"
+						"[ID]\n"
+						"EngineVersion=" + QVersion.Version(false) + "\n"
+						"GameID=" + SaveGameID() + "\n"
+						"Engine=SCI\n"
+					};
+					
+					JO->AddString(oID, "ID/Identify.ini");
+				} break;
 				case SGJCR_Types::TxtData:
 					for (auto& TD : Rec->TextEntries) {
 						QCol->Doing("-> Text", TD.first);
-						auto Storage{ "Store" };
+						std::string Storage{ "Store" };
 						if (TD.second.size() > 2048) Storage = "zlib";
 						JO->AddString(TD.second, "TxtData/" + TD.first, Storage, "Scyndi's Creative Interpreter", "Save game data");
 					}
@@ -182,14 +226,18 @@ namespace Scyndi_CI {
 				case SGJCR_Types::BinData:
 					for (auto& TD : Rec->Banks) {
 						QCol->Doing("-> Binary", TD.first);
-						auto Storage{ "Store" };
+						std::string Storage{ "Store" };
 						if (TD.second->Size() > 2048) Storage = "zlib";
 						JO->AddBank(TD.second, "BinData/" + TD.first, Storage, "Scyndi's Creative Interpreter", "Save game data");
 					}
 					break;
 				case SGJCR_Types::RPGStat:
-					// TO DO: RPG Stats
-					luaL_error(L, "RPG Stat Data is not yet supported! Please come back later for that one!");
+					for (auto& TS : Rec->PartyEntries) {
+						QCol->Doing("-> Statistician", TS.first, " "); QCol->LMagenta("(" + TS.second + ")\n");
+						auto P = JSG_GetParty(TS.first);
+						StatSaveJCR6(P, JO, "Statistician." + TS.second);
+					}
+					//luaL_error(L, "RPG Stat Data is not yet supported! Please come back later for that one!");
 					return 0;
 				default:
 					luaL_error(L, "Unknown SGJCR type (%d)", (uint32)IJD.first);
@@ -197,16 +245,18 @@ namespace Scyndi_CI {
 				}
 			}
 		}
+		QCol->Doing("Finalizing", Rec->JCRFile);
 		JO->Close();
+		QCol->Doing("Done", "Game has been saved");
 		return 0;
 	}
 
 	static int API_SGJCRLoad(lua_State* L) {
 		AutoRec;
 		auto Identified{ false };
-		if (Rec->JCRFile.size()) { luaL_error(L, "L:No file assigned to savegame record!"); return 0; }
+		if (!Rec->JCRFile.size()) { luaL_error(L, "L:No file assigned to savegame record!"); return 0; }
 		QCol->Doing("Analysing", Rec->JCRFile);
-		auto JI{ JCR6_Dir(SaveGameDir() + Rec->JCRFile) };
+		auto JI{ JCR6_Dir(SaveGameDir() + "/" + Rec->JCRFile) };
 		if (Last()->Error) { luaL_error(L, "Error analysing savegame: %s", Last()->ErrorMessage.c_str()); return 0; }
 		map<SGJCR_Types, bool>ToDo{};
 		for (auto F : JI->_Entries) {
@@ -214,15 +264,17 @@ namespace Scyndi_CI {
 			if (Slash > 0) {
 				auto Dir{ F.first.substr(0,Slash) };
 				if (Nm2En.count(Dir)) ToDo[Nm2En[Dir]] = true;
+				ToDo[SGJCR_Types::RPGStat] = ToDo[SGJCR_Types::RPGStat] || Prefixed(Dir, "STATISTICIAN.");
 			}
 		}
 		for (auto& IJT : ToDo) {
+			printf("Loading game. Stage: %d\n", (int)IJT.first);
 			switch (IJT.first) {
 			case SGJCR_Types::ID: {
 				QCol->Doing("-> ID", "Identify.ini");
 				auto C{ JI->GetString("ID/Identify.ini") };
 				auto G{ ParseUGINIE(C) };
-				if (G->Value("ID", "Engine") != "ID") { luaL_error(L, "Savegame engine fault"); return 0; }
+				// if (G->Value("ID", "Engine") != "SCI") { luaL_error(L, "Savegame engine fault"); return 0; }
 				if (G->Value("ID", "GameID") != SaveGameID()) { luaL_error(L, "Savegame appears to be for a different game"); return 0; }
 				Identified = true;
 			} break;
@@ -230,7 +282,7 @@ namespace Scyndi_CI {
 				for (auto F : JI->_Entries) {
 					if (ExtractDir(F.first) == "TXTDATA") {
 						QCol->Doing("-> Text", F.second->Name());
-						Rec->TextEntries[F.first] = JI->GetString(F.first);
+						Rec->TextEntries[StripDir(F.first)] = JI->GetString(F.first);
 					}
 				}
 				break;
@@ -243,8 +295,15 @@ namespace Scyndi_CI {
 				}
 				break;
 			case SGJCR_Types::RPGStat:
-				luaL_error(L, "RPGStat data loading is not yet implemented in this version");
-				return 0;
+				//luaL_error(L, "RPGStat data loading is not yet implemented in this version");				
+				//return 0;
+				for (auto& TS : Rec->PartyEntries) {
+					QCol->Doing("-> Statistician", TS.first, " "); QCol->LMagenta("(" + TS.second + ")\n");
+					//auto P = JSG_GetParty(TS.first);
+					//StatSaveJCR6(P, JO, "Statistician." + TS.second);
+					auto P = JCR6_LoadParty(JI, "Statistician." + TS.second);
+					JSG_SetParty(TS.first,P);
+				}
 			default:
 				break;
 			}
@@ -290,20 +349,22 @@ namespace Scyndi_CI {
 
 	void Init_API_SGJCR(){
 		std::map<std::string, lua_CFunction>IAPI{
-			{"Create",API_SGJCRCreate},
-			{"Assign",API_SGJCRAssign},
-			{"Mutilate",API_SGJCRMutilate},
-			{"GetText",API_SGJCRGetText},
-			{"SetText",API_SGJCRSetText},
-			{"GetBank",API_SGJCRGetBank},
-			{"SetBank",API_SGJCRSetBank},
-			{"DoType",API_SGJCRDoType},
-			{"Save",API_SGJCRSave},
-			{"Load",API_SGJCRLoad},
-			{"Clear",API_SGJCRClear},
-			{"Exists",API_SGExists},
-			{"HasText",API_HasText},
-			{"HasBin",API_HasBin}
+			{ "Create", API_SGJCRCreate },
+			{ "Assign",API_SGJCRAssign },
+			{ "Mutilate",API_SGJCRMutilate },
+			{ "GetText",API_SGJCRGetText },
+			{ "SetText",API_SGJCRSetText },
+			{ "GetBank",API_SGJCRGetBank },
+			{ "SetBank",API_SGJCRSetBank },
+			{ "SetStat",API_SGJCRSetStat },
+			{ "GetStat",API_SGJCRGetStat },
+			{ "DoType",API_SGJCRDoType },
+			{ "Save",API_SGJCRSave },
+			{ "Load",API_SGJCRLoad },
+			{ "Clear",API_SGJCRClear },
+			{ "Exists",API_SGExists },
+			{ "HasText",API_HasText },
+			{ "HasBin",API_HasBin }
 		};
 		InstallAPI("SGJCR", IAPI);
 	}

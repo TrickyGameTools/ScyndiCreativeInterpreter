@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.10.04
+// Version: 23.10.07
 // EndLic
 
 #include <Lunatic.hpp>
@@ -51,6 +51,20 @@ using namespace Lunatic;
 namespace Scyndi_CI {
 
 	static map<string, Party> PartyReg{};
+
+#pragma region "Only used for savegame. Headers are in API_SGJCR.cpp"
+	Party JSG_GetParty(string T,bool create) {
+		Trans2Upper(T);
+		if (create) PartyReg[T] = CreateParty();
+		if (!PartyReg.count(T)) Crash(TrSPrintF("SG:There is no party tagged '%s' in the statician database",T));
+		return PartyReg[T];
+	}
+
+	void JSG_SetParty(string T, Party P) {
+		Trans2Upper(T);
+		PartyReg[T] = P;
+	}
+#pragma endregion
 
 	static int API_Stat_HasParty(lua_State* L) {
 		lua_pushboolean(L, PartyReg.count(Upper(luaL_checkstring(L, 1))));
@@ -152,7 +166,7 @@ namespace Scyndi_CI {
 		auto
 			ChTag{ luaL_checkstring(L,3) };
 		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
-		printf("Party %s index %d will have character %s", PartyTag.c_str(), Index, ChTag);
+		//printf("Party %s index %d will have character %s\n", PartyTag.c_str(), Index, ChTag);
 		(*PartyReg[PartyTag])[Index] = ChTag;
 		return 0;
 	}

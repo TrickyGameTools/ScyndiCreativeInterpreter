@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.10.04
+// Version: 23.10.07
 // EndLic
 
 
@@ -74,6 +74,11 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	static int API_Kthura_LoadedMap(lua_State* L) {
+		Lunatic_PushString(L, LastLoadedKthura());
+		return 1;
+	}
+
 #define SetObjInt(skey,key) if (ObjKey==skey) {o->key(luaL_checkinteger(L,3)); return 0; }
 #define SetObjByte(skey,key) if (ObjKey==skey) {o->key((byte)(luaL_checkinteger(L,3)%256)); return 0; }
 #define SetObjString(skey,key) if (ObjKey==skey) {o->key(luaL_checkstring(L,3)); return 0; }
@@ -113,6 +118,8 @@ namespace Scyndi_CI {
 		SetObjBool("BLOCKED", impassible);
 		SetObjBool("BLOCK", impassible);
 		SetObjBool("FORCEPASSIBLE", forcepassible);
+		// Actor only
+		SetObjString("WIND", Wind);
 		Crash("(Set) Unknown object field: " + ObjKey);
 		return 0;
 	}
@@ -128,6 +135,7 @@ namespace Scyndi_CI {
 			ObjKey{ Upper(luaL_checkstring(L,2)) };
 		auto
 			o{ GetKthuraLayer()->Obj(ObjTag) };
+		// Object
 		GetObjInt("X", x);
 		GetObjInt("Y", y);
 		GetObjInt("W", w);
@@ -157,6 +165,8 @@ namespace Scyndi_CI {
 		GetObjBool("BLOCKED", impassible);
 		GetObjBool("BLOCK", impassible);
 		GetObjBool("FORCEPASSIBLE", forcepassible);
+		// Actor only
+		GetObjString("WIND", Wind);
 		Crash("(Get) Unknown object field: " + ObjKey);
 		return 0;
 	}
@@ -178,7 +188,7 @@ namespace Scyndi_CI {
 	static int API_Kthura_WalkTo(lua_State* L) {
 		auto Tag{ Lunatic_CheckString(L,1) };
 		auto o{ GetKthuraLayer()->Obj(Tag) };
-		auto n{ lua_gettop(L) }, t{ lua_type(L,1) };
+		auto n{ lua_gettop(L) }, t{ lua_type(L,2) };
 		auto errtype = std::string("");
 		// Who said function overloading was not possible in Lua? ;)
 		switch (t) {
@@ -214,6 +224,43 @@ namespace Scyndi_CI {
 			break;
 		}
 		Crash("Illegal \"WalkTo\" call. Type '" + errtype + "' is not allowed to define a target spot!");
+		return 0;
+	}
+
+	static int API_Kthura_HasObj(lua_State* L) {		
+		auto n{ lua_gettop(L) }, t{ lua_type(L,1) };
+		auto errtype = std::string("");
+		// Who said function overloading was not possible in Lua? ;)
+		switch (t) {
+		case LUA_TSTRING:
+			lua_pushboolean(L, GetKthuraLayer()->HasTag(luaL_checkstring(L, 1)));
+			return 1;
+		case LUA_TNUMBER:
+			lua_pushboolean(L, GetKthuraLayer()->HasID(luaL_checkinteger(L, 2)));
+			return 1;
+		case LUA_TBOOLEAN:
+			errtype = "boolean";
+			break;
+		case LUA_TTABLE:
+			errtype = "table";
+			break;
+		case LUA_TTHREAD:
+			errtype = "thread";
+			break;
+		case LUA_TFUNCTION:
+			errtype = "function";
+			break;
+		case LUA_TNIL:
+			errtype = "nil";
+			break;
+		case LUA_TLIGHTUSERDATA:
+			errtype = "userdata";
+			break;
+		default:
+			errtype = TrSPrintF("Unknown type (%d)");
+			break;
+		}
+		Crash("Illegal \"HasObj\" call. Type '" + errtype + "' is not allowed to define the identification of an object");
 		return 0;
 	}
 
@@ -292,6 +339,7 @@ namespace Scyndi_CI {
 		switch (t) {
 		case LUA_TSTRING:
 			GetKthuraLayer()->Spawn(luaL_checkstring(L, 2))->Tag(Tag);
+			GetKthuraLayer()->RemapTags();
 			return 0;
 		case LUA_TNUMBER:
 			if (t == 2) {
@@ -299,6 +347,7 @@ namespace Scyndi_CI {
 				GetKthuraLayer()->Spawn(o->x(), o->y())->Tag(Tag);
 			} else
 				GetKthuraLayer()->Spawn(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3))->Tag(Tag);
+			GetKthuraLayer()->RemapTags();
 			return 0;
 		case LUA_TBOOLEAN:
 			errtype = "boolean";
@@ -326,6 +375,21 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	int API_Kthura_SetMeta(lua_State* L) {
+		auto
+			Key{ Lunatic_CheckString(L,1) },
+			Value{ Lunatic_CheckString(L,2) };
+		(*GetKthura()->MetaData)[Key] = Value;
+		return 0;
+	}
+
+	int API_Kthura_GetMeta(lua_State* L) {
+		auto
+			Key{ Lunatic_CheckString(L,1) };
+		Lunatic_PushString(L, (*GetKthura()->MetaData)[Key]);
+		return 1;
+	}
+
 	void Init_API_Kthura() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{ "Load", API_Kthura_Load },
@@ -340,7 +404,11 @@ namespace Scyndi_CI {
 			{ "MoveTo",API_Kthura_MoveTo },
 			{ "Draw",API_Kthura_Draw },
 			{ "Kill",API_Kthura_Kill },
-			{ "Spawn",API_Kthura_Spawn }
+			{ "Spawn",API_Kthura_Spawn },
+			{ "GetMeta",API_Kthura_GetMeta },
+			{ "SetMeta",API_Kthura_SetMeta },
+			{ "HasObj",API_Kthura_HasObj },
+			{ "LastLoadedMap",API_Kthura_LoadedMap }
 		};
 		InstallAPI("Kthura", IAPI);
 	}

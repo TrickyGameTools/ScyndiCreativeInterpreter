@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.09.23
+// Version: 23.10.07
 // EndLic
 #include <Lunatic.hpp>
 
@@ -70,6 +70,7 @@ namespace Scyndi_CI {
 			GvRegister[Tag]._Int.clear();
 			GvRegister[Tag]._Str.clear();
 		}
+		GvRegister[Tag]; // Must make sure the record is called at least ONCE making sure it exists!
 		for (auto& IT : *B) GvRegister[Tag]._Bool[IT] = G->Value("Boolean", IT) == "TRUE";
 		for (auto& IT : *I) GvRegister[Tag]._Int[IT] = G->IntValue("Integer", IT);
 		for (auto& IT : *S) GvRegister[Tag]._Str[IT] = G->Value("String", IT);
@@ -96,7 +97,8 @@ namespace Scyndi_CI {
 		auto
 			Tag{ Upper(luaL_checkstring(L,1)) },
 			VarN{ Upper(luaL_checkstring(L,3)) };
-		if (Prefixed(Tag, "*") && (!GvRegister.count(Tag))) { Crash("InterVar '" + Tag + "' cannot be created like this"); return 0; }
+
+		if (Prefixed(Tag, "*") && (!GvRegister.count(Tag))) { Crash("InterVar '" + Tag + "' cannot be created like this (def "+VarN+")"); return 0; }
 		switch(luaL_checkinteger(L,2)){
 		case 1:
 			GvRegister[Tag]._Bool[VarN] = luaL_checkinteger(L, 5);
@@ -118,7 +120,7 @@ namespace Scyndi_CI {
 		auto
 			Tag{ Upper(luaL_checkstring(L,1)) },
 			VarN{ Upper(luaL_checkstring(L,3)) };
-		if (Prefixed(Tag, "*") && (!GvRegister.count(Tag))) { Crash("InterVar '" + Tag + "' cannot be created like this"); return 0; }
+		if (Prefixed(Tag, "*") && (!GvRegister.count(Tag))) { Crash("InterVar '" + Tag + "' cannot be created like this (Get "+VarN+")"); return 0; }
 		switch (luaL_checkinteger(L, 2)) {
 		case 1:
 			lua_pushboolean(L, GvRegister[Tag]._Bool[VarN]);
@@ -176,6 +178,7 @@ namespace Scyndi_CI {
 
 	void Init_API_Vars() {
 		if (!GvRegister.count("*GENERAL")) GvParse("*GENERAL", "# Nothing"); // Just makes sure the record exists!
+		//std::cout << "*GENERAL exists >> " << GvRegister.count("*GENERAL") << "\n"; // DEBUG
 		std::map<std::string, lua_CFunction>IAPI{
 			{"UnParse",API_GvUnParse},
 			{"Parse",API_GvParse},

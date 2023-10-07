@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.10.04
+// Version: 23.10.07
 // EndLic
 
 #include <Lunatic.hpp>
@@ -38,6 +38,7 @@
 #include "SCI_Config.hpp"
 
 #include "API/SCI_InstallAPIs.hpp"
+#include "API/API_DebugConsole.hpp"
 
 using namespace Slyvina;
 using namespace Units;
@@ -351,6 +352,11 @@ namespace Scyndi_CI {
 		OpenURL(luaL_checkstring(L, 1));
 		return 0;
 	}
+
+	static int SYS_Yes(lua_State* L) {
+		lua_pushboolean(L, Yes(StReplace(luaL_checkstring(L, 1), "<nl>", "\n")));
+		return 1;
+	}
 #pragma endregion
 
 	static void InitScript() {
@@ -376,6 +382,7 @@ namespace Scyndi_CI {
 			{"SCI_OpenURL",SYS_OpenURL},
 			{"SCI_Call",SYS_Call},
 			{"SCI_HasState",SYS_HasState},
+			{"SCI_Yes",SYS_Yes},
 
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},
@@ -501,6 +508,10 @@ namespace Scyndi_CI {
 		return StateRegister.count(Upper(_State));
 	}
 
+	std::string CurrentFlow() {
+		return CFlow.Name;
+	}
+
 	void GoToFlow(std::string State) {
 		CFlow.Name = "FLOW_" + State;
 		CFlow.State = Flow(State);
@@ -541,6 +552,8 @@ namespace Scyndi_CI {
 		StateRegister.clear();
 	}
 
+	void EndTheRun() { EndRun = true; }
+
 	void RunGame() {
 		auto RT{ GetRunType() };
 
@@ -555,6 +568,7 @@ namespace Scyndi_CI {
 			case RunType::Flow:
 				Cls();
 				Poll();
+				if (DebugConsoleCalled()) break;
 				Call(CFlow.Name, "MainFlow");
 				if (DontFlip)
 					DontFlip--;
@@ -569,6 +583,7 @@ namespace Scyndi_CI {
 				else
 					Flip();
 				Poll();
+				if (DebugConsoleCalled()) break;
 				Call(CFlow.Name, "CB_Update");
 				static auto keys{ KeyArray() };
 				for (auto k : keys) {

@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.10.04
+// Version: 23.10.07
 // EndLic
 
 #include <SlyvMD5.hpp>
@@ -73,13 +73,34 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	int API_StripDir(lua_State* L) {
+		Lunatic_PushString(L,
+			StripDir(luaL_checkstring(L, 1)));
+		return 1;
+	}
+
+	int API_ExtExt(lua_State* L) {
+		Lunatic_PushString(L,
+			ExtractExt(luaL_checkstring(L, 1)));
+		return 1;
+	}
+
+	int API_ExtDir(lua_State* L) {
+		Lunatic_PushString(L,
+			ExtractDir(luaL_checkstring(L, 1)));
+		return 1;
+	}
+
 	void Init_API_String() {
 		std::map<std::string, lua_CFunction> IAPI{
 			{ "Replace", API_StReplace},
 			{ "Repeat",API_Repeat },
 			{ "MD5",API_MD5 },
 			{ "StripAll",API_StripAll },
-			{ "StripExt",API_StripExt }
+			{ "StripExt",API_StripExt },
+			{ "StripDir",API_StripDir },
+			{ "ExtractExt",API_ExtExt },
+			{ "ExtractDir",API_ExtDir }
 		};
 		InstallAPI("SString", IAPI);
 	}

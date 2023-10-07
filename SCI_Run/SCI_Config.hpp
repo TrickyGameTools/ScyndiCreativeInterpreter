@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.20
+// Version: 23.10.07
 // EndLic
 
 #pragma once
@@ -50,6 +50,8 @@ namespace Scyndi_CI {
 	std::string GameTitle();
 	std::string GameAuthor();
 	std::string GameCopyright();
+
+	bool DebugBuild();
 
 	std::string SaveGameID();
 

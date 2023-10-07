@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // Kthura Link up for Scyndi's Creative Interpreter
-// version: 23.10.04
+// version: 23.10.07
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -39,26 +39,27 @@ End
 
 
 plua _ObjKeyIndex(s,string Key)
-	return Lua.GetObj(s.____objtag,Key)
+	return Lua.Kthura.GetObj(s.____objtag,Key)
 end
 
 plua _ObjKeyNewIndex(s,string Key,value)
 	if (Lua.type(value)=="boolean")
 		if value
-			Lua.SetObj(s.____objtag,Key,1)
+			Lua.Kthura.SetObj(s.____objtag,Key,1)
 		else
-			Lua.SetObj(s.____objtag,Key,0)
+			Lua.Kthura.SetObj(s.____objtag,Key,0)
 		end
 	else
-		Lua.SetObj(s.____objtag,Key,value)
+		Lua.Kthura.SetObj(s.____objtag,Key,value)
 	end
 end
 
 plua _ObjIndex(s,string key)
-	key=key:upper()
+	key=upper(key)
 	if !s.____table[key] 
 		s.____table[key] = SetMetaTable({["____objtag"]=key},{["__index"]=_ObjKeyIndex, ["__newindex"]=_ObjKeyNewIndex})
 	end
+	// print("Obj.",key," => ",s.____table[key]) // debug
 	return s.____table[key]
 end
 
@@ -66,7 +67,15 @@ plua _ReadOnly(s,k)
 	Lua.error("Trying to write into a read only property")
 end
 
-const Var Obj = SetMetaTable({["____table"]={}},{["__index"]=_ObjIndex,["__newindex"]=_ReadOnly})
+
+plua _Obj
+
+init
+	_Obj = SetMetaTable({["____table"]={}},{["__index"]=_ObjIndex,["__newindex"]=_ReadOnly})
+end
+Get Var Obj
+	return _Obj
+End
 	
 
 Get String CurrentMap
@@ -85,6 +94,10 @@ Set String CurrentLayer
 	PickLayer(Value)
 End
 
+Get String LastLoadedMap
+	Return Lua.Kthura.LastLoadedMap()
+End
+
 
 Void ObjRGB(string Tag, Byte R,Byte G, Byte B)
 	Obj[Tag].R=R
@@ -99,3 +112,24 @@ Const Delegate MoveTo = Lua.Kthura.MoveTo
 
 Const Delegate Draw = Lua.Kthura.Draw
 Const Delegate Spawn = Lua.Kthura.Spawn
+Const Delegate HasObj = Lua.Kthura.HasObj
+
+
+
+
+QuickMeta Kthura_Meta
+	index
+		return Lua.Kthura.GetMeta(Key)
+	end
+	newindex
+		Lua.Kthura.SetMeta(Key,Value)
+	end
+end
+	
+Get Var Meta
+	Return Kthura_Meta
+End
+
+Get Var MetaData
+	Return Kthura_Meta
+End

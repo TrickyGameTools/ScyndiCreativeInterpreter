@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.16
+// Version: 23.10.07
 // EndLic
 
 #pragma once
@@ -45,11 +45,12 @@ namespace Scyndi_CI {
 	void StateCheck(bool s);
 	bool HasState(std::string _State);
 
-	inline Slyvina::Lunatic::SLunatic Flow(std::string _State) { return State("FLOW_" + _State); }
+	inline Slyvina::Lunatic::SLunatic Flow(std::string _State) { return State("FLOW_" + _State); }	
 	inline void Flow(std::string _State, Slyvina::Lunatic::SLunatic _Lun) { State("FLOW_" + _State, _Lun); }
 	inline void Flow(std::string _State, Slyvina::JCR6::JT_Dir _Res, std::string _Entry) { State("FLOW_" + _State, _Res, _Entry); }
 	inline void Flow(std::string _State, std::string _Entry) { Flow(_State, Resource(), _Entry); }
 	inline bool HasFlow(std::string _State) { return HasState("FLOW_" + _State); }
+	std::string CurrentFlow();
 
 	void GoToFlow(std::string State);
 
@@ -60,6 +61,8 @@ namespace Scyndi_CI {
 	void ScriptError(std::string _State,std::string ErrorMessage);
 
 	void KillAllStates();
+
+	void EndTheRun();
 
 	void RunGame();
 }

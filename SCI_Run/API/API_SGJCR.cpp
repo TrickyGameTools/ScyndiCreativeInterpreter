@@ -274,7 +274,7 @@ namespace Scyndi_CI {
 				QCol->Doing("-> ID", "Identify.ini");
 				auto C{ JI->GetString("ID/Identify.ini") };
 				auto G{ ParseUGINIE(C) };
-				// if (G->Value("ID", "Engine") != "SCI") { luaL_error(L, "Savegame engine fault"); return 0; }
+				if (G->Value("ID", "Engine") != "SCI") { luaL_error(L, "Savegame engine fault"); return 0; }
 				if (G->Value("ID", "GameID") != SaveGameID()) { luaL_error(L, "Savegame appears to be for a different game"); return 0; }
 				Identified = true;
 			} break;

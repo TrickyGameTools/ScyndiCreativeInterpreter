@@ -130,6 +130,10 @@ namespace Scyndi_CI {
 
 	std::string PickedLayer() { return LayerLastPicked; }
 
+	bool MapPicked() { return MapLastPicked != ""; }
+
+	bool LayerPicked() { return LayerLastPicked != ""; }
+
 	void PickKthura(std::string Tag) { 
 		Init_SCI_Kthura();
 		ChosenMap = GetKthura(Tag); 

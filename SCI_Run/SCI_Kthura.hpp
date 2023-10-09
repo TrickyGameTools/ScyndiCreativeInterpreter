@@ -44,4 +44,6 @@ namespace Scyndi_CI {
 	void PickKthuraLayer(std::string LayerTag);
 	std::string PickedMap();
 	std::string PickedLayer();
+	bool MapPicked();
+	bool LayerPicked();
 }

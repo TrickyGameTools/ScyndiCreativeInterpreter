@@ -36,6 +36,7 @@
 #include "../SCI_Script.hpp"
 #include "../SCI_Config.hpp"
 #include "../SCI_Graphics.hpp"
+#include "../SCI_Kthura.hpp"
 #include "API_DebugConsole.hpp"
 
 using namespace Slyvina;
@@ -79,6 +80,21 @@ namespace Scyndi_CI {
 	void IC_Back(VecString) { printf("System returned to the game. Please click the game window to continue\n"); ConsoleRunning = false; }
 	void IC_Fuck(VecString) { QCol->Error("HEY! What kind of talk is that?"); }
 	void IC_Echo(VecString L) { for (auto A : *L) printf("=> %s\n", A.c_str()); }
+
+	void IC_Block(VecString) {
+		if (!MapPicked()) { QCol->Error("Request not possible. No map picked"); }
+		if (!LayerPicked()) { QCol->Error("Request not possible. No layer picked"); }
+		QCol->Reset();
+		cout << "Blockmap: " << PickedMap() << "; Layer:" << PickedLayer() << endl;
+		auto L{ GetKthuraLayer() };		
+		printf("Blockmap: %dx%d\n", L->BlockWidth(), L->BlockHeight());
+		for (auto y = 0; y < L->BlockHeight(); ++y) {
+			for (auto x = 0; x < L->BlockWidth(); ++x) {
+				if (L->Block(x, y)) QCol->Yellow("X"); else QCol->Dark(".");
+			} cout << endl;
+		}
+
+	}
 #pragma endregion
 
 
@@ -93,6 +109,7 @@ namespace Scyndi_CI {
 		MCommands["EXIT"] = { "DEBUG_GLOBAL","",IC_Bye };
 		MCommands["BACK"] = { "DEBUG_GLOBAL","",IC_Back };
 		MCommands["RETURN"] = { "DEBUG_GLOBAL","",IC_Back };
+		MCommands["BLOCKMAP"] = { "DEBUG_GLOBAL","",IC_Block };
 		// Test commands
 		MCommands["FUCK"] = { "DEBUG_GLOBAL","",IC_Fuck };
 		MCommands["SHIT"] = { "DEBUG_GLOBAL","",IC_Fuck };

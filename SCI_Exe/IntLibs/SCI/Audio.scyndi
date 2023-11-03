@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/Audio.scyndi
 // Scyndi - Audio Link Up
-// version: 23.09.21
+// version: 23.11.03
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -34,8 +34,8 @@ Class TAudio
 		AutoKill = Left(_T,3)=="***"
 	End
 	
-	Int Play(int Channel=0)
-		Return Lua.Audio.PlayAudio(Tag,Channel)
+	Int Play(Channel)
+		Return Lua.Audio.PlayAudio(Tag,Channel || -1)
 	End
 	
 	Int Loop(int Channel=0,int Loops=0)
@@ -73,6 +73,8 @@ Var LoadNew(string file, string Tag)
 	End
 End
 
+Const Delegate Playing = Lua.Audio.Playing
+Const Delegate ChannelPlaying = Lua.Audio.Playing
 Const Delegate StopChannel = Lua.Audio.StopChannel
 Const Delegate HaltChannel = Lua.Audio.StopChannel
 Const Delegate Kill = Lua.Audio.KillAudio

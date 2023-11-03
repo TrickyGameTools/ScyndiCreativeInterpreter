@@ -34,6 +34,7 @@
 #include <SlyvStream.hpp>
 #include <SlyvQCol.hpp>
 #include <SlyvTime.hpp>
+#include <SlyvBank.hpp>
 
 #include "../SCI_Share/SCI_Header.hpp"
 #include "SCI_Config.hpp"
@@ -86,12 +87,15 @@ namespace Scyndi_CI {
 	}
 }
 
+void SCI_BankPanic(std::string err) { Crash("Banking error:"+err); }
+
 int main(int c, char** cli_args) {
 	using namespace Scyndi_CI;	
 	Header("Scyndi's Creative Interpreter");
 	QCol->Doing("Run File", ChReplace(cli_args[0],'\\','/'));
 	QCol->Doing("Run from", CurrentDir());
 	QCol->Doing("Game Home", GameGlobalHome());
+	_Bank::DefineDefaultBankPanic(SCI_BankPanic);
 	if (CanStart(c, cli_args)) {
 #ifndef SCI_NO_ERROR_CATCHING
 		try {

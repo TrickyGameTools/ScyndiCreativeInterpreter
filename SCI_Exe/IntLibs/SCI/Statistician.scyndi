@@ -154,7 +154,9 @@ Var PointsGet(s,string Key)
 End
 
 String DataGet(s,string Key)
-	return Me.GetCharData(s["*_PartyTag_*"],s["*_CharTag_*"],Key)
+	plua ret
+	ret = Me.GetCharData(s["*_PartyTag_*"],s["*_CharTag_*"],Key)
+	return ret
 end
 
 Void DataSet(s,string Key,string Value)
@@ -226,6 +228,10 @@ Class StatChar
 	Void ListAdd(String Key,String Value)
 		Me.StatListSet(PartyTag,CharTag,Key,Value)
 	End
+	
+	Bool HaveStat(string key)
+		return Me.HaveCharStat(PartyTag,CharTag,key)
+	end
 	
 	Constructor(P,String _T)
 		Parent=P
@@ -308,8 +314,8 @@ Class StatParty
 		//print("Char created")
 	end
 	
-	Void KilLChar(String T)
-		Me.StatKilChar(PartyTag,T)
+	Void KillChar(String T)
+		Me.StatKillChar(PartyTag,T)
 	End
 End
 

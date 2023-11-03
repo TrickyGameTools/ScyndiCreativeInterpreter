@@ -73,7 +73,7 @@ namespace Scyndi_CI {
 	}
 
 	static int API_Events_MouseHit(lua_State* L) {
-		lua_pushboolean(L, MouseHit(luaL_optinteger(L, 1, 1)));
+		lua_pushboolean(L, MouseHit(luaL_optinteger(L, 1, 1)));		
 		return 1;
 	}
 
@@ -108,6 +108,11 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	static int API_Sleep(lua_State* L) {
+		SDL_Delay(luaL_checkinteger(L, 1));
+		return 0;
+	}
+
 	void Init_API_Events() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Poll", API_Events_Poll},
@@ -124,7 +129,8 @@ namespace Scyndi_CI {
 			{ "KeyName",API_Events_KeyName },
 			{ "Flush",API_Events_Flush },
 			{ "Yes",API_Events_Yes },
-			{ "MouseButtonFromName",API_Events_MouseButtonFromName }
+			{ "MouseButtonFromName",API_Events_MouseButtonFromName },
+			{ "Sleep", API_Sleep}
 		};
 		InstallAPI("Events", IAPI);
 	}

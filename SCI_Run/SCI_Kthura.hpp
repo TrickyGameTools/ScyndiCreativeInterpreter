@@ -46,4 +46,5 @@ namespace Scyndi_CI {
 	std::string PickedLayer();
 	bool MapPicked();
 	bool LayerPicked();
+	bool InKthuraObject(Slyvina::Kthura::KthuraObject* o, int x, int y);
 }

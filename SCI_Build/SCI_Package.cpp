@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.14
+// Version: 23.11.03
 // EndLic
 
 #define Act(A) if (!A) return false
@@ -30,6 +30,7 @@
 
 #include <SlyvAsk.hpp>
 #include <SlyvDir.hpp>
+#include <SlyvDirry.hpp>
 #include <SlyvVecSearch.hpp>
 
 #include "SCI_Package.hpp"
@@ -231,10 +232,6 @@ namespace Scyndi_CI {
 				}
 			}
 		}
-			
-			
-			
-		
 
 		bool _Package::AddString(std::string package, std::string entry, std::string content, std::string author, std::string notes) {
 			if (_debug || package == "*DEBUG") {
@@ -242,6 +239,28 @@ namespace Scyndi_CI {
 				OutputJQL += "Notes:"; OutputJQL += notes + "\n";
 				OutputJQL += "Text:"; OutputJQL += entry + "\n";
 				OutputJQL += content + "\n@END@\n\n";
+			}
+			return true;
+		}
+
+		bool _Package::AddMedals(std::string package) {
+			if (_debug || package == "*DEBUG") {
+				if (_Parent->UseMedals()) {
+					std::string MedalP{ "E:/projects/applications/site/Medals/Medals.ini" };
+					auto Medal{ Dirry("$AppSupport$/Medals.JBC") };
+					if (FileExists(MedalP)) {
+						QCol->Doing("Importing", MedalP);						
+						OutputJQL += "Author:Jeroen P. Broks\nNotes:To be kept within THIS project alone!\nRaw:" + MedalP + ">ID/Medals.ini\n\n";
+					} else {
+						if (!FileExists(Medal)) {
+							QCol->Error(Medal + " could not be found!");
+							return false;
+						}
+						QCol->Doing("Stealing from", Medal);
+						OutputJQL += "From:" + Medal + "\n";
+						OutputJQL += "Steal:Score>ID/Medals.ini\n\n";
+					}
+				}
 			}
 			return true;
 		}
@@ -302,6 +321,7 @@ namespace Scyndi_CI {
 			QCol->Doing("Identifying", P->File());
 			//Act(HP->AddString("*MAIN", "ID/Identify.ini", G->UnParse("Identify data for Scyndi's Creative Interpreter"), P->Author(), P->Copyright()));
 			Act(HP->AddString("*MAIN", "ID/Identify.ini", P->IDUnparsed(),P->Author(), P->Copyright()));
+			Act(HP->AddMedals("*MAIN"));
 			Act(HP->Pack());
 			Act(HP->PackScript());
 			return true;

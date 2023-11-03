@@ -76,6 +76,20 @@ namespace Scyndi_CI {
 		Img(Tag)->Draw(x, y, frame);
 	}
 
+	static int API_DrawRotatedImage(lua_State* L) {
+		auto
+			Tag{ Lunatic_CheckString(L,1) };
+		auto
+			x{ luaL_checkinteger(L,2) },
+			y{ luaL_checkinteger(L,3) },
+			deg{ luaL_checkinteger(L,4) },
+			frame{ luaL_optinteger(L,5,0) };
+		Rotate(deg);
+		Img(Tag)->XDraw(x, y, frame);
+		Rotate(0);
+
+	}
+
 	static int API_TileImage(lua_State* L) {
 		auto
 			Tag{ Lunatic_CheckString(L,1) };
@@ -100,6 +114,9 @@ namespace Scyndi_CI {
 	}
 
 	static int API_HotCenter(lua_State* L) { Img(luaL_checkstring(L, 1))->HotCenter(); return 0; }
+
+	static int API_Hot(lua_State*L) { Img(luaL_checkstring(L, 1))->Hot(luaL_checkinteger(L,2),luaL_checkinteger(L,3)); return 0; }
+
 	static int API_Color(lua_State* L) {
 		auto
 			r = luaL_checkinteger(L, 1),
@@ -168,8 +185,9 @@ namespace Scyndi_CI {
 		auto
 			X{ luaL_checkinteger(L,3) },
 			Y{ luaL_checkinteger(L,4) },
-			Alignment{ luaL_optinteger(L,5,0) };
-		Fnt(Tag)->Text(Text, X, Y, (Align)Alignment);
+			HAlignment{ luaL_optinteger(L,5,0) },
+			VAlignment{ luaL_optinteger(L,6,0) };
+		Fnt(Tag)->Text(Text, X, Y, (Align)HAlignment, (Align)VAlignment);
 		return 0;
 	}
 
@@ -220,28 +238,79 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_DarkText(lua_State* L) {
+		auto
+			Tag{ Lunatic_CheckString(L,1) },
+			Text{ Lunatic_CheckString(L,2) };
+		auto
+			X{ luaL_checkinteger(L,3) },
+			Y{ luaL_checkinteger(L,4) },
+			AlignmentH{ luaL_optinteger(L,5,0) },
+			AlignmentV{ luaL_optinteger(L,8,0) };
+		Fnt(Tag)->Dark(Text, X, Y, (Align)AlignmentH, (Align)AlignmentV);
+		return 0;
+	}
+
+	static int API_SetAlpha(lua_State* L) {
+		SetAlpha((byte)luaL_checkinteger(L, 1));
+		return 0;
+	}
+
+	static int API_Line(lua_State* L) {
+		ALine(
+			luaL_checkinteger(L, 1),
+			luaL_checkinteger(L, 2),
+			luaL_checkinteger(L, 3),
+			luaL_checkinteger(L, 4)
+		);
+		return 0;
+	}
+
+	static int API_ImageFrames(lua_State* L) {
+		auto
+			Tag{ Lunatic_CheckString(L,1) };
+		lua_pushinteger(L, Img(Tag)->Frames());
+		return 1;
+	}
+
+	static int API_SetScale(lua_State* L) {
+		auto
+			sx{ luaL_checknumber(L,1) },
+			sy{ luaL_optnumber(L,2,sx) };
+		SetScale(sx, sy);
+		return 0;
+	}
+
+
 	void Init_API_Graphics() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{ "KillImage", API_Kill},
 			{ "LoadImage",API_LoadImage },
 			{ "HasImageTag",API_HasImageTag },
 			{ "Draw",API_DrawImage },
+			{ "DrawRotated",API_DrawRotatedImage },
 			{ "TrueDraw",API_TrueDrawImage },
 			{ "Tile",API_TileImage },
 			{ "Cls",API_Cls },
 			{ "HotCenter",API_HotCenter },
+			{ "Hot",API_Hot },
 			{ "Color",API_Color },
 			{ "ColorHSV",API_ColorHSV },
+			{ "Alpha",API_SetAlpha },
 			{ "Width",API_SWidth },
 			{ "Height",API_SHeight },
+			{ "Scale",API_SetScale },
 			{ "GetImageFormat",API_ImgFmt },
+			{ "ImageFrames",API_ImageFrames },
 			{ "LinkFont",API_LinkFont },
 			{ "Text",API_Text },
 			{ "TextSize",API_TextSize },
-			{ "KillFont",API_KillFont },
+			{ "DarkText",API_DarkText },
+			{ "KillFont", API_KillFont },
 			{ "HasFontTag",API_HasFontTag },
 			{ "Stretch",API_Strech },
 			{ "Rect",API_Rect },
+			{ "Line",API_Line },
 			{ "Flip",API_Flip }
 		};
 		InstallAPI("Graphics", IAPI);

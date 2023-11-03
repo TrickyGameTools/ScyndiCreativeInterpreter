@@ -74,7 +74,7 @@ namespace Scyndi_CI {
 	}
 
 	void Img(std::string Tag, Slyvina::JCR6::JT_Dir J, std::string File) {
-		if (!J->EntryExists(File)) {
+		if ((!J->EntryExists(File)) && (!J->DirectoryExists(File))) {
 			Crash("Image name '" + File + "' (for tag '" + Tag + "') not found");
 			return;
 		}

@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/JCR6.scyndi
 // Scyndi's Creative Interpreter - JCR6 Script
-// version: 23.10.04
+// version: 23.11.03
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -49,6 +49,28 @@ String GetString(string Ent,String Tag="*MAIN")
 	return Lua.JCR6.JCRGetString(Tag,Ent)
 End
 
+Table GetLines(string Ent,String Tag="*MAIN")
+	Table Ret 
+	Plua Src
+	Src = GetString(Ent,Tag)
+	Ret = {}
+	Int Line = 0
+	For i=1,Len(Src)
+		Switch Mid(Src,i,1)
+			Case "\r"
+				// Do NOTHING
+			Case "\n"
+				if !Ret[Line]
+					Ret[Line]=""
+				end
+				Line++
+			Default
+				Ret[Line] = sprintf("%s%s",Ret[Line] || "",Mid(Src,i,1))
+		End
+	End
+	Return Ret
+End
+
 Var Dir(String Directory,String Tag="*MAIN")
 	plua Ret = {}
 	plua fil
@@ -58,4 +80,8 @@ Var Dir(String Directory,String Tag="*MAIN")
 		Fil = Lua.JCR6.JCRFindNext()
 	End
 	Return Ret
+End
+
+Bool EntryExists(string Ent,string Tag="*MAIN")
+	return Lua.JCR6.JCREntryExists(Tag,Ent)
 End

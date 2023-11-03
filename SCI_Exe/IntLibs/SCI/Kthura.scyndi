@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // Kthura Link up for Scyndi's Creative Interpreter
-// version: 23.10.07
+// version: 23.11.03
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -37,9 +37,17 @@ Void GoToMap(String Tag,String File="",string Layer="")
 	End
 End
 
+plua _Niks()
+end
 
 plua _ObjKeyIndex(s,string Key)
-	return Lua.Kthura.GetObj(s.____objtag,Key)
+	Switch (Upper(Key))
+	Case "STOPWALKING"
+		Lua.Kthura.StopWalking(s.____objtag)
+		return _Niks
+	Default
+		return Lua.Kthura.GetObj(s.____objtag,Key)
+	End
 end
 
 plua _ObjKeyNewIndex(s,string Key,value)
@@ -67,6 +75,7 @@ plua _ReadOnly(s,k)
 	Lua.error("Trying to write into a read only property")
 end
 
+Const Delegate StopWalking=Lua.Kthura.StopWalking
 
 plua _Obj
 
@@ -114,7 +123,10 @@ Const Delegate Draw = Lua.Kthura.Draw
 Const Delegate Spawn = Lua.Kthura.Spawn
 Const Delegate HasObj = Lua.Kthura.HasObj
 
+Const Delegate InObj = Lua.Kthura.InObj
+Const Delegate Walking = Lua.Kthura.Walking
 
+Const Delegate Kill = Lua.Kthura.Kill
 
 
 QuickMeta Kthura_Meta

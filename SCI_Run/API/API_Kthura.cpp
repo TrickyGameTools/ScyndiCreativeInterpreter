@@ -36,6 +36,7 @@
 
 using namespace Slyvina; 
 using namespace Slyvina::Units;
+using namespace Slyvina::Kthura;
 using namespace Slyvina::Lunatic;
 
 namespace Scyndi_CI {
@@ -118,6 +119,7 @@ namespace Scyndi_CI {
 		SetObjBool("BLOCKED", impassible);
 		SetObjBool("BLOCK", impassible);
 		SetObjBool("FORCEPASSIBLE", forcepassible);
+		SetObjInt("ANIMFRAME", animframe);
 		// Actor only
 		SetObjString("WIND", Wind);
 		Crash("(Set) Unknown object field: " + ObjKey);
@@ -165,6 +167,7 @@ namespace Scyndi_CI {
 		GetObjBool("BLOCKED", impassible);
 		GetObjBool("BLOCK", impassible);
 		GetObjBool("FORCEPASSIBLE", forcepassible);
+		GetObjInt("ANIMFRAME", animframe);
 		// Actor only
 		GetObjString("WIND", Wind);
 		Crash("(Get) Unknown object field: " + ObjKey);
@@ -236,7 +239,7 @@ namespace Scyndi_CI {
 			lua_pushboolean(L, GetKthuraLayer()->HasTag(luaL_checkstring(L, 1)));
 			return 1;
 		case LUA_TNUMBER:
-			lua_pushboolean(L, GetKthuraLayer()->HasID(luaL_checkinteger(L, 2)));
+			lua_pushboolean(L, GetKthuraLayer()->HasID(luaL_checkinteger(L, 1)));
 			return 1;
 		case LUA_TBOOLEAN:
 			errtype = "boolean";
@@ -337,12 +340,22 @@ namespace Scyndi_CI {
 		auto errtype = std::string("");
 		// Who said function overloading was not possible in Lua? ;)
 		switch (t) {
-		case LUA_TSTRING:
-			GetKthuraLayer()->Spawn(luaL_checkstring(L, 2))->Tag(Tag);
+		case LUA_TSTRING: {
+			auto Spot{ Lunatic_CheckString(L,2) };
+			if (!GetKthuraLayer()->HasTag(Spot)) {
+				printf("Spot failure. Remapping tags and trying it again!\n");
+				GetKthuraLayer()->RemapTags();
+				if (!GetKthuraLayer()->HasTag(Spot)) {
+					Crash("Kthura Layer '" + PickedLayer() + "' has no spot called '" + Spot + "'");
+					return 0;
+				}
+			}
+			GetKthuraLayer()->Spawn(Spot)->Tag(Tag);
 			GetKthuraLayer()->RemapTags();
+		}
 			return 0;
 		case LUA_TNUMBER:
-			if (t == 2) {
+			if (n == 2) {
 				auto o{ GetKthuraLayer()->Obj(luaL_checkinteger(L, 2)) };
 				GetKthuraLayer()->Spawn(o->x(), o->y())->Tag(Tag);
 			} else
@@ -375,7 +388,7 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
-	int API_Kthura_SetMeta(lua_State* L) {
+	static int API_Kthura_SetMeta(lua_State* L) {
 		auto
 			Key{ Lunatic_CheckString(L,1) },
 			Value{ Lunatic_CheckString(L,2) };
@@ -383,12 +396,71 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
-	int API_Kthura_GetMeta(lua_State* L) {
+	static int API_Kthura_GetMeta(lua_State* L) {
 		auto
 			Key{ Lunatic_CheckString(L,1) };
 		Lunatic_PushString(L, (*GetKthura()->MetaData)[Key]);
 		return 1;
 	}
+
+	static int API_Kthura_InObj(lua_State* L) {
+		auto t{  lua_type(L,1)};
+		KthuraObject* o{ nullptr };
+		switch (t) {
+		case LUA_TNUMBER:
+			o = GetKthuraLayer()->Obj(luaL_checkinteger(L, 1));
+			break;
+		case LUA_TSTRING:
+			o = GetKthuraLayer()->Obj(luaL_checkstring(L, 1));
+			break;
+		default:
+			Crash("Illegal object identification!");
+			break;
+		}
+		auto
+			x{ luaL_checkinteger(L,2) },
+			y{ luaL_checkinteger(L,3) };
+		lua_pushboolean(L, InKthuraObject(o, x, y));
+		return 1;
+	}
+
+	static int API_Kthura_Walking(lua_State* L) {
+		auto t{ lua_type(L,1) };
+		KthuraObject* o{ nullptr };
+		switch (t) {
+		case LUA_TNUMBER:
+			o = GetKthuraLayer()->Obj(luaL_checkinteger(L, 1));
+			break;
+		case LUA_TSTRING:
+			o = GetKthuraLayer()->Obj(luaL_checkstring(L, 1));
+			break;
+		default:
+			Crash("Illegal object identification!");
+			break;
+		}
+		lua_pushboolean(L, o->Kind()==KthuraKind::Actor && o->Walking());
+		return 1;
+	}
+
+	static int API_Kthura_StopWalking(lua_State* L) {
+		auto t{ lua_type(L,1) };
+		KthuraObject* o{ nullptr };
+		switch (t) {
+		case LUA_TNUMBER:
+			o = GetKthuraLayer()->Obj(luaL_checkinteger(L, 1));
+			break;
+		case LUA_TSTRING:
+			o = GetKthuraLayer()->Obj(luaL_checkstring(L, 1));
+			break;
+		default:
+			Crash("Illegal object identification!");
+			break;
+		}
+		o->StopWalking();
+		return 0;	
+	}
+
+
 
 	void Init_API_Kthura() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -408,7 +480,10 @@ namespace Scyndi_CI {
 			{ "GetMeta",API_Kthura_GetMeta },
 			{ "SetMeta",API_Kthura_SetMeta },
 			{ "HasObj",API_Kthura_HasObj },
-			{ "LastLoadedMap",API_Kthura_LoadedMap }
+			{ "LastLoadedMap",API_Kthura_LoadedMap },
+			{ "InObj",API_Kthura_InObj },
+			{ "Walking",API_Kthura_Walking },
+			{ "StopWalking",API_Kthura_StopWalking }
 		};
 		InstallAPI("Kthura", IAPI);
 	}

@@ -151,8 +151,8 @@ namespace Scyndi_CI {
 	static int API_StatKilLChar(lua_State* L) {
 		auto
 			PartyTag{ Upper(luaL_checkstring(L,1)) },
-			CharTag{ Lunatic_CheckString(L,2) },
-			Name{ Lunatic_CheckString(L,3) };
+			CharTag{ Lunatic_CheckString(L,2) };
+			//Name{ Lunatic_CheckString(L,3) };
 		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
 		PartyReg[PartyTag]->Kill(CharTag);
 		return 0;
@@ -256,18 +256,31 @@ namespace Scyndi_CI {
 	static int API_StatSetCharName(lua_State* L) {
 		BaseTag;
 		//printf("Naming char %s -> %s\n", CharTag.c_str(), luaL_checkstring(L, 3)); // Debug only.
-		CharData->Name = luaL_checkstring(L, 2);
+		CharData->Name = luaL_checkstring(L, 3);		
+		return 0;
+	}
+
+	static int API_HaveStat(lua_State* L) {
+		BaseTag;
+		lua_pushboolean(L, CharData->HaveStat(luaL_checkstring(L, 3)));
+		return 1;
+	}
+
+	static int API_KillChar(lua_State* L) {
+		BaseTag;
+		auto P{ PartyReg[PartyTag] };
+		P->Kill(CharTag);
 		return 0;
 	}
 
 
 	void Init_API_Statistician() {
 		std::map<std::string, lua_CFunction>IAPI{
-			{"HasParty", API_Stat_HasParty},
+			{ "HasParty", API_Stat_HasParty },
 			{ "CreateParty",API_Stat_CreateParty },
 			{ "KillParty",API_Stat_KillParty },
 			{ "SetCharData", API_StatSetData },
-			{ "GetCharData",API_StatSetData },
+			{ "GetCharData",API_StatGetData },
 			{ "SetBaseStat",API_StatSetBaseStat },
 			{ "GetBaseStat",API_StatGetBaseStat },
 			{ "GetTotalStat",API_StatGetStat },
@@ -285,7 +298,9 @@ namespace Scyndi_CI {
 			{ "StatListGet",API_StatListGet },
 			{ "StatListSet",API_StatListSet },
 			{ "StatSetCharName",API_StatSetCharName },
-			{ "StatGetCharName",API_StatGetCharName }
+			{ "StatGetCharName",API_StatGetCharName },
+			{ "HaveCharStat",API_HaveStat },
+			{ "KillChar",API_KillChar }
 		};
 		InstallAPI("Statistician", IAPI);
 	}

@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.14
+// Version: 23.11.03
 // EndLic
 #include <SlyvStream.hpp>
 #include <SlyvAsk.hpp>
@@ -61,6 +61,8 @@ namespace Scyndi_CI {
 			auto excode{ system(cmd.c_str()) };
 			if (excode == 1)
 				QCol->Error("Scyndi did apparently encounter an error during the compile session");
+			else if (excode < 0)
+				QCol->Error("It appears Scyndi crashed during the compilation session");
 			else if (excode)
 				QCol->Error(TrSPrintF("Scyndi did apparently encounter %d errors during the compile session", excode));
 			else

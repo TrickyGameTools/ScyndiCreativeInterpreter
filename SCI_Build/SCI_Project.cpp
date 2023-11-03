@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.18
+// Version: 23.11.03
 // EndLic
 
 #include <SlyvQCol.hpp>
@@ -116,6 +116,10 @@ namespace Scyndi_CI {
 
 		bool SCI_Project::AssetsMultiDir() {
 			return Yes(Data,"Directory","SCI_ASSETS_MULTIDIR","Is the assets dir set up for 'multi-dir'");
+		}
+
+		bool SCI_Project::UseMedals() {
+			return Upper(Data->Value("MEDALS", "USE")) == "YES";
 		}
 
 		Scyndi_CI::Builder::SCI_Project::SCI_Project(std::string _Project) {

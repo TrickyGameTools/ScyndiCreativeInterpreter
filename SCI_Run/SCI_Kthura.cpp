@@ -85,9 +85,11 @@ namespace Scyndi_CI {
 	void SCI_LoadKthura(std::string Tag, std::string MapDir) {
 		Init_SCI_Kthura();
 		Trans2Upper(Tag);
+		if (Tag == MapLastPicked) { ChosenMap = nullptr; ChosenLayer = nullptr; }
 		QCol->Doing("Loading Kthura", MapDir, " ");
 		QCol->Doing("to", Tag);
 		MapRegister[Tag] = LoadKthura(Resource(), MapDir);
+		if (!MapRegister[Tag]) Crash("Loading Kthura map \"" + MapDir + "\" failed");
 		MapLastLoaded = MapDir;
 	}
 
@@ -134,12 +136,14 @@ namespace Scyndi_CI {
 
 	bool LayerPicked() { return LayerLastPicked != ""; }
 
+	bool InKthuraObject(KthuraObject* o, int x, int y) { return SCI_KthuraDraw->InsideObject(o, x, y); }
+
 	void PickKthura(std::string Tag) { 
 		Init_SCI_Kthura();
-		ChosenMap = GetKthura(Tag); 
-		if (Tag == MapLastPicked) { ChosenMap = nullptr; ChosenLayer = nullptr; }
+		ChosenMap = GetKthura(Tag); 		
 		MapLastPicked = Tag;
 		LayerLastPicked = "";
+		
 	}
 
 }

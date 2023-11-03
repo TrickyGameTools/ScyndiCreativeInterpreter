@@ -81,7 +81,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>E:\Projects\Applications\Slyvina\Libs\Statistician;E:\Projects\Applications\Slyvina\Libs\TQSL\SDL2\include;E:\Projects\Applications\Slyvina\Libs\Lunatic;E:\Projects\Applications\Slyvina\Libs\TQSL\Headers;E:\Projects\Applications\Slyvina\Libs\Kthura\Headers;E:\Projects\Applications\Slyvina\Libs\JCR6\Headers;E:\Projects\Applications\Slyvina\Libs\Units\Headers;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Projects\Applications\Slyvina\Libs\Medals;E:\Projects\Applications\Slyvina\Libs\Statistician;E:\Projects\Applications\Slyvina\Libs\TQSL\SDL2\include;E:\Projects\Applications\Slyvina\Libs\Lunatic;E:\Projects\Applications\Slyvina\Libs\TQSL\Headers;E:\Projects\Applications\Slyvina\Libs\Kthura\Headers;E:\Projects\Applications\Slyvina\Libs\JCR6\Headers;E:\Projects\Applications\Slyvina\Libs\Units\Headers;$(IncludePath)</IncludePath>
     <OutDir>../SCI_Exe</OutDir>
     <LibraryPath>E:\Projects\Applications\Slyvina\Libs\TQSL\SDL2;E:\Projects\Applications\Slyvina\Libs\JCR6\3rdParty\zlib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -191,6 +191,7 @@
     <ClCompile Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lvm.c" />
     <ClCompile Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lzio.c" />
     <ClCompile Include="..\..\..\Libs\Lunatic\Lunatic.cpp" />
+    <ClCompile Include="..\..\..\Libs\Medals\Medals.cpp" />
     <ClCompile Include="..\..\..\Libs\Statistician\Statistician.cpp" />
     <ClCompile Include="..\..\..\Libs\Statistician\Statistician_LoadJCR6.cpp" />
     <ClCompile Include="..\..\..\Libs\Statistician\Statistician_SaveJCR6.cpp" />
@@ -207,6 +208,7 @@
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvOpenURL.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvQCol.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvRequestFile.cpp" />
+    <ClCompile Include="..\..\..\Libs\Units\Source\SlyvRoman.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvSTOI.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvStream.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvString.cpp" />
@@ -222,6 +224,7 @@
     <ClCompile Include="API\API_InterState.cpp" />
     <ClCompile Include="API\API_JCR.cpp" />
     <ClCompile Include="API\API_Kthura.cpp" />
+    <ClCompile Include="API\API_Medals.cpp" />
     <ClCompile Include="API\API_SGFile.cpp" />
     <ClCompile Include="API\API_Statistician.cpp" />
     <ClCompile Include="API\API_Vars.cpp" />
@@ -271,6 +274,8 @@
     <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lvm.h" />
     <ClInclude Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lzio.h" />
     <ClInclude Include="..\..\..\Libs\Lunatic\Lunatic.hpp" />
+    <ClInclude Include="..\..\..\Libs\Medals\Medals.hpp" />
+    <ClInclude Include="..\..\..\Libs\Medals\TrueMedals.hpp" />
     <ClInclude Include="..\..\..\Libs\Statistician\Statistician.hpp" />
     <ClInclude Include="..\..\..\Libs\Statistician\Statistician_LoadJCR6.hpp" />
     <ClInclude Include="..\..\..\Libs\Statistician\Statistician_SaveJCR6.hpp" />
@@ -291,6 +296,7 @@
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvQCol.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvRandom.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvRequestFile.hpp" />
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvRoman.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvSTOI.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvStream.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvString.hpp" />

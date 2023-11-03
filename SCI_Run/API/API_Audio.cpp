@@ -83,6 +83,10 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_Playing(lua_State* L) {
+		lua_pushboolean(L, Mix_Playing(luaL_checkinteger(L, 1)));
+		return 1;
+	}
 
 	void Init_API_Audio() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -90,7 +94,8 @@ namespace Scyndi_CI {
 			{ "LoadAudio",API_LoadAudio },
 			{ "HasAudio",API_HasAudio },
 			{ "PlayAudio",API_PlayAudio },
-			{ "StopChannel",API_StopChannel }
+			{ "StopChannel",API_StopChannel },
+			{ "Playing",API_Playing }
 		};
 		InstallAPI("Audio", IAPI);
 	}

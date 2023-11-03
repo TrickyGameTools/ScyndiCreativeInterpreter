@@ -36,9 +36,21 @@ const delegate OpenURL = Lua.SCI_OpenURL
 const delegate HasState = Lua.SCI_HasState
 const delegate Call = Lua.SCI_Call
 const delegate Yes = Lua.SCI_Yes
+
 global const delegate CSay = Lua.CSay
 global const delegate CSayF = Lua.CSayF
 global const delegate CSaySetConfig = Lua.SCI_CSaySetConfig
+
+const delegate ATAN2 = Lua.SCI_ATAN2
+
+
+void TraceBack()
+	Lua.SCI_Traceback(StateName)
+End
+
+get string CurrentFlow
+	Return Lua.SCI_CurrentFlow()
+end
 
 get string BuildState
 	return Lua.SCI_BuildState()

@@ -71,7 +71,7 @@ namespace Scyndi_CI {
 			GvRegister[Tag]._Str.clear();
 		}
 		GvRegister[Tag]; // Must make sure the record is called at least ONCE making sure it exists!
-		for (auto& IT : *B) GvRegister[Tag]._Bool[IT] = G->Value("Boolean", IT) == "TRUE";
+		for (auto& IT : *B) GvRegister[Tag]._Bool[IT] = Upper(G->Value("Boolean", IT)) == "TRUE";
 		for (auto& IT : *I) GvRegister[Tag]._Int[IT] = G->IntValue("Integer", IT);
 		for (auto& IT : *S) GvRegister[Tag]._Str[IT] = G->Value("String", IT);
 	}

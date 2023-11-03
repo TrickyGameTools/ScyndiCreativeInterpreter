@@ -149,6 +149,23 @@ namespace Scyndi_CI {
 		}
 	}
 
+	static int DBG_ShowTraceback(lua_State* L) {
+		auto St{ luaL_checkstring(L, 1) };
+		auto &sb{ State(St)->Trace };
+		QCol->Doing("State", St);
+		if (!State(St)->Trace.size()) {
+			QCol->Doing("Traceback", "Emptry");
+		} else {
+			QCol->Doing("Traceback", sb.size());
+			for (auto& sbi : sb) {
+				QCol->LMagenta("===============\n");
+				QCol->Doing("File", sbi.File);
+				QCol->Doing("Function", sbi.Func);
+				QCol->Doing("Line", sbi.Line);
+			}
+		}
+	}
+
 	static int SYS_Crash(lua_State* L) {
 		auto
 			St{ luaL_checkstring(L,1) },
@@ -335,7 +352,12 @@ namespace Scyndi_CI {
 				Param += TrSPrintF("%f", luaL_checknumber(L, i));
 				break;
 			case LUA_TFUNCTION:
-				Crash("Call to other states cannot transfer functions!");
+				char emsg[1000];
+				sprintf_s(emsg, "Sys.Call(\"%s\",\"%s\",...): Call to other states cannot transfer functions!", State.c_str(), Func.c_str());
+				luaL_argerror(L, i, emsg);
+				break;
+			case LUA_TNIL:
+				Param += "nil";
 				break;
 			default:
 				Crash(TrSPrintF("Unknown argument for interstate call: %d (argument #%d)", lua_type(L, i), i));
@@ -357,6 +379,19 @@ namespace Scyndi_CI {
 		lua_pushboolean(L, Yes(StReplace(luaL_checkstring(L, 1), "<nl>", "\n")));
 		return 1;
 	}
+
+	static int SYS_CurrentFlow(lua_State* L) {
+		Lunatic_PushString(L, CurrentFlow());
+		return 1;
+	}
+
+	static int SYS_ATAN2(lua_State* L) { 
+		auto
+			a{ (double)luaL_checknumber(L,1) },
+			b{ (double)luaL_checknumber(L,2) };
+		lua_pushnumber(L,atan2(a, b));
+		return 1;
+	}
 #pragma endregion
 
 	static void InitScript() {
@@ -372,6 +407,7 @@ namespace Scyndi_CI {
 			{"SCI_InitAPI",SYS_InitAPI},
 			{"SCI_GoToFlow",SYS_GoToFlow},
 			{"SCI_LoadFlow",SYS_LoadFlow},
+			{"SCI_CurrentFlow",SYS_CurrentFlow},
 			{"SCI_LoadNewFlow",SYS_LoadNewFlow},
 			{"SCI_LoadState",SYS_LoadState},
 			{"SCI_LoadNewState",SYS_LoadNewState},
@@ -383,11 +419,13 @@ namespace Scyndi_CI {
 			{"SCI_Call",SYS_Call},
 			{"SCI_HasState",SYS_HasState},
 			{"SCI_Yes",SYS_Yes},
+			{"SCI_ATAN2",SYS_ATAN2},
+			{"SCI_Traceback",DBG_ShowTraceback},
 
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},
 			{"__DEBUG_PUSH",DBG_Push},
-			{"__DEBUG_POP",DBG_Pop}		
+			{"__DEBUG_POP",DBG_Pop}
 			});
 	}
 

@@ -1,0 +1,24 @@
+Module
+
+VAR GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Medals")
+
+Const Delegate MedalValue = Lua.Medals.MedalValue
+Const Delegate Award = Lua.Medals.Award
+
+
+Get Bool Active
+	Return Lua.Medals.Active()
+End
+
+
+Get Int FullScore
+	Return Lua.Medals.FullScore()
+End
+
+Get String Game
+	Return Lua.Medals.GetGame()
+End
+
+Set String Game
+	Return Lua.Medals.SetGame(Value)
+End

@@ -95,6 +95,23 @@ namespace Scyndi_CI {
 		}
 
 	}
+
+	void IC_CountObjects(VecString) {
+		if (!MapPicked()) { QCol->Error("Request not possible. No map picked"); }
+		if (!LayerPicked()) { QCol->Error("Request not possible. No layer picked"); }
+		std::map<string, size_t> Cnt;
+		size_t total = 0;
+		QCol->Doing("Layer", PickedLayer());
+		for (auto o = GetKthuraLayer()->FirstObject(); o; o = o->Next()) {
+			if (!Cnt.count(o->SKind())) Cnt[o->SKind()] = 0;
+			Cnt[o->SKind()]++;
+			total++;
+		}
+		for (auto result : Cnt) {
+			QCol->Doing(result.first, TrSPrintF("%9d", result.second));
+		}
+		QCol->Doing("Total", TrSPrintF("%9d", total));
+	}
 #pragma endregion
 
 
@@ -110,6 +127,7 @@ namespace Scyndi_CI {
 		MCommands["BACK"] = { "DEBUG_GLOBAL","",IC_Back };
 		MCommands["RETURN"] = { "DEBUG_GLOBAL","",IC_Back };
 		MCommands["BLOCKMAP"] = { "DEBUG_GLOBAL","",IC_Block };
+		MCommands["COUNTOBJECTS"] = { "DEBUG_GLOBAL","",IC_CountObjects };
 		// Test commands
 		MCommands["FUCK"] = { "DEBUG_GLOBAL","",IC_Fuck };
 		MCommands["SHIT"] = { "DEBUG_GLOBAL","",IC_Fuck };

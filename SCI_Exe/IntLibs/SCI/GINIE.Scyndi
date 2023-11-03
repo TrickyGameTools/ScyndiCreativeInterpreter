@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/GINIE.Scyndi
 // Scyndi's Creative Interpreter - Link - GINIE
-// version: 23.10.04
+// version: 23.11.03
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -85,6 +85,57 @@ Class TGINIE
 	
 	Void Merge(String Src)
 		Lua.GINIE.Parse(Tag,Src,1)
+	End
+	
+	Void Add(String Cat,String Key,String Value,Sort,Unique)
+		int _Sort = 0
+		int _Unique = 0
+		// Needed because the C/C++ cannot fetch booleans from Lua for some silly reason!
+		// I don't know why.
+		if Sort==true
+			_Sort = 1
+		end
+		if Unique==true
+			_Unique = 1
+		end
+		Lua.GINIE.Add(Tag,Cat,Key,Value,_Sort,_Unique)
+	End
+	
+	Int ListSize(string Cat,string Key)
+		Return Lua.GINIE.ListSize(Tag,Cat,Key)
+	End
+	
+	String ListEntry(String Cat,String Key,Int Idx)
+		Return Lua.GINIE.ListEntry(Tag,Cat,Key,Idx)
+	End
+	
+	Table List(string Cat,string Key)
+		plua Ret = {}
+		//print(cat,key,self.ListSize(Cat,Key)) // debug
+		for i=0,self.ListSize(Cat,Key)-1
+			Ret[i] = self.ListEntry(Cat,Key,i)
+		End
+		return Ret
+	End
+	
+	Get Table Categories
+		plua Ret = {}
+		plua Num 
+		Num = Lua.GINIE.CatsGrab(Tag)
+		for i=0,Num-1
+			Ret[i]=Lua.GINIE.Cats(Tag,i)
+		end
+		return Ret
+	End
+	
+	Table Values(string Cat)
+		plua Ret = {}
+		plua Num 
+		Num = Lua.GINIE.ValsGrab(Tag,Cat)
+		for i=0,Num-1
+			Ret[i]=Lua.GINIE.Vals(Tag,i)
+		end
+		return Ret
 	End
 End
 

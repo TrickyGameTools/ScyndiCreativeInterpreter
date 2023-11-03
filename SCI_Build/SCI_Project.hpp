@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.01.12
+// Version: 23.11.03
 // EndLic
 
 #pragma once
@@ -67,6 +67,8 @@ namespace Scyndi_CI {
 
 			std::string AssetsDir();
 			bool AssetsMultiDir();
+
+			bool UseMedals();
 			
 
 			static Slyvina::uint64 Processed;

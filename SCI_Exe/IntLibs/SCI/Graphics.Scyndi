@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/Graphics.Scyndi
 // Scyndi's Creative Interpreter - Graphics linkup
-// version: 23.10.07
+// version: 23.11.03
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -29,6 +29,8 @@ PLUA _LinkFont = Lua.Graphics.LinkFont
 const delegate Cls = Lua.Graphics.Cls
 global const delegate Cls = Lua.Graphics.Cls
 
+const delegate Line = Lua.Graphics.Line
+global const delegate Line = Lua.Graphics.Line
 
 Class TImage
 	ReadOnly String Tag
@@ -47,8 +49,16 @@ Class TImage
 		End
 	End
 	
+	Get Int Frames
+		return Lua.Graphics.ImageFrames(Tag)
+	End
+	
 	Void Draw(int x, int y, int Frame=0)
 		Lua.Graphics.Draw(Tag,x,y,frame)
+	End
+	
+	Void DrawR(int x, int y, int rotatedeg,int Frame = 0) 
+		Lua.Graphics.DrawRotated(Tag,x,y,rotatedeg,frame)
 	End
 	
 	Void Tile(int x,int y, int w, int h, int frame=0)
@@ -61,6 +71,10 @@ Class TImage
 	
 	Void HotCenter()
 		Lua.Graphics.HotCenter(Tag)
+	End
+	
+	Void Hot(int x,int y)
+		Lua.Graphics.Hot(Tag,x,y)
 	End
 	
 	Void TrueDraw(int x, int y, int Frame=0)
@@ -171,8 +185,12 @@ Class TImageFont
 		return New TImageFont(RTag)
 	end		
 
-	Void Text(string Txt,Int X,Int Y,Int Align=0)
-		Lua.Graphics.Text(Tag,Txt,X,Y,Align)
+	Void Text(string Txt,Int X,Int Y,Int HAlign=0,Int VAlign=0)
+		Lua.Graphics.Text(Tag,Txt,X,Y,HAlign,VAlign)
+	End
+	
+	Void Dark(string Txt,Int X,Int Y,Int AlignH=0,Int AlignV=0)
+		Lua.Graphics.DarkText(Tag,Txt,X,Y,AlignH,AlignV)
 	End
 	
 	Var Size(string Txt)
@@ -255,6 +273,8 @@ Global Var LinkFont(String F,String Tag="")
 	Return TImageFont.Load(F,Tag)
 End
 
+		
+
 Var ObtainFont(String Tag)
 	Return TImageFont.Obtain(Tag)
 End
@@ -263,11 +283,31 @@ Global Var ObtainFont(String Tag)
 	Return TImageFont.Obtain(Tag)
 End
 
+Var LinkNewFont(String F,String Tag)
+	If Lua.Graphics.HasFontTag(Tag)
+		Return ObtainFont(Tag)
+	Else
+		Return LinkFont(F,Tag)
+	End
+End
+
+Global Var LinkNewFont(String F,String Tag)
+	If Lua.Graphics.HasFontTag(Tag)
+		Return ObtainFont(Tag)
+	Else
+		Return LinkFont(F,Tag)
+	End
+End
+
 
 const delegate Color = Lua.Graphics.Color
 global const delegate SetColor=Lua.Graphics.Color
 const delegate ColorHSV = Lua.Graphics.ColorHSV
 global const delegate SetColorHSV=Lua.Graphics.ColorHSV
+Const delegate Alpha = Lua.Graphics.Alpha
+Global Const Delegate SetAlpha = Lua.Graphics.Alpha
+Const delegate Scale = Lua.Graphics.Scale
+Global Const delegate SetScale = Lua.Graphics.Scale
 
 const delegate Rect = Lua.Graphics.Rect
 global const delegate Rect = Lua.Graphics.Rect

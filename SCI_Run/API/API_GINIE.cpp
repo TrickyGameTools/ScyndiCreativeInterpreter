@@ -168,21 +168,106 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_GINIEAdd(lua_State* L) {
+		AutoTag;
+		auto
+			Cat{ luaL_checkstring(L,2) },
+			Key{ luaL_checkstring(L,3) },
+			Val{ luaL_checkstring(L,4) };
+		auto
+			Sort{ luaL_checkinteger(L,5) },
+			Unique{ luaL_checkinteger(L,6) };
+
+		REC->Add(Cat, Key, Val, Sort, Unique);
+		return 0;
+	}
+
+	static int API_GINIEListSize(lua_State* L) {
+		AutoTag;
+		auto
+			Cat{ luaL_checkstring(L,2) },
+			Key{ luaL_checkstring(L,3) };
+		// cout << "API:GINIELISTSIZE(" << Tag << ":" << Cat << "," << Key << ") -> " << REC->ListCount(Cat, Key) << "\n";
+		lua_pushinteger(L, REC->ListCount(Cat, Key));
+		return 1;
+	}
+
+	static int API_GINIEListEntry(lua_State* L) {
+		AutoTag;
+		auto
+			Cat{ luaL_checkstring(L,2) },
+			Key{ luaL_checkstring(L,3) };
+		auto
+			IDX{ luaL_checkinteger(L,4) };
+		if (IDX < 0 || IDX >= REC->ListCount(Cat, Key)) {
+			Crash(TrSPrintF("%s->ListEntry(\"%s\",\"%s\",%d): Index out of bounds", Tag.c_str(), Cat, Key, IDX));
+			return 0;
+		}
+		Lunatic_PushString(L, (*REC->List(Cat, Key))[IDX]);
+		return 1;
+	}
+
+
+	static VecString LastCats{nullptr};
+	static int API_GINIE_GrabCats(lua_State* L) {
+		AutoTag;
+		LastCats = REC->Categories();
+		lua_pushinteger(L, LastCats->size());
+		return 1;
+	}
+
+	static int API_GINIE_Cat(lua_State* L) {
+		AutoTag;
+		auto idx{ luaL_checkinteger(L,2) };
+		if (!LastCats) { luaL_error(L, "No cats have been set up first."); return 0; }
+		if (idx < 0 || idx >= LastCats->size()) { luaL_error(L, "Cat out of bounds (%d/%d)", idx, LastCats->size()); return 0; }
+		Lunatic_PushString(L, (*LastCats)[idx]);
+		return 1;
+	}
+
+
+	static VecString LastVals{nullptr};
+	static int API_GINIE_GrabVals(lua_State* L) {
+		AutoTag;
+		auto Cat{ luaL_checkstring(L,2) };
+		LastVals = REC->Values(Cat);
+		lua_pushinteger(L, LastVals->size());
+		return 1;
+	}
+
+	static int API_GINIE_Val(lua_State* L) {
+		AutoTag;
+		auto idx{ luaL_checkinteger(L,2) };
+		if (!LastVals) { luaL_error(L, "No vales have been set up first."); return 0; }
+		if (idx < 0 || idx >= LastVals->size()) { luaL_error(L, "Cat out of bounds (%d/%d)", idx, LastVals->size()); return 0; }
+		Lunatic_PushString(L, (*LastVals)[idx]);
+		return 1;
+
+	}
+	
+
 
 
 	void Init_API_GINIE() {
 		std::map<std::string, lua_CFunction>IAPI{
-			{"Create",API_GINIE_Create},
-			{"Has",API_HasGINIE},
-			{"GetStringValue",API_GINIE_GetStringValue},
-			{"GetIntegerValue",API_GINIE_GetIntegerValue},
-			{"GetBooleanValue",API_GINIE_GetBooleanValue},
-			{"SetValue",API_GINIE_SetValue},
-			{"UnParse",API_UnParse},
-			{"Parse",API_Parse},
-			{"Kill",API_GINIEKill},
-			{"Load",API_GINIELoad},
-			{"LoadHome",API_GINIELoadHome}
+			{ "Create", API_GINIE_Create },
+			{ "Has",API_HasGINIE },
+			{ "GetStringValue",API_GINIE_GetStringValue },
+			{ "GetIntegerValue",API_GINIE_GetIntegerValue },
+			{ "GetBooleanValue",API_GINIE_GetBooleanValue },
+			{ "SetValue",API_GINIE_SetValue },
+			{ "UnParse",API_UnParse },
+			{ "Parse",API_Parse },
+			{ "Kill",API_GINIEKill },
+			{ "Load",API_GINIELoad },
+			{ "LoadHome",API_GINIELoadHome },
+			{ "Add",API_GINIEAdd },
+			{ "ListSize",API_GINIEListSize },
+			{ "ListEntry",API_GINIEListEntry },
+			{ "CatsGrab",API_GINIE_GrabCats },
+			{ "Cats",API_GINIE_Cat }, 
+			{ "ValsGrab", API_GINIE_GrabVals },
+			{ "Vals",API_GINIE_Val }
 		};
 		InstallAPI("GINIE", IAPI);
 	}

@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.09.21
+// Version: 23.11.03
 // EndLic
 #include <SlyvArgParse.hpp>
 #include <SlyvString.hpp>
@@ -60,6 +60,7 @@ int main(int ac, char** args) {
 	QCol->OnlyVal("Processed", SCI_Project::Processed);
 	QCol->OnlyVal("Success", SCI_Project::Success);
 	QCol->OnlyVal("Failed", SCI_Project::Fail);
+	QCol->Cyan("Ok\n");
 	QCol->Reset();
 	return SCI_Project::Fail;
 }

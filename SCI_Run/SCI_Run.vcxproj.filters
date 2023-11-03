@@ -70,6 +70,9 @@
     <Filter Include="Source Files\Slyvina\Kthura">
       <UniqueIdentifier>{6d4ef2fa-faf2-4af3-adba-fcb0d66b81e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Slyvina\Medals">
+      <UniqueIdentifier>{a7180d7a-5b1d-4007-9cb0-54a922a50cda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SCI_Run.cpp">
@@ -333,6 +336,15 @@
     <ClCompile Include="API\API_DebugConsole.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Libs\Units\Source\SlyvRoman.cpp">
+      <Filter>Source Files\Slyvina\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\Medals\Medals.cpp">
+      <Filter>Source Files\Slyvina\Medals</Filter>
+    </ClCompile>
+    <ClCompile Include="API\API_Medals.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SCI_Share\Version.hpp">
@@ -559,6 +571,15 @@
     </ClInclude>
     <ClInclude Include="API\API_DebugConsole.hpp">
       <Filter>Source Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvRoman.hpp">
+      <Filter>Header Files\Slyvina\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Medals\Medals.hpp">
+      <Filter>Source Files\Slyvina\Medals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Medals\TrueMedals.hpp">
+      <Filter>Source Files\Slyvina\Medals</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

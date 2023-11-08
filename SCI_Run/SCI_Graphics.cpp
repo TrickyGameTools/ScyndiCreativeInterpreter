@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.10.07
+// Version: 23.11.03
 // EndLic
 
 // Debug tag! Should be off in release
@@ -174,6 +174,22 @@ namespace Scyndi_CI {
 			auto
 				WI{ WV(WS,DesktopWidth()) },
 				HI{ WV(HS,DesktopHeight()) };
+			//cout << AltWidth() << "/" << AltHeight() << "/" << Upper(Left(GameID_GINIE()->Value("Window", "WINADEPTALT"), 1)) << (Upper(Left(GameID_GINIE()->Value("Window", "WINADEPTALT"), 1)) == "Y") << "\n"; // debug
+			if (AltWidth() && AltHeight() && Upper(Left(GameID_GINIE()->Value("Window", "WINADEPTALT"), 1)) == "Y") {
+				//double WR{ (double)AltWidth() / (double)WI };
+				//double HR{ (double)AltHeight() / (double)HI };
+				double WR{ (double)WI / (double)AltWidth() };
+				double HR{ (double)HI / (double)AltHeight() };
+				QCol->Doing("AutoAltRates", TrSPrintF("%f x %f (%dx%d) -> (%dx%d)", WR, HR, WI, HI, AltWidth(), AltHeight()));
+				if (WR < HR) {
+					QCol->Doing("AutoAlt", "Height adept to width");
+					HI = (int)floor((double)AltHeight() * WR);
+				} else if (WR >  HR) {
+					QCol->Doing("AutoAlt", "Width adept to height");
+					WI = (int)floor((double)AltWidth() * HR);
+				}
+			}
+			QCol->Doing("Graphics", TrSPrintF("%dx%d", WI, HI));
 			Graphics(WI, HI, WindowCaption());
 			//QCol->Error("Windowed mode not yet implemented");
 			//exit(500);

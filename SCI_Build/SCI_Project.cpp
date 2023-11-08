@@ -78,6 +78,7 @@ namespace Scyndi_CI {
 			if (Alt) {
 				ID->Value("Alt", "Width",Ask(Data, "SCI::Window", "AltWidth", "Alt width", "1200"));
 				ID->Value("Alt", "Height",Ask(Data, "SCI::Window", "AltHeight", "Alt Height", "1000"));				
+				if (Yes(Data, "SCI::Window", "WinAdeptAlt", "Automatically adept Window Size to keep Alt Screen Ratios correct")) ID->Value("Window", "WinAdeptAlt", "Y");
 			}
 			ID->Value("Mouse", "Hide", boolstring(Yes(Data, "SCI::Mouse", "Hide", "Do you want to hide the system's mouse pointer")));
 			ID->Value("Save", "Dir", Ask(Data,"SCI::Save", "Dir", "Savegame dir:"));

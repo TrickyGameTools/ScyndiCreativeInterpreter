@@ -345,6 +345,12 @@
     <ClCompile Include="API\API_Medals.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Libs\TQSL\Source\TQSG_BlopPlasma.cpp">
+      <Filter>Source Files\Slyvina\TQSL</Filter>
+    </ClCompile>
+    <ClCompile Include="API\API_BlopPlasma.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SCI_Share\Version.hpp">
@@ -580,6 +586,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Libs\Medals\TrueMedals.hpp">
       <Filter>Source Files\Slyvina\Medals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSG_BlopPlasma.hpp">
+      <Filter>Source Files\Slyvina\TQSL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

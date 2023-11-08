@@ -2,6 +2,7 @@ namespace Scyndi_CI{
 
 	void Init_API_Audio();
 	void Init_API_Bank();
+	void Init_API_BlopPlasma();
 	void Init_API_DebugConsole();
 	void Init_API_Events();
 	void Init_API_GINIE();
@@ -20,6 +21,7 @@ namespace Scyndi_CI{
 	inline void InstallAllAPIS() {
 		Init_API_Audio();
 		Init_API_Bank();
+		Init_API_BlopPlasma();
 		Init_API_DebugConsole();
 		Init_API_Events();
 		Init_API_GINIE();

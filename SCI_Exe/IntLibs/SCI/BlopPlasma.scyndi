@@ -1,0 +1,6 @@
+Module
+
+Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"BlopPlasma")
+
+Const Delegate Settings = Lua.BlopPlasma.Settings
+Const Delegate Draw = Lua.BlopPlasma.Draw

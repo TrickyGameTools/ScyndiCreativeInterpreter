@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.10.07
+// Version: 23.11.03
 // EndLic
 
 
@@ -120,6 +120,7 @@ namespace Scyndi_CI {
 		SetObjBool("BLOCK", impassible);
 		SetObjBool("FORCEPASSIBLE", forcepassible);
 		SetObjInt("ANIMFRAME", animframe);
+		SetObjBool("VISIBLE", visible);
 		// Actor only
 		SetObjString("WIND", Wind);
 		Crash("(Set) Unknown object field: " + ObjKey);
@@ -168,6 +169,7 @@ namespace Scyndi_CI {
 		GetObjBool("BLOCK", impassible);
 		GetObjBool("FORCEPASSIBLE", forcepassible);
 		GetObjInt("ANIMFRAME", animframe);
+		GetObjBool("VISIBLE", visible);
 		// Actor only
 		GetObjString("WIND", Wind);
 		Crash("(Get) Unknown object field: " + ObjKey);
@@ -199,10 +201,10 @@ namespace Scyndi_CI {
 			o->WalkTo(luaL_checkstring(L, 2));
 			return 0;
 		case LUA_TNUMBER:
-			if (t == 2) 
+			if (t == 2)
 				o->WalkTo(GetKthuraLayer()->Obj(luaL_checkinteger(L, 2)));
 			else
-				o->WalkTo(luaL_checkinteger(L, 2),luaL_checkinteger(L,3));
+				o->WalkTo(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
 			return 0;
 		case LUA_TBOOLEAN:
 			errtype = "boolean";
@@ -230,7 +232,7 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
-	static int API_Kthura_HasObj(lua_State* L) {		
+	static int API_Kthura_HasObj(lua_State* L) {
 		auto n{ lua_gettop(L) }, t{ lua_type(L,1) };
 		auto errtype = std::string("");
 		// Who said function overloading was not possible in Lua? ;)
@@ -353,7 +355,7 @@ namespace Scyndi_CI {
 			GetKthuraLayer()->Spawn(Spot)->Tag(Tag);
 			GetKthuraLayer()->RemapTags();
 		}
-			return 0;
+						return 0;
 		case LUA_TNUMBER:
 			if (n == 2) {
 				auto o{ GetKthuraLayer()->Obj(luaL_checkinteger(L, 2)) };
@@ -404,7 +406,7 @@ namespace Scyndi_CI {
 	}
 
 	static int API_Kthura_InObj(lua_State* L) {
-		auto t{  lua_type(L,1)};
+		auto t{ lua_type(L,1) };
 		KthuraObject* o{ nullptr };
 		switch (t) {
 		case LUA_TNUMBER:
@@ -438,7 +440,7 @@ namespace Scyndi_CI {
 			Crash("Illegal object identification!");
 			break;
 		}
-		lua_pushboolean(L, o->Kind()==KthuraKind::Actor && o->Walking());
+		lua_pushboolean(L, o->Kind() == KthuraKind::Actor && o->Walking());
 		return 1;
 	}
 
@@ -457,7 +459,17 @@ namespace Scyndi_CI {
 			break;
 		}
 		o->StopWalking();
-		return 0;	
+		return 0;
+	}
+
+	static int API_Kthura_Block(lua_State* L) {
+		lua_pushboolean(L, GetKthuraLayer()->Block(luaL_checkinteger(L, 1), luaL_checkinteger(L, 2)));
+		return 1;
+	}
+	
+	static int API_Kthura_Remap(lua_State* L) {
+		GetKthuraLayer()->TotalRemap();
+		return 0;
 	}
 
 
@@ -483,7 +495,9 @@ namespace Scyndi_CI {
 			{ "LastLoadedMap",API_Kthura_LoadedMap },
 			{ "InObj",API_Kthura_InObj },
 			{ "Walking",API_Kthura_Walking },
-			{ "StopWalking",API_Kthura_StopWalking }
+			{ "Block",API_Kthura_Block },
+			{ "StopWalking",API_Kthura_StopWalking },
+			{ "Remap",API_Kthura_Remap }
 		};
 		InstallAPI("Kthura", IAPI);
 	}

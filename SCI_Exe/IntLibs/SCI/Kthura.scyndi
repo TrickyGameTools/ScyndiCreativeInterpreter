@@ -51,7 +51,7 @@ plua _ObjKeyIndex(s,string Key)
 end
 
 plua _ObjKeyNewIndex(s,string Key,value)
-	if (Lua.type(value)=="boolean")
+	if (Lua.type(value)=="boolean" || Lua.type(value)=="nil")
 		if value
 			Lua.Kthura.SetObj(s.____objtag,Key,1)
 		else
@@ -127,6 +127,9 @@ Const Delegate InObj = Lua.Kthura.InObj
 Const Delegate Walking = Lua.Kthura.Walking
 
 Const Delegate Kill = Lua.Kthura.Kill
+
+Const Delegate Block = Lua.Kthura.Block
+Const Delegate Remap = Lua.Kthura.Remap
 
 
 QuickMeta Kthura_Meta

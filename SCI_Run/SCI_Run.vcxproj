@@ -198,6 +198,7 @@
     <ClCompile Include="..\..\..\Libs\TQSL\Source\TQSA.cpp" />
     <ClCompile Include="..\..\..\Libs\TQSL\Source\TQSE.cpp" />
     <ClCompile Include="..\..\..\Libs\TQSL\Source\TQSG.cpp" />
+    <ClCompile Include="..\..\..\Libs\TQSL\Source\TQSG_BlopPlasma.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvArgParse.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvAsk.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvBank.cpp" />
@@ -217,6 +218,7 @@
     <ClCompile Include="..\SCI_Share\SCI_GlobalConfig.cpp" />
     <ClCompile Include="API\API_Audio.cpp" />
     <ClCompile Include="API\API_Bank.cpp" />
+    <ClCompile Include="API\API_BlopPlasma.cpp" />
     <ClCompile Include="API\API_DebugConsole.cpp" />
     <ClCompile Include="API\API_Events.cpp" />
     <ClCompile Include="API\API_GINIE.cpp" />
@@ -282,6 +284,7 @@
     <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSA.hpp" />
     <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSE.hpp" />
     <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSG.hpp" />
+    <ClInclude Include="..\..\..\Libs\TQSL\Headers\TQSG_BlopPlasma.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvArgParse.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvAsk.hpp" />
     <ClInclude Include="..\..\..\Libs\Units\Headers\SlyvBank.hpp" />

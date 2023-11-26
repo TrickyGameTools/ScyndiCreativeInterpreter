@@ -41,6 +41,8 @@ namespace Scyndi_CI {
 			if (crash) { throw std::runtime_error(TrSPrintF("There is no audio sample tagged '%s'", Tag.c_str())); }
 			return nullptr;
 		}
+		//std::cout << "Audio requested: " << Tag << "\n";
+		if (crash && AudioRegister[Tag]==nullptr) { throw std::runtime_error(TrSPrintF("Audio tagged as %s is a null pointer", Tag.c_str())); }
 		return AudioRegister[Tag];
 	}
 

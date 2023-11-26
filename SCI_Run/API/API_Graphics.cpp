@@ -246,7 +246,7 @@ namespace Scyndi_CI {
 			X{ luaL_checkinteger(L,3) },
 			Y{ luaL_checkinteger(L,4) },
 			AlignmentH{ luaL_optinteger(L,5,0) },
-			AlignmentV{ luaL_optinteger(L,8,0) };
+			AlignmentV{ luaL_optinteger(L,6,0) };
 		Fnt(Tag)->Dark(Text, X, Y, (Align)AlignmentH, (Align)AlignmentV);
 		return 0;
 	}
@@ -281,6 +281,42 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_Blit(lua_State* L) {
+		auto
+			Tag{ Lunatic_CheckString(L,1) };
+		auto
+			BImg{ Img(Tag) };
+		switch (lua_gettop(L)) {
+		case 7:
+		case 8:
+			BImg->Blit(
+				luaL_checkinteger(L, 2), // x
+				luaL_checkinteger(L, 3), // y
+				luaL_checkinteger(L, 4), // insert start x
+				luaL_checkinteger(L, 5), // insert start y
+				luaL_checkinteger(L, 6), // insert end x
+				luaL_checkinteger(L, 7), // insert end y
+				luaL_optinteger(L, 8, 0)); // frame
+			break;
+		case 9:
+		case 10:
+			BImg->Blit(
+				luaL_checkinteger(L, 2), // x
+				luaL_checkinteger(L, 3), // y
+				luaL_checkinteger(L,4), // width
+				luaL_checkinteger(L,5), // height
+				luaL_checkinteger(L, 6), // insert start x
+				luaL_checkinteger(L, 7), // insert start y
+				luaL_checkinteger(L, 8), // insert end x
+				luaL_checkinteger(L, 9), // insert end y
+				luaL_optinteger(L, 10, 0)); // frame
+			break;
+		default:
+			Crash(TrSPrintF("TImage::Blit> Illegal function call! (%d parameters?)", lua_gettop(L)));
+		}
+		return 0;
+	}
+
 
 	void Init_API_Graphics() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -311,6 +347,7 @@ namespace Scyndi_CI {
 			{ "Stretch",API_Strech },
 			{ "Rect",API_Rect },
 			{ "Line",API_Line },
+			{ "Blit",API_Blit },
 			{ "Flip",API_Flip }
 		};
 		InstallAPI("Graphics", IAPI);

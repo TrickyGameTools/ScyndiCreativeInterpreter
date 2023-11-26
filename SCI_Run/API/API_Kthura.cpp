@@ -106,6 +106,8 @@ namespace Scyndi_CI {
 		SetObjByte("R", red);
 		SetObjByte("G", green);
 		SetObjByte("B", blue);
+		SetObjByte("ALPHA", alpha);
+		SetObjByte("ALPHA255", alpha);
 		SetObjByte("RED", red);
 		SetObjByte("GREEN", green);
 		SetObjByte("BLUE", blue);
@@ -158,6 +160,8 @@ namespace Scyndi_CI {
 		GetObjByte("RED", red);
 		GetObjByte("GREEN", green);
 		GetObjByte("BLUE", blue);
+		GetObjByte("ALPHA", alpha);
+		GetObjByte("ALPHA255", alpha);
 		GetObjInt("ANIMSPEED", animspeed);
 		GetObjInt("DOMINANCE", dominance);
 		GetObjInt("BLEND", blend);
@@ -472,6 +476,14 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_Kthura_HideByLabel(lua_State* L) {
+		GetKthuraLayer()->HideByLabel(luaL_checkstring(L, 1));
+		return 0;
+	}
+	static int API_Kthura_ShowByLabel(lua_State* L) {
+		GetKthuraLayer()->ShowByLabel(luaL_checkstring(L, 1));
+		return 0;
+	}
 
 
 	void Init_API_Kthura() {
@@ -497,7 +509,9 @@ namespace Scyndi_CI {
 			{ "Walking",API_Kthura_Walking },
 			{ "Block",API_Kthura_Block },
 			{ "StopWalking",API_Kthura_StopWalking },
-			{ "Remap",API_Kthura_Remap }
+			{ "Remap",API_Kthura_Remap },
+			{ "HideByLabel",API_Kthura_HideByLabel },
+			{ "ShowByLabel", API_Kthura_ShowByLabel }
 		};
 		InstallAPI("Kthura", IAPI);
 	}

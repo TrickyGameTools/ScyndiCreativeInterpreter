@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.09.21
+// Version: 23.11.26
 // EndLic
 #include "SCI_JCR.hpp"
 #include "SCI_Audio.hpp"

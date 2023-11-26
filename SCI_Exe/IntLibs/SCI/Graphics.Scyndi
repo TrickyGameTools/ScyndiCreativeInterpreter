@@ -99,6 +99,10 @@ Class TImage
 		Return H
 	End
 	
+	void Blit(string tag,infinity) 
+		Lua.Graphics.Blit(tag,infinity)
+	End
+
 
 	Static Var Load(String File, String _Tag="")
 		String RTag 
@@ -127,6 +131,7 @@ Class TImage
 		RTag = _LoadImage(File,_Tag)
 		Return New TImage(RTag)
 	End
+		
 End
 
 Var LoadImage(string File, String Tag="")
@@ -216,6 +221,7 @@ Class TImageFont
 		x,y = Lua.Graphics.TextSize(Tag,Txt)
 		return y
 	end
+	
 	
 	// Multi line by width
 	Var MLBW(string _txt,int wd)

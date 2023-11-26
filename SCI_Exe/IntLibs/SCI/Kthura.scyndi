@@ -131,6 +131,9 @@ Const Delegate Kill = Lua.Kthura.Kill
 Const Delegate Block = Lua.Kthura.Block
 Const Delegate Remap = Lua.Kthura.Remap
 
+Const Delegate HideByLabel = Lua.Kthura.HideByLabel
+Const Delegate ShowByLabel = Lua.Kthura.ShowByLabel
+
 
 QuickMeta Kthura_Meta
 	index

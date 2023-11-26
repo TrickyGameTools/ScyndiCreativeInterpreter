@@ -35,6 +35,8 @@ Const Delegate KeyName = Lua.Events.KeyName
 Const Delegate GetKey = Lua.Events.GetKey
 Const Delegate Flush = Lua.Events.Flush
 Const Delegate Yes = Lua.Events.Yes
+Const Delegate Delay = Lua.Events.Sleep
+Const Delegate Sleep = Lua.Events.Sleep
 
 const Int MouseLeftButton = Lua.Events.MouseButtonFromName("LEFT")
 const Int MouseRightButton = Lua.Events.MouseButtonFromName("LEFT")

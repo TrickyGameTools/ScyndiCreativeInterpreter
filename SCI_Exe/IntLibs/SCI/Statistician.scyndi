@@ -89,12 +89,14 @@ Int StatIndex(s,string StatKey)
 End
 
 Int BStatIndex(s,string StatKey)
+	Lua.assert(StatKey!="","G:Cannot index empty string as Stat")
 	Return Me.GetBaseStat(s["*_PartyTag_*"],s["*_CharTag_*"],StatKey)
 End
 
 
 Void StatNewIndex(s, string StatKey, Int Value)
 	//print("NewIndex",StatKey,Value)
+	Lua.assert(StatKey!="","S:Cannot index empty string as Stat")
 	Me.SetBaseStat(s["*_PartyTag_*"],s["*_CharTag_*"],StatKey,Value)
 End
 

@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.10.07
+// Version: 23.12.24
 // EndLic
 
 #include <SlyvMD5.hpp>
@@ -34,7 +34,9 @@ using namespace Lunatic;
 
 namespace Scyndi_CI {
 
-	int API_StReplace(lua_State* L) {
+	static VecString LastSplit{nullptr};
+
+	static int API_StReplace(lua_State* L) {
 		auto
 			HayStack{ Lunatic_CheckString(L,1) },
 			Needle{ Lunatic_CheckString(L,2) },
@@ -44,7 +46,7 @@ namespace Scyndi_CI {
 
 	}
 
-	int API_Repeat(lua_State* L) {
+	static int API_Repeat(lua_State* L) {
 		Lunatic_PushString(L,
 			Repeat(
 				Lunatic_CheckString(L, 1),
@@ -54,40 +56,57 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
-	int API_MD5(lua_State* L) {
+	static int API_MD5(lua_State* L) {
 		Lunatic_PushString(L,
 			md5(Lunatic_CheckString(L, 1))
 		);
 		return 1;
 	}
 
-	int API_StripAll(lua_State* L) {
+	static int API_StripAll(lua_State* L) {
 		Lunatic_PushString(L,
 			StripAll(luaL_checkstring(L, 1)));
 		return 1;
 	}
 
-	int API_StripExt(lua_State* L) {
+	static int API_StripExt(lua_State* L) {
 		Lunatic_PushString(L,
 			StripExt(luaL_checkstring(L, 1)));
 		return 1;
 	}
 
-	int API_StripDir(lua_State* L) {
+	static int API_StripDir(lua_State* L) {
 		Lunatic_PushString(L,
 			StripDir(luaL_checkstring(L, 1)));
 		return 1;
 	}
 
-	int API_ExtExt(lua_State* L) {
+	static int API_ExtExt(lua_State* L) {
 		Lunatic_PushString(L,
 			ExtractExt(luaL_checkstring(L, 1)));
 		return 1;
 	}
 
-	int API_ExtDir(lua_State* L) {
+	static int API_ExtDir(lua_State* L) {
 		Lunatic_PushString(L,
 			ExtractDir(luaL_checkstring(L, 1)));
+		return 1;
+	}
+
+	static int API_Split(lua_State* L) {
+		LastSplit = Split(
+			Lunatic_CheckString(L, 1),
+			Lunatic_OptString(L, 2, " ")[0]
+		);
+		lua_pushinteger(L, LastSplit->size());
+		return 1;
+	}
+
+	static int API_SplitVal(lua_State* L) {
+		auto idx{ luaL_checknumber(L,1) };
+		if (!LastSplit) return 0;
+		if (idx >= LastSplit->size()) return 0;
+		Lunatic_PushString(L, (*LastSplit)[idx]);
 		return 1;
 	}
 
@@ -100,7 +119,9 @@ namespace Scyndi_CI {
 			{ "StripExt",API_StripExt },
 			{ "StripDir",API_StripDir },
 			{ "ExtractExt",API_ExtExt },
-			{ "ExtractDir",API_ExtDir }
+			{ "ExtractDir",API_ExtDir },
+			{ "Split",API_Split },
+			{ "SplitVal",API_SplitVal }
 		};
 		InstallAPI("SString", IAPI);
 	}

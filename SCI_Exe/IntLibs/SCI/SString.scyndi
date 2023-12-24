@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/SString.scyndi
 // Scyndi's Creative Interpreter
-// version: 23.10.07
+// version: 23.12.24
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -31,3 +31,12 @@ Global ReadOnly Delegate StripExt = Lua.SString.StripExt
 Global ReadOnly Delegate StripDir = Lua.SString.StripDir
 Global ReadOnly Delegate ExtractDir = Lua.SString.ExtractDir
 Global ReadOnly Delegate ExtractExt = Lua.SString.ExtractExt
+	
+Global Table XSplit(String Str,String Sep=" ")
+	Int V;V = Lua.SString.Split(Str,Sep)
+	Plua Ret = {}
+	for i=0,V-1
+		Ret[i] = Lua.SString.SplitVal(i)
+	End
+	Return Ret
+End

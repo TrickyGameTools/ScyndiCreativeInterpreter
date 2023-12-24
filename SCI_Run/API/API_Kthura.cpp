@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.26
+// Version: 23.12.24
 // EndLic
 
 
@@ -174,6 +174,7 @@ namespace Scyndi_CI {
 		GetObjBool("FORCEPASSIBLE", forcepassible);
 		GetObjInt("ANIMFRAME", animframe);
 		GetObjBool("VISIBLE", visible);
+		GetObjBool("WALKING", Walking); // Read-Only
 		// Actor only
 		GetObjString("WIND", Wind);
 		Crash("(Get) Unknown object field: " + ObjKey);
@@ -484,6 +485,16 @@ namespace Scyndi_CI {
 		GetKthuraLayer()->ShowByLabel(luaL_checkstring(L, 1));
 		return 0;
 	}
+	static int API_Kthura_ObjDataSet(lua_State* L) {
+		auto o{ GetKthuraLayer()->Obj(luaL_checkstring(L, 1)) };
+		o->data(luaL_checkstring(L, 2), luaL_checkstring(L, 3));
+		return 0;
+	}
+	static int API_Kthura_ObjDataGet(lua_State* L) {
+		auto o{ GetKthuraLayer()->Obj(luaL_checkstring(L, 1)) };
+		Lunatic_PushString(L, o->data(luaL_checkstring(L, 2)));
+		return 1;
+	}
 
 
 	void Init_API_Kthura() {
@@ -511,7 +522,9 @@ namespace Scyndi_CI {
 			{ "StopWalking",API_Kthura_StopWalking },
 			{ "Remap",API_Kthura_Remap },
 			{ "HideByLabel",API_Kthura_HideByLabel },
-			{ "ShowByLabel", API_Kthura_ShowByLabel }
+			{ "ShowByLabel", API_Kthura_ShowByLabel },
+			{ "ObjDataGet",API_Kthura_ObjDataGet },
+			{ "ObjDataSet",API_Kthura_ObjDataSet }
 		};
 		InstallAPI("Kthura", IAPI);
 	}

@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/Graphics.Scyndi
 // Scyndi's Creative Interpreter - Graphics linkup
-// version: 23.11.26
+// version: 23.12.24
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -72,10 +72,12 @@ Class TImage
 	Void HotCenter()
 		Lua.Graphics.HotCenter(Tag)
 	End
+		
 	
 	Void Hot(int x,int y)
 		Lua.Graphics.Hot(Tag,x,y)
 	End
+	
 	
 	Void TrueDraw(int x, int y, int Frame=0)
 		Lua.Graphics.TrueDraw(Tag,x,y,frame)
@@ -98,6 +100,11 @@ Class TImage
 		W,H = Lua.Graphics.GetImageFormat(Tag)
 		Return H
 	End
+	
+	Void HotBottomCenter()
+		Self.Hot(Self.Width div 2, Self.Height)
+	End
+
 	
 	void Blit(string tag,infinity) 
 		Lua.Graphics.Blit(tag,infinity)

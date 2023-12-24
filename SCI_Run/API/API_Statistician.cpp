@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.03
+// Version: 23.12.24
 // EndLic
 
 #include <Lunatic.hpp>
@@ -233,6 +233,13 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_StatListRemove(lua_State* L) {
+		BaseTag;
+		auto Lst{ CharData->GetList(luaL_checkstring(L,3)) };
+		*Lst -= Lunatic_CheckString(L, 4);
+		return 0;
+	}
+
 	static int API_StatListGet(lua_State* L) {
 		BaseTag;
 		auto Lst{ CharData->GetList(luaL_checkstring(L,3)) };
@@ -245,6 +252,33 @@ namespace Scyndi_CI {
 		auto Lst{ CharData->GetList(luaL_checkstring(L,3)) };
 		(*Lst)[luaL_checkinteger(L, 4)] = luaL_checkstring(L, 4);
 		return 0;
+	}
+
+	static int API_StatListSort(lua_State* L) {
+		BaseTag;
+		CharData->GetList(luaL_checkstring(L, 3))->sort();
+		return 0;
+	}
+
+	static int API_StatListContains(lua_State* L) {
+		BaseTag;
+		auto Lst{ CharData->GetList(luaL_checkstring(L,3)) };
+		auto Needle{ Lunatic_CheckString(L,4) };
+		auto IgnoreCase{ luaL_optinteger(L,5,0) };
+		if (IgnoreCase) Trans2Upper(Needle);
+		for (size_t i = 0; i < Lst->GetList()->size(); ++i) {
+			auto it1 = (*Lst)[i];
+			if (IgnoreCase) Trans2Upper(it1);
+			if (Needle == it1) { lua_pushboolean(L, true); return 1; }
+		}
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	static int API_StatListSize(lua_State* L) {
+		BaseTag;
+		lua_pushinteger(L,CharData->GetList(luaL_checkstring(L, 3))->GetList()->size());
+		return 1;
 	}
 
 	static int API_StatGetCharName(lua_State* L) {
@@ -295,8 +329,12 @@ namespace Scyndi_CI {
 			{ "StatPointsSet",API_StatPointsSet },
 			{ "StatPointsGet",API_StatPointsGet },
 			{ "StatListAdd",API_StatListAdd },
+			{ "StatListRemove",API_StatListRemove },
 			{ "StatListGet",API_StatListGet },
 			{ "StatListSet",API_StatListSet },
+			{ "StatListSort",API_StatListSort },
+			{ "StatListSize",API_StatListSize },
+			{ "StatListContains",API_StatListContains },
 			{ "StatSetCharName",API_StatSetCharName },
 			{ "StatGetCharName",API_StatGetCharName },
 			{ "HaveCharStat",API_HaveStat },

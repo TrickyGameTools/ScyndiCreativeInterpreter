@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/Statistician.scyndi
 // Statistician Support
-// version: 23.11.26
+// version: 23.12.24
 // Copyright (C) 2023 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -185,7 +185,7 @@ end
 Var ListGet(s,string Key)
 	plua r
 	plua parent
-	r=s["*_Parent_*"]
+	parent=s["*_Parent_*"]
 	r=s["*_Reg_*"]
 	Key = Upper(Key)
 	if !r[Key]
@@ -228,7 +228,27 @@ Class StatChar
 	ReadOnly Var XStat
 		
 	Void ListAdd(String Key,String Value)
-		Me.StatListSet(PartyTag,CharTag,Key,Value)
+		Me.StatListAdd(PartyTag,CharTag,Key,Value)
+	End
+	
+	Bool ListHave(string Key,String Needle)
+		Me.StatListContains(PartyTag,CharTag,Key,Needle)
+	End
+	
+	Bool ListContains(string Key,String Needle)
+		Me.StatListContains(PartyTag,CharTag,Key,Needle)
+	End
+
+	Void ListRemove(string Key,String Victim)
+		Me.StatListRemove(PartyTag,CharTag,Key,Victim)
+	End
+	
+	Void ListSort(String Key)
+		Me.StatListSort(PartyTag,CharTag,Key)
+	End
+	
+	Int ListSize(String Key)
+		Return Me.StatListSize(PartyTag,CharTag,Key)
 	End
 	
 	Bool HaveStat(string key)

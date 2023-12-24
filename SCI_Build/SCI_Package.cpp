@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.03
+// Version: 23.12.24
 // EndLic
 
 #define Act(A) if (!A) return false
@@ -231,6 +231,7 @@ namespace Scyndi_CI {
 					DepNextNeed = NewSRList(); //NewVecString();
 				}
 			}
+			return true;
 		}
 
 		bool _Package::AddString(std::string package, std::string entry, std::string content, std::string author, std::string notes) {

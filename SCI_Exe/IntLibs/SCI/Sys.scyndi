@@ -1,8 +1,8 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/Sys.scyndi
 // Scyndi's Creative Interpreter - Sys Module
-// version: 23.11.03
-// Copyright (C) 2023 Jeroen P. Broks
+// version: 24.01.20
+// Copyright (C) 2023, 2024 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
@@ -36,6 +36,11 @@ const delegate OpenURL = Lua.SCI_OpenURL
 const delegate HasState = Lua.SCI_HasState
 const delegate Call = Lua.SCI_Call
 const delegate Yes = Lua.SCI_Yes
+const delegate Annoy = Lua.SCI_Annoy
+const delegate ErrorMessage = Lua.SCI_ErrorBox
+const delegate ErrorBox = Lua.SCI_ErrorBox
+const delegate Sleep = Lua.SCI_Sleep
+const delegate Delay = Lua.SCI_Sleep
 
 global const delegate CSay = Lua.CSay
 global const delegate CSayF = Lua.CSayF

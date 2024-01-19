@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.03
+// Version: 24.01.20
 // EndLic
 
 #include <Lunatic.hpp>
@@ -380,6 +380,25 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	static int SYS_Annoy(lua_State* L) {
+		Uint32 flags{ SDL_MESSAGEBOX_INFORMATION };
+		auto Type{ Upper(Lunatic_OptString(L,3,"INFO")) };
+		if (Type == "ERROR") flags = SDL_MESSAGEBOX_ERROR;
+		if (Type == "WARNING") flags = SDL_MESSAGEBOX_WARNING;
+		SDL_ShowSimpleMessageBox(flags, luaL_optstring(L, 2, GameTitle().c_str()), luaL_checkstring(L, 1), nullptr);
+		return 0;
+	}
+
+	static int SYS_Sleep(lua_State* L) {
+		SDL_Delay(luaL_checkinteger(L, 1));
+		return 0;
+	}
+
+	static int SYS_ErrMsg(lua_State* L) {
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, luaL_optstring(L, 2, GameTitle().c_str()), luaL_checkstring(L, 1), nullptr);
+		return 0;
+	}
+
 	static int SYS_CurrentFlow(lua_State* L) {
 		Lunatic_PushString(L, CurrentFlow());
 		return 1;
@@ -419,6 +438,9 @@ namespace Scyndi_CI {
 			{"SCI_Call",SYS_Call},
 			{"SCI_HasState",SYS_HasState},
 			{"SCI_Yes",SYS_Yes},
+			{"SCI_Annoy",SYS_Annoy},
+			{"SCI_ErrorBox",SYS_ErrMsg},
+			{"SCI_Sleep",SYS_Sleep},
 			{"SCI_ATAN2",SYS_ATAN2},
 			{"SCI_Traceback",DBG_ShowTraceback},
 

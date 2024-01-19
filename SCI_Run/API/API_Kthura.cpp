@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.12.24
+// Version: 24.01.20
 // EndLic
 
 
@@ -449,6 +449,24 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	static int API_Kthura_Moving(lua_State* L) {
+		auto t{ lua_type(L,1) };
+		KthuraObject* o{ nullptr };
+		switch (t) {
+		case LUA_TNUMBER:
+			o = GetKthuraLayer()->Obj(luaL_checkinteger(L, 1));
+			break;
+		case LUA_TSTRING:
+			o = GetKthuraLayer()->Obj(luaL_checkstring(L, 1));
+			break;
+		default:
+			Crash("Illegal object identification!");
+			break;
+		}
+		lua_pushboolean(L, o->Kind() == KthuraKind::Actor && o->Moving());
+		return 1;
+	}
+
 	static int API_Kthura_StopWalking(lua_State* L) {
 		auto t{ lua_type(L,1) };
 		KthuraObject* o{ nullptr };
@@ -518,6 +536,7 @@ namespace Scyndi_CI {
 			{ "LastLoadedMap",API_Kthura_LoadedMap },
 			{ "InObj",API_Kthura_InObj },
 			{ "Walking",API_Kthura_Walking },
+			{ "Moving",API_Kthura_Moving },
 			{ "Block",API_Kthura_Block },
 			{ "StopWalking",API_Kthura_StopWalking },
 			{ "Remap",API_Kthura_Remap },

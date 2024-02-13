@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.03
+// Version: 24.02.13
 // EndLic
 
 #include <SlyvGINIE.hpp>
@@ -76,6 +76,37 @@ namespace Scyndi_CI {
 				luaL_error(L, "Type (Lua code %d) received for GINIE value, but I don't know how to handle that ", lua_type(L, 4));
 				return 0;
 		}
+		return 0;
+	}
+
+	static int API_GINIE_NewValue(lua_State* L) {
+		AutoTag;
+		auto
+			Cat{ luaL_checkstring(L,2) },
+			Key{ luaL_checkstring(L,3) };
+		//auto
+		//	NewValue{ luaL_optinteger(L,5,0) > 0 };
+		//if (NewValue && REC->HasValue(Cat, Key)) return 0;
+		//cout << "New Value " << Cat << ":" << Key << " (Has value:" << REC->HasValue(Cat, Key) << ") "; // Debug Only!
+		switch (lua_type(L, 4)) {
+		case LUA_TSTRING:
+			REC->NewValue(Cat, Key, luaL_checkstring(L, 4));
+			break;
+		case LUA_TNUMBER:
+			REC->NewValue(Cat, Key, luaL_checkinteger(L, 4));
+			break;
+		case LUA_TFUNCTION:
+			luaL_error(L, "Functions cannot be set as a GINIE value");
+			return 0;
+		case LUA_TNONE:
+			luaL_error(L, "Nothing given to be a value for GINIE value");
+			return 0;
+		default:
+			cout << "<GINIE." << Tag << ">.NewValue(\"" << Cat << "," << Key << "\n,<Lua#" << lua_type(L, 4) << ") << \x1b[31mERROR!!!\x1b[0m\n";
+			luaL_error(L, "Type (Lua code %d) received for GINIE value, but I don't know how to handle that ", lua_type(L, 4));
+			return 0;
+		}
+		//cout << REC->Value(Cat, Key) << "\n"; // Debug Only
 		return 0;
 	}
 
@@ -157,7 +188,7 @@ namespace Scyndi_CI {
 			AutoSaveFile{ SaveGameDir() + "/" + Lunatic_OptString(L,3,"") },
 			AutoSaveHead{ Lunatic_OptString(L,4,"") };			
 		if (!FileExists(FFile)) { // { Crash("File not found: " + PFile, "Full File Name: " + FFile); return 0; }
-			GINREG[Tag] = ParseGINIE("");
+			GINREG[Tag] = ParseGINIE("# Nothing\n#Move along!");
 			if (AutoSaveFile.size()) GINREG[Tag]->AutoSave = AutoSaveFile;
 			if (AutoSaveHead.size()) GINREG[Tag]->AutoSaveHeader = AutoSaveHead;
 		} else {
@@ -256,6 +287,7 @@ namespace Scyndi_CI {
 			{ "GetIntegerValue",API_GINIE_GetIntegerValue },
 			{ "GetBooleanValue",API_GINIE_GetBooleanValue },
 			{ "SetValue",API_GINIE_SetValue },
+			{ "NewValue",API_GINIE_NewValue },
 			{ "UnParse",API_UnParse },
 			{ "Parse",API_Parse },
 			{ "Kill",API_GINIEKill },

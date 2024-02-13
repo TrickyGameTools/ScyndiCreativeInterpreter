@@ -1,8 +1,8 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/GINIE.Scyndi
 // Scyndi's Creative Interpreter - Link - GINIE
-// version: 23.11.03
-// Copyright (C) 2023 Jeroen P. Broks
+// version: 24.02.12
+// Copyright (C) 2023, 2024 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
@@ -58,9 +58,10 @@ Class TGINIE
 			return ret
 		end
 	end
+		
 	
 	Void NewValue(string Cat,string Key, Value)
-		Lua.GINIE.SetValue(Tag,Cat,Key,Value,1)
+		Lua.GINIE.NewValue(Tag, Cat,Key, Value)
 	End
 	
 	String StringValue(string Cat,String Key)

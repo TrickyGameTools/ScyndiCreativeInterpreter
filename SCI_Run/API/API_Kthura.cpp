@@ -486,7 +486,7 @@ namespace Scyndi_CI {
 	}
 
 	static int API_Kthura_Block(lua_State* L) {
-		lua_pushboolean(L, GetKthuraLayer()->Block(luaL_checkinteger(L, 1), luaL_checkinteger(L, 2)));
+		lua_pushboolean(L, GetKthuraLayer()->Block((int)luaL_checkinteger(L, 1), (int)luaL_checkinteger(L, 2)));
 		return 1;
 	}
 	

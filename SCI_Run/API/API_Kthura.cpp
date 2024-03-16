@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.01.20
+// Version: 24.03.16
 // EndLic
 
 
@@ -366,7 +366,7 @@ namespace Scyndi_CI {
 				auto o{ GetKthuraLayer()->Obj(luaL_checkinteger(L, 2)) };
 				GetKthuraLayer()->Spawn(o->x(), o->y())->Tag(Tag);
 			} else
-				GetKthuraLayer()->Spawn(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3))->Tag(Tag);
+				GetKthuraLayer()->Spawn((int)luaL_checkinteger(L, 2), (int)luaL_checkinteger(L, 3))->Tag(Tag);
 			GetKthuraLayer()->RemapTags();
 			return 0;
 		case LUA_TBOOLEAN:

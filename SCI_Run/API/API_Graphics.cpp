@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.26
+// Version: 24.03.16
 // EndLic
 
 #include <SlyvString.hpp>
@@ -228,7 +228,8 @@ namespace Scyndi_CI {
 			luaL_checkinteger(L, 1),
 			luaL_checkinteger(L, 2),
 			luaL_checkinteger(L, 3),
-			luaL_checkinteger(L, 4)
+			luaL_checkinteger(L, 4),
+			luaL_optinteger(L, 5, 0)
 		);
 		return 0;
 	}

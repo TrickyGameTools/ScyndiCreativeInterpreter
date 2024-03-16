@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.03
+// Version: 24.03.16
 // EndLic
 
 #undef SCI_NO_ERROR_CATCHING
@@ -35,6 +35,7 @@
 #include <SlyvQCol.hpp>
 #include <SlyvTime.hpp>
 #include <SlyvBank.hpp>
+#include <SlyvWindows.hpp>
 
 #include "../SCI_Share/SCI_Header.hpp"
 #include "SCI_Config.hpp"
@@ -42,6 +43,7 @@
 #include "SCI_Load.hpp"
 #include "SCI_Script.hpp"
 #include "SCI_Crash.hpp"
+
 
 
 
@@ -106,6 +108,10 @@ int main(int c, char** cli_args) {
 			Flow("MAIN", MainScript());
 			do { Poll(); } while (abs(TimeStamp() - StartTime) < 3);
 			GoToFlow("MAIN");
+#ifdef SlyvWindows
+			QCol->Doing("Releasing", "Console");
+			if (NoConsole()) ReleaseConsole();
+#endif
 			RunGame();
 #ifndef SCI_NO_ERROR_CATCHING
 		} catch (runtime_error rte) {

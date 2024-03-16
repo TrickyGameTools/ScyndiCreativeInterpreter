@@ -215,6 +215,7 @@
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvString.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvTime.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvVolumes.cpp" />
+    <ClCompile Include="..\..\..\Libs\Units\Source\SlyvWindows.cpp" />
     <ClCompile Include="..\SCI_Share\SCI_GlobalConfig.cpp" />
     <ClCompile Include="API\API_Audio.cpp" />
     <ClCompile Include="API\API_Bank.cpp" />
@@ -227,6 +228,7 @@
     <ClCompile Include="API\API_JCR.cpp" />
     <ClCompile Include="API\API_Kthura.cpp" />
     <ClCompile Include="API\API_Medals.cpp" />
+    <ClCompile Include="API\API_RealFile.cpp" />
     <ClCompile Include="API\API_SGFile.cpp" />
     <ClCompile Include="API\API_Statistician.cpp" />
     <ClCompile Include="API\API_Vars.cpp" />

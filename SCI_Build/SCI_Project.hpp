@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.03
+// Version: 24.03.16
 // EndLic
 
 #pragma once
@@ -64,6 +64,9 @@ namespace Scyndi_CI {
 
 			std::string OutputName();
 			std::string DebugJQLFile();
+			std::string ReleaseDirectory();
+			std::string PrefferedStorage();
+			bool DirIsSolid(std::string pkg,std::string d);
 
 			std::string AssetsDir();
 			bool AssetsMultiDir();
@@ -74,9 +77,16 @@ namespace Scyndi_CI {
 			static Slyvina::uint64 Processed;
 			static Slyvina::uint64 Success;
 			static Slyvina::uint64 Fail;
+
+			bool Yes(std::string cat, std::string key, std::string question);
 			
 			inline SCI_Project() {}; // Fuck it! C++ want it to exist for no reason!
 			SCI_Project(std::string _Project);
+
+			void Export_Windows();
+			// void Export_Mac(); // No concern now, as long as Apple blocks everything out completely.
+			// void Export_Linux(); // Linux users wil have to fill me in on this one.
+			
 		};
 
 

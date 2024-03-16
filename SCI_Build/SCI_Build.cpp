@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,11 +21,13 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.03
+// Version: 24.03.16
 // EndLic
 #include <SlyvArgParse.hpp>
 #include <SlyvString.hpp>
+#include <JCR6_Core.hpp>
 #include <JCR6_JQL.hpp>
+#include <JCR6_zlib.hpp>
 #include "../SCI_Share/SCI_Header.hpp"
 #include "SCI_Build_Config.hpp"
 #include "SCI_Project.hpp"
@@ -33,9 +35,20 @@
 using namespace Scyndi_CI;
 using namespace Scyndi_CI::Builder;
 using namespace Slyvina::Units;
+using namespace Slyvina::JCR6;
+
+void JCR6_Fout(std::string e) {
+	QCol->Error("JCR error");
+	QCol->LMagenta("\t" + e + "\n");
+	QCol->Doing("  Entry", Last()->Entry);
+	QCol->Doing("  Main", Last()->MainFile);
+	exit(100);
+}
+
 
 int main(int ac, char** args) {
 	Header("Scyndi's Creative Interpreter - Builder");
+	JCR6PANIC = JCR6_Fout;
 	FlagConfig Cfg;
 	AddFlag_Bool(Cfg, "debug", false);
 	AddFlag_Bool(Cfg, "scyndidebug", false); // Use debug builds of Scyndi compilations
@@ -54,6 +67,7 @@ int main(int ac, char** args) {
 		return 0;
 	}
 	Slyvina::JCR6::InitJQL();
+	Slyvina::JCR6::init_zlib();
 	for (auto prj : CLI_Args.arguments) {
 		auto LozeTroep{ SCI_Project(prj) };
 	}

@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,12 +21,13 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.12.24
+// Version: 24.03.16
 // EndLic
 
 #define Act(A) if (!A) return false
 
 #include <JCR6_Core.hpp>
+#include <JCR6_Write.hpp>
 
 #include <SlyvAsk.hpp>
 #include <SlyvDir.hpp>
@@ -83,6 +84,37 @@ namespace Scyndi_CI {
 			{"LIBS","script libraries"}
 		};
 
+		JT_Create _Package::GetPackage(std::string pkg) {
+			Trans2Upper(pkg);
+			if (pkg == "*MAIN") return MainPackage;
+			if (!Packages.count(pkg)) {
+				if (_Parent->Yes("Release_Package_MergeWithMain", pkg, "Merge package " + pkg + " with main package")) return MainPackage;
+				auto jname{ _Parent->ReleaseDirectory() + _Parent->OutputName() + "." + pkg + ".jcr" };
+				QCol->Doing("Creating", jname," ");
+				QCol->Doing("For Package", pkg);
+				Packages[pkg] = CreateJCR6(jname,_Parent->PrefferedStorage());
+				if (Yes("Release_Package_Optional", pkg, "Is this package optional and can the game function without it")) {
+					MainPackage->Import(jname);
+				} else {
+					MainPackage->Require(jname);
+				}
+			}
+			return JT_Create();
+		}
+
+		Slyvina::JCR6::JT_CreateBlock _Package::GetBlock(std::string pkg, std::string dir) {
+			Trans2Upper(pkg);
+			Trans2Upper(dir);
+			auto tag{ pkg + "::" + dir };
+			if (!Blocks.count(tag)) {
+				QCol->Doing("Creating block", tag);
+				auto jpkg{ GetPackage(pkg) };
+				Blocks[tag] = jpkg->AddBlock(_Parent->PrefferedStorage());
+			}
+			return Blocks[tag];
+		}
+
+
 		std::string _Package::Package(std::string dir) {
 			if (_debug) return "*DEBUG";
 			if (dir == "*SCRIPT*") return "*MAIN";
@@ -119,7 +151,67 @@ namespace Scyndi_CI {
 				}
 				OutputJQL + "\n\n";
 			} else {
-				QCol->Error("Packing for release not yet implemented");
+				OutputJQL += "Author:"; OutputJQL += Author + "\n";
+				OutputJQL += "Notes:"; OutputJQL += Notes + "\n";
+				for (auto file : *D) {
+					auto PWD{ ExtractDir(file) };
+					auto Allow{ true };
+					if (ReservedDirs.count(PWD)) Allow = Yes(PrjData, "SCI_RESERVEDDIRS", PWD, TrSPrintF("The directory '%s' has been reserved for %s!\nThis can lead to undesirable behavior!\nAre you sure you still want to include files for this directory", PWD.c_str(), ReservedDirs[PWD].c_str()));
+					if (Allow) {
+						auto ffile{ srcdir + "/" + file };
+						if (_JT_Dir::Recognize(ffile) == "NONE") {
+							QCol->Doing("Adding", ffile, " ");
+							if (_Parent->DirIsSolid(Package, PWD)) {
+								GetBlock(Package, PWD)->AddFile(ffile, file, Author, Notes);
+								QCol->Magenta("Added to block: " + Package + "::" + PWD+"\n");
+							} else {
+								string Storage{ "Store" };
+								if (FileSize(ffile) > 4000) Storage = _Parent->PrefferedStorage();
+								GetPackage(Package)->AddFile(ffile, file, Storage, Author, Notes);
+								auto de{ GetPackage(Package)->Entries[Upper(file)] };
+								if (de->Storage() == "Store") 
+									QCol->LMagenta("Stored\n");
+								else { 
+									QCol->LMagenta("Packed "); 
+									QCol->LGreen(de->Storage());
+									QCol->LCyan(TrSPrintF(" %5.1f%%\n", ((double)de->CompressedSize() / (double)de->RealSize()) * 100));
+								}
+							}
+						} else {
+							auto D{ JCR6_Dir(ffile) };
+							auto EntryList{ D->Entries() };
+							for (auto entry : *EntryList) {
+								auto _Author{ entry->Author() };
+								auto _Notes{ entry->Notes() };
+								if (_Author == "" && _Parent->Yes("JCR6MERGE_AUTHOR_TRANSFER::" + Package, file, "No author data found for " + entry->Name() + ".Just use package data")) _Author = Author;
+								if (_Notes == "" && _Parent->Yes("JCR6MERGE_NOTES_TRANSFER::" + Package, file, "No notes data found for " + entry->Name() + ". Just use package data")) _Notes = Notes;
+								QCol->Doing("Adding", "", "");
+								QCol->Magenta(ffile + "/");
+								QCol->Cyan(entry->Name()+" ");
+								if (_Parent->DirIsSolid(Package, file)) {
+									GetBlock(Package, file)->AddBank(D->B(entry->Name()), file + "/" + entry->Name(), _Author, _Notes);
+									QCol->Magenta("Added to block: " + Package + "::" + PWD + "\n");
+								} else {
+									string
+										Storage{ "Store" },
+										TarName{ file + "/" + entry->Name() };
+									if (entry->RealSize() > 4000) Storage = _Parent->PrefferedStorage();
+									GetPackage(Package)->AddBank(D->B(entry->Name()), TarName, Storage, _Author, _Notes);
+									auto de{ GetPackage(Package)->Entries[Upper(TarName)] };
+									if (de->Storage() == "Store")
+										QCol->LMagenta("Stored\n");
+									else {
+										QCol->LMagenta("Packed ");
+										QCol->LGreen(de->Storage());
+										QCol->LCyan(TrSPrintF(" %5.1f%%\n", ((double)de->CompressedSize() / (double)de->RealSize()) * 100));
+									}
+								}
+
+							}
+						}
+					}
+				}
+				//QCol->Error("Packing for release not yet implemented");
 				return false;
 			}
 			return true;
@@ -138,7 +230,31 @@ namespace Scyndi_CI {
 					//OutputJQL += "Steal:Translation.lua>" + directory + "/" + entry + ".lua\n";
 					OutputJQL += "Steal:Translation.lua>" + entry + "\n";
 				}
-			} else { QCol->Error("Release not yet implemented for script"); }
+			} else {
+				QCol->Doing("Script Import", bundle);
+				auto JS{ JCR6_Dir(bundle) };
+				auto PWD{ ExtractDir(entry) };
+				if (_Parent->DirIsSolid(package, PWD)) {
+					if (bytecode) {
+						GetBlock(package, PWD)->AddBank(JS->B("ByteCode.lbc"), entry,_Parent->Author());
+					} else {
+						GetBlock(package, PWD)->AddBank(JS->B("translation.lua"), entry, _Parent->Author());
+					}
+				} else {
+					if (bytecode) {
+						if (JS->Entry("Bytecode.lbc")->RealSize() > 4000)
+							GetPackage(package)->AddBank(JS->B("ByteCode.lbc"), entry, _Parent->PrefferedStorage(), _Parent->Author());
+						else
+							GetPackage(package)->AddBank(JS->B("ByteCode.lbc"), entry, "Store", _Parent->Author());
+					} else {
+						if (JS->Entry("Translation")->RealSize() > 4000)
+							GetPackage(package)->AddBank(JS->B("translation.lua"), entry, _Parent->PrefferedStorage(), _Parent->Author());
+						else
+							GetPackage(package)->AddBank(JS->B("translation.lua"), entry, "Store", _Parent->Author());
+					}
+				}
+				//QCol->Error("Release not yet implemented for script"); 
+			}
 			return ret;
 		}
 
@@ -240,7 +356,12 @@ namespace Scyndi_CI {
 				OutputJQL += "Notes:"; OutputJQL += notes + "\n";
 				OutputJQL += "Text:"; OutputJQL += entry + "\n";
 				OutputJQL += content + "\n@END@\n\n";
+			} else {
+				string storage{ "Store" };
+				if (content.size() > 4000) storage = _Parent->PrefferedStorage();
+				GetPackage(package)->AddString(content, entry, storage, author, notes);
 			}
+
 			return true;
 		}
 
@@ -250,7 +371,7 @@ namespace Scyndi_CI {
 					std::string MedalP{ "E:/projects/applications/site/Medals/Medals.ini" };
 					auto Medal{ Dirry("$AppSupport$/Medals.JBC") };
 					if (FileExists(MedalP)) {
-						QCol->Doing("Importing", MedalP);						
+						QCol->Doing("Importing", MedalP);
 						OutputJQL += "Author:Jeroen P. Broks\nNotes:To be kept within THIS project alone!\nRaw:" + MedalP + ">ID/Medals.ini\n\n";
 					} else {
 						if (!FileExists(Medal)) {
@@ -261,6 +382,24 @@ namespace Scyndi_CI {
 						OutputJQL += "From:" + Medal + "\n";
 						OutputJQL += "Steal:Score>ID/Medals.ini\n\n";
 					}
+				}
+			} else {
+				std::string MedalP{ "E:/projects/applications/site/Medals/Medals.ini" };
+				auto Medal{ Dirry("$AppSupport$/Medals.JBC") };
+				if (FileExists(MedalP)) {
+					string storage{ "Store" };
+					if (FileSize(MedalP) > 4000) storage = "zlib";
+					QCol->Doing("Importing", MedalP);
+					MainPackage->AddFile(MedalP, "ID/Medals.ini", storage, "Jeroen P. Broks", "To be kept within THIS project alone!");
+				} else {
+					if (!FileExists(Medal)) {
+						QCol->Error(Medal + " could not be found!");
+						return false;
+					}
+					QCol->Doing("Stealing from", Medal);
+					auto J{ JCR6_Dir(Medal) };
+					auto mcontent{ J->GetString("Score") };
+					AddString("*MAIN", "ID/Medals", mcontent, "Jeroen P. Broks", "To be kept within THIS project alone!");
 				}
 			}
 			return true;
@@ -298,8 +437,13 @@ namespace Scyndi_CI {
 				QCol->Doing("Build mode", "Debug");
 				_debug = true;
 				OutputJQL = "JQL\n\n";
+			} else {
+				QCol->Doing("Build mode", "Release");
+				auto ofile{ P->ReleaseDirectory() + P->OutputName() + ".jcr" };
+				QCol->Doing("Creating", ofile);
+				MainPackage = CreateJCR6(ofile);				
+				Packages["*MAIN"] = MainPackage;
 			}
-			QCol->Doing("Build mode", "Release");
 		}
 
 		_Package::~_Package() {
@@ -313,7 +457,17 @@ namespace Scyndi_CI {
 				SaveString(ofile, OutputJQL);
 				return;
 			}
-			QCol->Error("Finalizing not yet implemented for release builds");
+			for (auto b : Blocks) {
+				QCol->Doing("Closing block", b.first);
+				b.second->CloseAllEntries();
+				b.second->Close();
+			}
+			for (auto p : Packages) {
+				QCol->Doing("Closing package", p.first);
+				p.second->CloseAllEntries();
+				p.second->Close();
+			}
+			//QCol->Error("Finalizing not yet implemented for release builds");
 		}
 
 		bool HandlePackage(SCI_Project* P, GINIE G) {

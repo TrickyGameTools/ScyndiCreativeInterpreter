@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.03
+// Version: 24.03.16
 // EndLic
 #pragma once
 #include <memory>
@@ -49,9 +49,14 @@ namespace Scyndi_CI {
 			Slyvina::Units::GINIE PrjData{ nullptr };
 			SCI_Project* _Parent{ nullptr };
 
-			std::map<std::string, Slyvina::JCR6::JT_Dir> Packages;
+			std::map<std::string, Slyvina::JCR6::JT_Create> Packages;
+			std::map<std::string, Slyvina::JCR6::JT_CreateBlock> Blocks;
 			bool _debug{ false };
 			std::string OutputJQL;
+			Slyvina::JCR6::JT_Create MainPackage;
+			Slyvina::JCR6::JT_Create GetPackage(std::string pkg);
+			Slyvina::JCR6::JT_CreateBlock GetBlock(std::string pkg, std::string dir);
+			
 
 			std::string Package(std::string dir);
 

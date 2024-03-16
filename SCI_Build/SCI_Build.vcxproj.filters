@@ -96,6 +96,9 @@
     <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_Write.cpp">
       <Filter>Source Files\Slyvina\JCR6</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_zlib.cpp">
+      <Filter>Source Files\Slyvina\JCR6</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SCI_Build_Config.hpp">

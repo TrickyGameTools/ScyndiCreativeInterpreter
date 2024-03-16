@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.26
+// Version: 24.03.16
 // EndLic
 
 #include <SlyvQCol.hpp>
@@ -29,6 +29,8 @@
 #include <SlyvTime.hpp>
 #include <SlyvVolumes.hpp>
 #include <SlyvMD5.hpp>
+#include <SlyvDir.hpp>
+#include <SlyvStream.hpp>
 
 #include "../SCI_Share/Version.hpp"
 
@@ -57,30 +59,34 @@ namespace Scyndi_CI {
 			}
 			QCol->Doing("Creating Project", Project);
 			SaveString(Project,"[Project]\nCreated=" + CurrentDate() + "; " + CurrentTime() + "\n");		
+			return true;
 		}
 
 		bool SCI_Project::WindowSettings() {
 			if (DebugFlag()) 
 				ID->Value("BUILD", "TYPE", "debug"); 
-			else
+			else {
 				ID->Value("BUILD", "TYPE", "release");
+				if (Yes("RELEASE", "WINDOWS_CONSOLE_RELEASE", "Release from console in Windows"))
+					ID->Value("PLATFORM::WINDOWS", "CONSOLE", "RELEASE");
+			}
 			ID->Value("Engine", "Engine", "SCI");
 			ID->Value("Engine", "Version", QVersion.Version());
 			ID->Value("Window", "Caption", Ask(Data, "SCI::WINDOW", "Caption", "Window - Caption: ", Title()));
-			auto Full{ Yes(Data, "SCI::WINDOW","Full Screen","Do you want to game to run full screen?") };
+			auto Full{ Units::Yes(Data, "SCI::WINDOW","Full Screen","Do you want to game to run full screen?") };
 			ID->Value("Window", "Full", boolstring(Full));
 			if (!Full) {
 				ID->Value("Window", "Width", Ask(Data, "SCI::Window", "WinWidth", "Window width (suffix with % to make it calculate on the desktop size)", "1200"));
 				ID->Value("WIndow", "Height", Ask(Data, "SCI::Window", "WinHeight", "Window height (suffix with % to make it calculate on the desktop size)", "1000"));
 			}
-			auto Alt{ Yes(Data,"SCI::Window","UseAlt","Use the Alt Height system") };
+			auto Alt{ Units::Yes(Data,"SCI::Window","UseAlt","Use the Alt Height system") };
 			ID->Value("Alt", "Use", boolstring(Alt));
 			if (Alt) {
 				ID->Value("Alt", "Width",Ask(Data, "SCI::Window", "AltWidth", "Alt width", "1200"));
 				ID->Value("Alt", "Height",Ask(Data, "SCI::Window", "AltHeight", "Alt Height", "1000"));				
-				if (Yes(Data, "SCI::Window", "WinAdeptAlt", "Automatically adept Window Size to keep Alt Screen Ratios correct")) ID->Value("Window", "WinAdeptAlt", "Y");
+				if (Units::Yes(Data, "SCI::Window", "WinAdeptAlt", "Automatically adept Window Size to keep Alt Screen Ratios correct")) ID->Value("Window", "WinAdeptAlt", "Y");
 			}
-			ID->Value("Mouse", "Hide", boolstring(Yes(Data, "SCI::Mouse", "Hide", "Do you want to hide the system's mouse pointer")));
+			ID->Value("Mouse", "Hide", boolstring(Units::Yes(Data, "SCI::Mouse", "Hide", "Do you want to hide the system's mouse pointer")));
 			ID->Value("Save", "Dir", Ask(Data,"SCI::Save", "Dir", "Savegame dir:"));
 			if (!Data->HasValue("SCI::Save", "ID")) {
 				Data->Value("SCI::Save", "ID", md5(TrSPrintF("Scyndi %d %s", TimeStamp(), Data->Value("SCI::Save", "Dir").c_str())) + "-" + md5(CurrentDate()));
@@ -111,17 +117,41 @@ namespace Scyndi_CI {
 			return AVolPath(dir + OutputName() + ".jql");
 		}
 
+		std::string SCI_Project::ReleaseDirectory() {
+			auto dir{ Ask(Data,"Release","Directory","Directory for release: ") };
+			dir = ChReplace(dir, '\\', '/');
+			if (!Suffixed(dir, "/")) dir += "/";
+			return AVolPath(dir);
+		}
+
+		std::string SCI_Project::PrefferedStorage() {
+			return Ask(Data, "Release", "PrefStorage", "What storage method is preferred for releases? ", "zlib");
+		}
+
+		bool SCI_Project::DirIsSolid(std::string pkg, std::string d) {
+			static std::map<std::string, bool> AlwaysSolid = { {".JPBF",true} };
+			static std::map<std::string, bool> NeverSolid = { {".JFBF",true} };
+			if (d == "") return false;
+			for (auto as : AlwaysSolid) if (as.second && Upper(ExtractExt(d)) == as.first) return true;
+			for (auto as : NeverSolid) if (as.second && Upper(ExtractExt(d)) == as.first) return false;
+			return Units::Yes(Data, "SOLID::" + pkg, d, "Is the directory \"" + d + "\" to be packed as a solid block");
+		}
+
 		std::string SCI_Project::AssetsDir() {
 			return AVolPath(Ask(Data, "Directory", "SCI_Assets_Source", "Please tell me where the assets to include in this project are stored: "));
 		}
 
 		bool SCI_Project::AssetsMultiDir() {
-			return Yes(Data,"Directory","SCI_ASSETS_MULTIDIR","Is the assets dir set up for 'multi-dir'");
+			return Units::Yes(Data,"Directory","SCI_ASSETS_MULTIDIR","Is the assets dir set up for 'multi-dir'");
 		}
 
 		bool SCI_Project::UseMedals() {
 			return Upper(Data->Value("MEDALS", "USE")) == "YES";
 		}
+
+		bool SCI_Project::Yes(std::string cat, std::string key, std::string question) { return Units::Yes(Data, cat, key, question); }
+		
+
 
 		Scyndi_CI::Builder::SCI_Project::SCI_Project(std::string _Project) {
 			Project = _Project;
@@ -139,7 +169,47 @@ namespace Scyndi_CI {
 			WindowSettings();
 			if (!CompileScripts(this, Data)) { Fail++; return; }
 			if (!HandlePackage(this, Data)) { Fail++; return; }
+			//cout << "Debug flag -> " << DebugFlag() << endl; // Debug only!
+			if (!DebugFlag()) {
+				Export_Windows();
+				//Export_Mac();
+				//Export_Linux();
+			}
 		}
+
+		static void QCF(std::string ori, std::string tar) {
+			if ((!FileExists(tar)) || (FileSize(tar) != FileSize(ori)) || (FileTimeStamp(tar) != FileSize(ori))) {
+				QCol->Doing("Copying", ori, " ");
+				QCol->Green(" -> ");
+				QCol->Cyan(tar + "\n");
+				FileCopy(ori, tar);
+			}
+		}
+
+		void SCI_Project::Export_Windows() {
+			QCol->Doing("Exporting to", "Windows");
+			auto mydir{ ExtractDir(CLI_Args.myexe) }; // cout << mydir << endl; 
+			auto content{ FileList(mydir) };
+			for (auto f : *content) {
+				if (Lower(ExtractExt(f)) == "dll") {
+					auto ori{ mydir + "/" + f };
+					auto tar{ ReleaseDirectory() + f };
+					//cout << ori << " >> " << tar << endl;
+					QCF(ori, tar);
+				}
+			}
+			QCF(mydir + "/SCI_Run.exe", ReleaseDirectory() + OutputName() + ".exe");
+			QCF(mydir + "/SCI_Run.srf", ReleaseDirectory() + OutputName() + ".srf");
+			SaveString(
+				ReleaseDirectory() + OutputName(),
+				"#! /usr/bin/bash\n"
+				"\n\n"
+				"# This shell script SHOULD run the game in Linux providing that WINE has been installed\n"
+				"# No official support, though. Make sure that this file has the 'x' attribute or it will NOT run at all\n\n" 
+				"wine \""+OutputName()+".exe\"\n\n"
+			);
+		}
+
 
 	}
 }

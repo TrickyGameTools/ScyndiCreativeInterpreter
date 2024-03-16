@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.02.12
+// Version: 24.03.16
 // EndLic
 
 #include <Lunatic.hpp>
@@ -319,9 +319,11 @@ namespace Scyndi_CI {
 		else if (Al == "NEVER")
 			Allow = false;
 		else if (Al == "DEBUG" || Al == "DEBUGONLY")
-			Allow = State(St)->Debug;
+			//Allow = State(St)->Debug;
+			Allow = Upper(IDVal("Build", "Type")) == "DEBUG";
 		else if (Al == "RELEASE" || Al == "RELEASEONLY" || Al == "NODEBUG")
-			Allow = !State(St)->Debug;
+			//Allow = !State(St)->Debug;
+			Allow = Upper(IDVal("Build", "Type")) == "RELEASE";
 		else
 			Crash("Unknown CSay condition (" + Al + ")");
 		if (Allow) {
@@ -417,6 +419,11 @@ namespace Scyndi_CI {
 		lua_pushnumber(L,atan2(a, b));
 		return 1;
 	}
+
+	static int SYS_GameID(lua_State* L) {
+		Lunatic_PushString(L, IDVal(luaL_checkstring(L, 1), luaL_checkstring(L, 2)));
+		return 1;
+	}
 #pragma endregion
 
 	static void InitScript() {
@@ -450,6 +457,7 @@ namespace Scyndi_CI {
 			{"SCI_ATAN2",SYS_ATAN2},
 			{"SCI_Traceback",DBG_ShowTraceback},
 			{"SCI_Platform",SYS_Platform},
+			{"SCI_GameID",SYS_GameID},
 
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},

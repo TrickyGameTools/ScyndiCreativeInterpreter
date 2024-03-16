@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.26
+// Version: 24.03.16
 // EndLic
 namespace Scyndi_CI{
 
@@ -36,6 +36,7 @@ namespace Scyndi_CI{
 	void Init_API_JCR();
 	void Init_API_Kthura();
 	void Init_API_Medals();
+	void Init_API_RealFile();
 	void Init_API_SGFile();
 	void Init_API_SGJCR();
 	void Init_API_Statistician();
@@ -55,6 +56,7 @@ namespace Scyndi_CI{
 		Init_API_JCR();
 		Init_API_Kthura();
 		Init_API_Medals();
+		Init_API_RealFile();
 		Init_API_SGFile();
 		Init_API_SGJCR();
 		Init_API_Statistician();

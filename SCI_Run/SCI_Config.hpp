@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.10.07
+// Version: 24.03.16
 // EndLic
 
 #pragma once
@@ -51,7 +51,10 @@ namespace Scyndi_CI {
 	std::string GameAuthor();
 	std::string GameCopyright();
 
+	std::string IDVal(std::string cat, std::string key);
+
 	bool DebugBuild();
+	bool NoConsole();
 
 	std::string SaveGameID();
 

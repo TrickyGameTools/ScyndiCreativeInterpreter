@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.10.07
+// Version: 24.03.16
 // EndLic
 
 #include <TQSE.hpp>
@@ -132,8 +132,16 @@ namespace Scyndi_CI {
 		return res_id->Value("ID", "Copyright");
 	}
 
+	std::string IDVal(std::string cat, std::string key) {
+		return GameID_GINIE()->Value(cat, key);
+	}
+
 	bool DebugBuild() {
 		return Lower(res_id->Value("BUILD", "TYPE")) == "debug";
+	}
+
+	bool NoConsole() {
+		return (!DebugBuild()) && Upper(res_id->Value("PLATFORM::WINDOWS", "CONSOLE")) == "RELEASE";
 	}
 
 	std::string SaveGameID() {

@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.03.16
+// Version: 24.03.22
 // EndLic
 
 #include <Lunatic.hpp>
@@ -424,6 +424,11 @@ namespace Scyndi_CI {
 		Lunatic_PushString(L, IDVal(luaL_checkstring(L, 1), luaL_checkstring(L, 2)));
 		return 1;
 	}
+
+	static int SYS_Ticks(lua_State* L) {
+		lua_pushinteger(L,SDL_GetTicks());
+		return 1;
+	}
 #pragma endregion
 
 	static void InitScript() {
@@ -458,6 +463,7 @@ namespace Scyndi_CI {
 			{"SCI_Traceback",DBG_ShowTraceback},
 			{"SCI_Platform",SYS_Platform},
 			{"SCI_GameID",SYS_GameID},
+			{"SCI_Ticks",SYS_Ticks},
 
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},

@@ -1,7 +1,7 @@
 // License Information:
 // SCI_Exe/IntLibs/SCI/GINIE.Scyndi
 // Scyndi's Creative Interpreter - Link - GINIE
-// version: 24.02.12
+// version: 24.03.22
 // Copyright (C) 2023, 2024 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -202,6 +202,6 @@ Var LoadHomeNew(string _File,String _Tag,String AutoSF="",String AutoSC="")
 	If Lua.GINIE.Has(_Tag)
 		Return Obtain(_Tag)
 	Else
-		Return LoadHome(_Tag,AutoSF,AutoSC)
+		Return LoadHome(_File,_Tag,AutoSF,AutoSC)
 	End
 End

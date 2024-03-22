@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.03.16
+// Version: 24.03.22
 // EndLic
 
 #pragma once
@@ -79,6 +79,7 @@ namespace Scyndi_CI {
 			static Slyvina::uint64 Fail;
 
 			bool Yes(std::string cat, std::string key, std::string question);
+			std::string Vraag(std::string cat, std::string key, std::string question, std::string defaultvalue = "");
 			
 			inline SCI_Project() {}; // Fuck it! C++ want it to exist for no reason!
 			SCI_Project(std::string _Project);

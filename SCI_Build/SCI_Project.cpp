@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.03.16
+// Version: 24.03.22
 // EndLic
 
 #include <SlyvQCol.hpp>
@@ -37,6 +37,7 @@
 #include "SCI_Build_Config.hpp"
 #include "SCI_Project.hpp"
 #include "SCI_Script.hpp"
+#include "SCI_Butler.hpp"
 
 using namespace Slyvina;
 using namespace Units;
@@ -150,6 +151,10 @@ namespace Scyndi_CI {
 		}
 
 		bool SCI_Project::Yes(std::string cat, std::string key, std::string question) { return Units::Yes(Data, cat, key, question); }
+
+		std::string SCI_Project::Vraag(std::string cat, std::string key, std::string question, std::string defaultvalue) {
+			return Ask(Data, cat, key, question, defaultvalue);
+		}
 		
 
 

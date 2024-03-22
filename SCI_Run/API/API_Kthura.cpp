@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.03.16
+// Version: 24.03.22
 // EndLic
 
 
@@ -320,7 +320,7 @@ namespace Scyndi_CI {
 		auto
 			ScrollX{ luaL_optinteger(L,1,0) },
 			ScrollY{ luaL_optinteger(L,2,0) };
-		SCI_KthuraDraw->DrawLayer(GetKthuraLayer(), ScrollX, ScrollY);
+		SCI_KthuraDraw->DrawLayer(GetKthuraLayer(), (int)ScrollX, (int)ScrollY);
 		return 0;
 	}
 

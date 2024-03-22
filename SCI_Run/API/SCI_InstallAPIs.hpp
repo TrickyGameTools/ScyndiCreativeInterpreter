@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.03.16
+// Version: 24.03.22
 // EndLic
 namespace Scyndi_CI{
 
@@ -36,6 +36,7 @@ namespace Scyndi_CI{
 	void Init_API_JCR();
 	void Init_API_Kthura();
 	void Init_API_Medals();
+	void Init_API_Random();
 	void Init_API_RealFile();
 	void Init_API_SGFile();
 	void Init_API_SGJCR();
@@ -56,6 +57,7 @@ namespace Scyndi_CI{
 		Init_API_JCR();
 		Init_API_Kthura();
 		Init_API_Medals();
+		Init_API_Random();
 		Init_API_RealFile();
 		Init_API_SGFile();
 		Init_API_SGJCR();

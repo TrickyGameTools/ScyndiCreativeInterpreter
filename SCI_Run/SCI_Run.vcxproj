@@ -228,6 +228,7 @@
     <ClCompile Include="API\API_JCR.cpp" />
     <ClCompile Include="API\API_Kthura.cpp" />
     <ClCompile Include="API\API_Medals.cpp" />
+    <ClCompile Include="API\API_Random.cpp" />
     <ClCompile Include="API\API_RealFile.cpp" />
     <ClCompile Include="API\API_SGFile.cpp" />
     <ClCompile Include="API\API_Statistician.cpp" />

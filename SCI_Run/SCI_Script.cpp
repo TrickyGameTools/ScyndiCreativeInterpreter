@@ -605,7 +605,8 @@ namespace Scyndi_CI {
 		if (S->Flag("NotScyndi"))
 			src += TrSPrintF("local suc,err = pcall(%s,%s)\n", Func.c_str(), Para.c_str());
 		else
-			src += TrSPrintF("local suc,err = pcall(Scyndi.Globals.%s,%s)\n", Func.c_str(), Para.c_str());
+			//src += TrSPrintF("local suc,err = pcall(Scyndi.Globals.%s,%s)\n", Func.c_str(), Para.c_str());
+			src += "local suc,err = pcall(Scyndi.Globals." + Func + "," + Para + ")";
 		//src += "print(suc,err)\n"; // debug
 		src += "if not suc then SCI_Crash('" + _State + "',err) end";
 		// std::cout << src << "\n"; // debug

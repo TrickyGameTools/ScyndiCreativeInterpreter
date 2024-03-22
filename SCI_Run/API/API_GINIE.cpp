@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.02.13
+// Version: 24.03.22
 // EndLic
 
 #include <SlyvGINIE.hpp>
@@ -31,6 +31,8 @@
 #include "../SCI_Crash.hpp"
 
 #define AutoTag auto Tag{ Upper(luaL_checkstring(L,1))}; if (!GINREG.count(Tag)) {luaL_error(L,"There is no GINIE tagged '%s",Tag.c_str()); return 0; } auto REC{GINREG[Tag]}
+
+#define API_GINIE_DEBUG
 
 using namespace Slyvina;
 using namespace Units;
@@ -188,6 +190,9 @@ namespace Scyndi_CI {
 			AutoSaveFile{ SaveGameDir() + "/" + Lunatic_OptString(L,3,"") },
 			AutoSaveHead{ Lunatic_OptString(L,4,"") };			
 		if (!FileExists(FFile)) { // { Crash("File not found: " + PFile, "Full File Name: " + FFile); return 0; }
+#ifdef API_GINIE_DEBUG
+			cout << "GINIE HOME FILE '"<<FFile<<"' does not exist! Creating \n";
+#endif
 			GINREG[Tag] = ParseGINIE("# Nothing\n#Move along!");
 			if (AutoSaveFile.size()) GINREG[Tag]->AutoSave = AutoSaveFile;
 			if (AutoSaveHead.size()) GINREG[Tag]->AutoSaveHeader = AutoSaveHead;

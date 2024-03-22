@@ -164,12 +164,14 @@
     <ClCompile Include="..\SCI_Share\SCI_GlobalConfig.cpp" />
     <ClCompile Include="SCI_Build.cpp" />
     <ClCompile Include="SCI_Build_Config.cpp" />
+    <ClCompile Include="SCI_Butler.cpp" />
     <ClCompile Include="SCI_Package.cpp" />
     <ClCompile Include="SCI_Project.cpp" />
     <ClCompile Include="SCI_Script.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SCI_Build_Config.hpp" />
+    <ClInclude Include="SCI_Butler.hpp" />
     <ClInclude Include="SCI_Package.hpp" />
     <ClInclude Include="SCI_Project.hpp" />
     <ClInclude Include="SCI_Script.hpp" />

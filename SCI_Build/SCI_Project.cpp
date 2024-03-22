@@ -174,6 +174,7 @@ namespace Scyndi_CI {
 				Export_Windows();
 				//Export_Mac();
 				//Export_Linux();
+				Butler(this);
 			}
 		}
 

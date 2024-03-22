@@ -99,6 +99,9 @@
     <ClCompile Include="..\..\..\Libs\JCR6\Source\JCR6_zlib.cpp">
       <Filter>Source Files\Slyvina\JCR6</Filter>
     </ClCompile>
+    <ClCompile Include="SCI_Butler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SCI_Build_Config.hpp">
@@ -111,6 +114,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SCI_Package.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SCI_Butler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

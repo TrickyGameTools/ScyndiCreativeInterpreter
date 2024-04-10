@@ -79,6 +79,7 @@ namespace Scyndi_CI {
 			Bits{ luaL_optinteger(L,3,8) };
 		if (!BankRegister.count(Tag)) luaL_error(L, "There is no bank tagged '%s'", Tag.c_str());
 		auto Bnk{ BankRegister[Tag] };
+		if (Address >= Bnk->Size()) luaL_error(L, "Back[%s].Peek(%d):Out of bounds (%d)", Tag.c_str(), Address, Bnk->Size());
 		switch (Bits) {
 		case 8:lua_pushinteger(L, Bnk->PeekByte(Address)); break;
 		case 16:lua_pushinteger(L, Bnk->PeekUInt16(Address)); break;
@@ -99,15 +100,24 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_Clean(lua_State* L) {
+		auto Tag{ Upper(luaL_checkstring(L,1)) };
+		if (!BankRegister.count(Tag)) luaL_error(L, "There is no bank tagged '%s'", Tag.c_str());
+		auto Bnk{ BankRegister[Tag] };
+		for (size_t p = 0; p < Bnk->Size(); p++) Bnk->Poke(p, (char)0);
+		return 0;
+	}
+
 	Bank SGBank(std::string Tag) { return BankRegister[Upper(Tag)]; } // Needed for the savegame system
 	void SGBank(std::string Tag, Bank Bnk) { BankRegister[Upper(Tag)] = Bnk; }
  
 	void Init_API_Bank() {
 		std::map<std::string, lua_CFunction>IAPI{
-			{"Create",API_CreateBank},
-			{"Kill",API_KillBank},
-			{"Poke",API_PokeBank},
-			{"Peek",API_PeekBank}
+			{ "Create", API_CreateBank},
+			{ "Kill",API_KillBank },
+			{ "Poke",API_PokeBank },
+			{ "Peek",API_PeekBank },
+			{ "Clean",API_Clean }
 		};
 		InstallAPI("Bank", IAPI);
 	}

@@ -41,8 +41,8 @@ CLASS TBank
 		End
 		if (size<=16) 
 			error("A bank must be at least 16 bytes")
-		end
-		Tag = Lua.Bank.Create(Tag,size)
+		end		
+		Tag = Lua.Bank.Create(_Tag,size)
 	END
 	
 	DESTRUCTOR
@@ -52,71 +52,75 @@ CLASS TBank
 	END
 	
 	VOID Poke(INT ADDR,INT VALUE,INT BITS=8)
-		Lua.Bank.Poke(ADDR,VALUE,BITS)
+		Lua.Bank.Poke(Tag,ADDR,VALUE,BITS)
 	END
 	
 	VOID PokeS8(Int ADDR,INT VALUE)
-		Lua.Bank.Poke(ADDR,VALUE,-8)
+		Lua.Bank.Poke(Tag,ADDR,VALUE,-8)
 	END
 	
 	VOID PokeU8(INT ADDR,BYTE VALUE)
-		Lua.Bank.Poke(ADDR,VALUE,8)
+		Lua.Bank.Poke(Tag,ADDR,VALUE,8)
 	END
 	
 	VOID PokeS16(Int ADDR,INT VALUE)
-		Lua.Bank.Poke(ADDR,VALUE,-16)
+		Lua.Bank.Poke(Tag,ADDR,VALUE,-16)
 	END
 	
 	VOID PokeU16(INT ADDR,INT VALUE)
-		Lua.Bank.Poke(ADDR,VALUE,16)
+		Lua.Bank.Poke(Tag,ADDR,VALUE,16)
 	END
 	
 	VOID PokeS32(Int ADDR,INT VALUE)
-		Lua.Bank.Poke(ADDR,VALUE,-32)
+		Lua.Bank.Poke(Tag,ADDR,VALUE,-32)
 	END
 	
 	VOID PokeU32(INT ADDR,INT VALUE)
-		Lua.Bank.Poke(ADDR,VALUE,32)
+		Lua.Bank.Poke(Tag,ADDR,VALUE,32)
 	END		
 	
 	VOID PokeS64(Int ADDR,INT VALUE)
-		Lua.Bank.Poke(ADDR,VALUE,-64)
+		Lua.Bank.Poke(Tag,ADDR,VALUE,-64)
 	END
 	
 	VOID PokeU64(INT ADDR,INT VALUE)
-		Lua.Bank.Poke(ADDR,VALUE,64)
+		Lua.Bank.Poke(Tag,ADDR,VALUE,64)
 	END		
 	
 	INT Peek(INT ADDR,INT BITS=8)
-		RETURN Lua.Bank.Peek(ADDR,BITS)
+		RETURN Lua.Bank.Peek(Tag,ADDR,BITS)
 	END
 	
 	BYTE PeekS8(INT ADDR)
-		RETURN Lua.Bank.Peek(ADDR,8)
+		RETURN Lua.Bank.Peek(Tag,ADDR,8)
 	END
 	INT PeekU8(INT ADDR)
-		RETURN Lua.Bank.Peek(ADDR,-8)
+		RETURN Lua.Bank.Peek(Tag,ADDR,-8)
 	END
 	
 	INT PeekS16(INT ADDR)
-		RETURN Lua.Bank.Peek(ADDR,16)
+		RETURN Lua.Bank.Peek(Tag,ADDR,16)
 	END
 	INT PeekU16(INT ADDR)
-		RETURN Lua.Bank.Peek(ADDR,-16)
+		RETURN Lua.Bank.Peek(Tag,ADDR,-16)
 	END
 	
 	INT PeekS32(INT ADDR)
-		RETURN Lua.Bank.Peek(ADDR,32)
+		RETURN Lua.Bank.Peek(Tag,ADDR,32)
 	END
 	INT PeekU32(INT ADDR)
-		RETURN Lua.Bank.Peek(ADDR,-32)
+		RETURN Lua.Bank.Peek(Tag,ADDR,-32)
 	END
 	
 	INT PeekS64(INT ADDR)
-		RETURN Lua.Bank.Peek(ADDR,64)
+		RETURN Lua.Bank.Peek(Tag,ADDR,64)
 	END
 	INT PeekU64(INT ADDR)
-		RETURN Lua.Bank.Peek(ADDR,-64)
+		RETURN Lua.Bank.Peek(Tag,ADDR,-64)
+	END
+	
+	VOID CLEAN()
+		Lua.Bank.Clean(Tag)
 	END
 	
 END

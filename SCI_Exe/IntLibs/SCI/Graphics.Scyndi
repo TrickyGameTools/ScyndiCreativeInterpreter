@@ -330,6 +330,10 @@ get int Width
 	return Lua.Graphics.Width(0)
 end
 
+get int W
+	return Lua.Graphics.Width(0)
+end
+
 Get Int TrueWidth
 	return Lua.Graphics.Width(1)
 end
@@ -337,6 +341,11 @@ end
 get int Height
 	return Lua.Graphics.Height(0)
 end
+
+get int H
+	return Lua.Graphics.Height(0)
+end
+
 
 Get Int TrueHeight
 	return Lua.Graphics.Height(1)

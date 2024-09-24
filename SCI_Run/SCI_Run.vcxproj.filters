@@ -360,6 +360,9 @@
     <ClCompile Include="API\API_Random.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_LoadCompiled.cpp">
+      <Filter>Source Files\Slyvina\Kthura</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SCI_Share\Version.hpp">

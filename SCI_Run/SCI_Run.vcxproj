@@ -157,6 +157,7 @@
     <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Core.cpp" />
     <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Draw.cpp" />
     <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Draw_TQSG.cpp" />
+    <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_LoadCompiled.cpp" />
     <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_Walk_Dijkstra.cpp" />
     <ClCompile Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lapi.c" />
     <ClCompile Include="..\..\..\Libs\Lunatic\Lua\Raw\src\lauxlib.c" />

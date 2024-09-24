@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// (c) Jeroen P. Broks, 2023, 2024
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.03
+// Version: 24.09.24
 // EndLic
 
 #include <SlyvQCol.hpp>
@@ -88,7 +88,7 @@ namespace Scyndi_CI {
 		if (Tag == MapLastPicked) { ChosenMap = nullptr; ChosenLayer = nullptr; }
 		QCol->Doing("Loading Kthura", MapDir, " ");
 		QCol->Doing("to", Tag);
-		MapRegister[Tag] = LoadKthura(Resource(), MapDir);
+		MapRegister[Tag] = XLoadKthura(Resource(), MapDir);
 		if (!MapRegister[Tag]) Crash("Loading Kthura map \"" + MapDir + "\" failed");
 		MapLastLoaded = MapDir;
 	}

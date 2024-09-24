@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.03.16
+// Version: 24.09.24
 // EndLic
 #include <SlyvString.hpp>
 #include <SlyvStream.hpp>
@@ -104,16 +104,18 @@ namespace Scyndi_CI {
 
 	// The reason behind this function is that in my experience, deleting files is not always flawless on Windows systems.
 	// This API function will at least see to it that a SaveGame file that should have been deleted will no longer be functional
-	// In anyway. And it being completely replaced with random bytes, will also make data recovery next to impossible.
+	// in any way. And it being completely replaced with random bytes, will also make data recovery next to impossible.
 	static int API_SGJCRMutilate(lua_State* L) {
 		AutoTag;
-		auto File{ _SGRec::Register[Tag]->JCRFile };
+		auto File{ SaveGameDir() + "/" + _SGRec::Register[Tag]->JCRFile };
 		if (!File.size()) return 0;
 		if (FileExists(File)) {
 			auto S{ FileSize(File) };
 			auto BO{ WriteFile(File) };
 			for (size_t i = 0; i < S; i++) BO->Write((byte)Rand.Get(0, 255));
 			BO->Close();
+		} else {
+			cout << "\x1b[31mNOTE>\x1b[37m File \"" << File << "\" does not exist, so request to mutilate ignored!\n";
 		}
 		return 0;
 	}

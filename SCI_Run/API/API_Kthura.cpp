@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.03.22
+// Version: 24.09.24
 // EndLic
 
 
@@ -95,10 +95,13 @@ namespace Scyndi_CI {
 		SetObjInt("W", w);
 		SetObjInt("H", h);
 		SetObjInt("INSX", insertx);
-		SetObjInt("INSy", inserty);
+		SetObjInt("INSY", inserty);
+		SetObjInt("INSERTX", insertx);
+		SetObjInt("INSERTY", inserty);
 		SetObjInt("SCALEX", scalex);
-		SetObjInt("SCALEy", scalex);
+		SetObjInt("SCALEY", scalex);
 		SetObjInt("ROTATE", rotatedeg);
+		SetObjInt("ROTATION", rotatedeg);
 		SetObjInt("ROTATEDEG", rotatedeg);
 		SetObjInt("ROTATEDEGREES", rotatedeg);
 		SetObjInt("ROTATERAD", rotaterad);
@@ -146,10 +149,13 @@ namespace Scyndi_CI {
 		GetObjInt("W", w);
 		GetObjInt("H", h);
 		GetObjInt("INSX", insertx);
-		GetObjInt("INSy", inserty);
+		GetObjInt("INSY", inserty);
+		GetObjInt("INSERTX", insertx);
+		GetObjInt("INSERTY", inserty);
 		GetObjInt("SCALEX", scalex);
-		GetObjInt("SCALEy", scalex);
+		GetObjInt("SCALEY", scalex);
 		GetObjInt("ROTATE", rotatedeg);
+		GetObjInt("ROTATION", rotatedeg);
 		GetObjInt("ROTATEDEG", rotatedeg);
 		GetObjInt("ROTATEDEGREES", rotatedeg);
 		GetObjInt("ROTATERAD", rotaterad);

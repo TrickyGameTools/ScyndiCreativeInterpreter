@@ -87,7 +87,7 @@ namespace Scyndi_CI {
 	static int API_Events_KeyFromName(lua_State* L) {
 		auto name{ luaL_checkstring(L,1) };
 		SDL_Keycode ret{ SDL_GetKeyFromName(name) };
-		if (ret == SDLK_UNKNOWN) { Units::QCol->Warn(TrSPrintF("Key name '%s' was not recognized!\7",name)); }
+		if (ret == SDLK_UNKNOWN) { QCol->Warn(TrSPrintF("Key name '%s' was not recognized!\7",name)); }
 		lua_pushinteger(L, (int)ret);		
 		return 1;
 	}

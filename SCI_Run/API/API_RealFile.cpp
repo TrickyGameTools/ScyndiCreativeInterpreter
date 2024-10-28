@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.10
+// Version: 24.10.28
 // End License
 // Lic:
 // Scyndi's Creative Interpreter
@@ -103,7 +103,7 @@ namespace Scyndi_CI {
 		auto
 			FileName{ Lunatic_CheckString(L,1) };
 		if (!FileExists(FileName)) {
-			Lunatic_PushString(L,"File \"" + FileName = "\ has not been found!");
+			Lunatic_PushString(L,"File \"" + FileName = "\" has not been found!");
 			lua_pushboolean(L, false);
 			return 2;
 		}

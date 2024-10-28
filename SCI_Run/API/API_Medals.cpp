@@ -1,4 +1,4 @@
-// Lic:
+// License:
 // **********************************************
 // 
 // SCI_Run/API/API_Medals.cpp
@@ -24,6 +24,7 @@
 // from it, you can use it under that license.
 // Please check out the other files to find out
 // which license applies.
+// 
 // This file comes 'as-is' and in no possible
 // way the author can be held responsible of
 // any form of damages that may occur due to
@@ -32,8 +33,10 @@
 // 
 // **********************************************
 // 
-// version: 23.11.26
-// EndLic
+// 
+// version: 24.10.10 I
+// 
+// End License
 
 #include <SlyvQCol.hpp>
 
@@ -45,7 +48,7 @@
 
 
 using namespace Slyvina;
-using namespace Lunatic;
+using namespace NSLunatic;
 using namespace Medals;
 
 namespace Scyndi_CI {

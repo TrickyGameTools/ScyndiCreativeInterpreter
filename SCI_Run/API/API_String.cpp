@@ -1,35 +1,36 @@
-// Lic:
+// License:
+// 
 // Scyndi's Creative Interpreter
 // Super String
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// 	(c) Jeroen P. Broks, 2023, 2024
 // 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// 		This program is free software: you can redistribute it and/or modify
+// 		it under the terms of the GNU General Public License as published by
+// 		the Free Software Foundation, either version 3 of the License, or
+// 		(at your option) any later version.
 // 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 		This program is distributed in the hope that it will be useful,
+// 		but WITHOUT ANY WARRANTY; without even the implied warranty of
+// 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// 		GNU General Public License for more details.
+// 		You should have received a copy of the GNU General Public License
+// 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Please note that some references to data like pictures or audio, do not automatically
-// fall under this licenses. Mostly this is noted in the respective files.
+// 	Please note that some references to data like pictures or audio, do not automatically
+// 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.12.24
-// EndLic
+// Version: 24.10.28
+// End License
 
 #include <SlyvMD5.hpp>
 #include "../SCI_Script.hpp"
 
 using namespace Slyvina;
 using namespace Units;
-using namespace Lunatic;
+using namespace NSLunatic;
 
 
 namespace Scyndi_CI {
@@ -110,6 +111,17 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	static int API_Prefixed(lua_State* L) {
+		lua_pushboolean(L, Prefixed(luaL_checkstring(L, 1), luaL_checkstring(L, 2)));
+		return 1;
+	}
+
+	static int API_Suffixed(lua_State* L) {
+		lua_pushboolean(L, Suffixed(luaL_checkstring(L, 1), luaL_checkstring(L, 2)));
+		return 1;
+	}
+
+
 	void Init_API_String() {
 		std::map<std::string, lua_CFunction> IAPI{
 			{ "Replace", API_StReplace},
@@ -121,7 +133,9 @@ namespace Scyndi_CI {
 			{ "ExtractExt",API_ExtExt },
 			{ "ExtractDir",API_ExtDir },
 			{ "Split",API_Split },
-			{ "SplitVal",API_SplitVal }
+			{ "SplitVal",API_SplitVal },
+			{ "Prefixed",API_Prefixed },
+			{ "Suffixed",API_Suffixed }
 		};
 		InstallAPI("SString", IAPI);
 	}

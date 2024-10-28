@@ -1,28 +1,29 @@
-// Lic:
+// License:
+// 
 // Scyndi's Creative Interpreter
 // Script & State Manager
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023, 2024
+// 	(c) Jeroen P. Broks, 2023, 2024
 // 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// 		This program is free software: you can redistribute it and/or modify
+// 		it under the terms of the GNU General Public License as published by
+// 		the Free Software Foundation, either version 3 of the License, or
+// 		(at your option) any later version.
 // 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 		This program is distributed in the hope that it will be useful,
+// 		but WITHOUT ANY WARRANTY; without even the implied warranty of
+// 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// 		GNU General Public License for more details.
+// 		You should have received a copy of the GNU General Public License
+// 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Please note that some references to data like pictures or audio, do not automatically
-// fall under this licenses. Mostly this is noted in the respective files.
+// 	Please note that some references to data like pictures or audio, do not automatically
+// 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.03.22
-// EndLic
+// Version: 24.10.10 II
+// End License
 
 #include <Lunatic.hpp>
 
@@ -44,7 +45,7 @@
 using namespace Slyvina;
 using namespace Units;
 using namespace JCR6;
-using namespace Lunatic;
+using namespace NSLunatic;
 using namespace TQSG;
 using namespace TQSE;
 
@@ -148,6 +149,7 @@ namespace Scyndi_CI {
 				State(St)->Trace.pop_back();
 			//std::cout << " -> " << State(St)->Trace.size()<<"\n";
 		}
+		return 0;
 	}
 
 	static int DBG_ShowTraceback(lua_State* L) {
@@ -492,7 +494,7 @@ namespace Scyndi_CI {
 		return StateRegister.count(_State);
 	}
 	bool _statecheck{ true };
-	Slyvina::Lunatic::SLunatic State(std::string _State) {
+	Slyvina::NSLunatic::SLunatic State(std::string _State) {
 		Trans2Upper(_State);
 		if (!StateRegister.count(_State)) { 
 			//throw std::runtime_error(TrSPrintF("State '%s' doesn't exist", _State.c_str())); 
@@ -506,7 +508,7 @@ namespace Scyndi_CI {
 		return StateRegister[_State];
 	}
 
-	void State(std::string _State, Slyvina::Lunatic::SLunatic _Lun) {
+	void State(std::string _State, Slyvina::NSLunatic::SLunatic _Lun) {
 		Trans2Upper(_State);
 		if (!_Lun) {
 			if (StateRegister.count(_State)) StateRegister.erase(_State);

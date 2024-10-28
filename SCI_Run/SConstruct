@@ -1,6 +1,7 @@
 import platform
 from datetime import date
 from os import system
+from os import environ
 
 Today = date.today().strftime("%b %d %y")
 Fmt = """# SRF Identification file!
@@ -51,7 +52,8 @@ else:
     AddLib("zlib",["../../../Libs/JCR6/3rdParty/3rdParty/zlib/zlib"])
     
 # project
-AddLib("SDL2",["libSDL2","SDL2_mixer","SDL2_image","SDL2main"])
+Environment(ENV = {'PATH' : environ['PATH']})
+AddLib("SDL2",["SDL2","SDL2_mixer","SDL2_image","SDL2main"])
 Add("JCR6",[    
     "../../../Libs/JCR6/Source/JCR6_Core.cpp",
     "../../../Libs/JCR6/Source/JCR6_JQL.cpp",

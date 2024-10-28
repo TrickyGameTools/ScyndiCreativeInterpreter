@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.10 II
+// Version: 24.10.28
 // End License
 
 #include <Lunatic.hpp>
@@ -48,6 +48,7 @@ using namespace JCR6;
 using namespace NSLunatic;
 using namespace TQSG;
 using namespace TQSE;
+using namespace std;
 
 namespace Scyndi_CI {
 	struct SCFlow { std::string Name; SLunatic State{ nullptr }; };

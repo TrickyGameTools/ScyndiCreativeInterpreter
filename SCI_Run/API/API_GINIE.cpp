@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28
+// Version: 24.10.28 I
 // End License
 // Lic:
 // Scyndi's Creative Interpreter
@@ -130,7 +130,7 @@ namespace Scyndi_CI {
 			luaL_error(L, "Nothing given to be a value for GINIE value");
 			return 0;
 		default:
-			cout << "<GINIE." << Tag << ">.NewValue(\"" << Cat << "," << Key << "\n,<Lua#" << lua_type(L, 4) << ") << \x1b[31mERROR!!!\x1b[0m\n";
+			std::cout << "<GINIE." << Tag << ">.NewValue(\"" << Cat << "," << Key << "\n,<Lua#" << lua_type(L, 4) << ") << \x1b[31mERROR!!!\x1b[0m\n";
 			luaL_error(L, "Type (Lua code %d) received for GINIE value, but I don't know how to handle that ", lua_type(L, 4));
 			return 0;
 		}

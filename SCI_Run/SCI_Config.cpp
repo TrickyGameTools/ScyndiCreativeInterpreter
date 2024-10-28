@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28 I
+// Version: 24.10.28 II
 // End License
 
 #include <TQSE.hpp>
@@ -186,7 +186,7 @@ namespace Scyndi_CI {
 			if (SRT == "CALLBACK") Ret = RunType::Callback;
 			else if (SRT == "STRAIGHT") Ret = RunType::Straight;
 			else if (SRT == "" || SRT == "FLOW") Ret = RunType::Flow;
-			else throw runtime_error("Unknown RunType");
+			else throw std::runtime_error("Unknown RunType");
 		}
 		return Ret;
 	}

@@ -217,7 +217,7 @@ namespace Scyndi_CI {
 			AutoSaveHead{ Lunatic_OptString(L,4,"") };			
 		if (!FileExists(FFile)) { // { Crash("File not found: " + PFile, "Full File Name: " + FFile); return 0; }
 #ifdef API_GINIE_DEBUG
-			cout << "GINIE HOME FILE '"<<FFile<<"' does not exist! Creating \n";
+			std::cout << "GINIE HOME FILE '"<<FFile<<"' does not exist! Creating \n";
 #endif
 			GINREG[Tag] = ParseGINIE("# Nothing\n#Move along!");
 			if (AutoSaveFile.size()) GINREG[Tag]->AutoSave = AutoSaveFile;

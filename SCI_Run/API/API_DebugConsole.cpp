@@ -82,6 +82,7 @@ namespace Scyndi_CI {
 	void IC_Echo(VecString L) { for (auto A : *L) printf("=> %s\n", A.c_str()); }
 
 	void IC_Block(VecString) {
+		using namespace std;
 		if (!MapPicked()) { QCol->Error("Request not possible. No map picked"); }
 		if (!LayerPicked()) { QCol->Error("Request not possible. No layer picked"); }
 		QCol->Reset();
@@ -99,7 +100,7 @@ namespace Scyndi_CI {
 	void IC_CountObjects(VecString) {
 		if (!MapPicked()) { QCol->Error("Request not possible. No map picked"); }
 		if (!LayerPicked()) { QCol->Error("Request not possible. No layer picked"); }
-		std::map<string, size_t> Cnt;
+		std::map<String, size_t> Cnt;
 		size_t total = 0;
 		QCol->Doing("Layer", PickedLayer());
 		for (auto o = GetKthuraLayer()->FirstObject(); o; o = o->Next()) {
@@ -158,7 +159,7 @@ namespace Scyndi_CI {
 				auto RawCommand = Trim(ReadLine());
 				QCol->Reset();
 				if (RawCommand.size()) {
-					string Cmd{};
+					String Cmd{};
 					VecString Params;
 					auto P = FindFirst(RawCommand, ' ');
 					if (P < 0) {
@@ -168,7 +169,7 @@ namespace Scyndi_CI {
 						Params = NewVecString();
 						Cmd = Upper(RawCommand.substr(0, P));
 						auto RawParams{ RawCommand.substr(P + 1) };
-						string Word;
+						String Word;
 						bool quote{ false };
 						for (size_t i = 0; i < RawParams.size(); ++i) {
 							switch (RawParams[i]) {

@@ -51,7 +51,7 @@ else:
     AddLib("zlib",["../../../Libs/JCR6/3rdParty/3rdParty/zlib/zlib"])
     
 # project
-AddLib("SDL2",["sdl2"])
+AddLib("SDL2",["sdl2","sdl2_mixer","sdl2_image","sdl2main"])
 Add("JCR6",[    
     "../../../Libs/JCR6/Source/JCR6_Core.cpp",
     "../../../Libs/JCR6/Source/JCR6_JQL.cpp",

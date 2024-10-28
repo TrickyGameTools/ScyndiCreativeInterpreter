@@ -43,7 +43,7 @@ def Add(cat,files):
 def AddLib(cat,files):
     for f in files: 
         Doing("Lib "+cat,f)
-        Files.append(f)
+        Libs.append(f)
         
 # zlib        
 if platform.system()=="Linux":

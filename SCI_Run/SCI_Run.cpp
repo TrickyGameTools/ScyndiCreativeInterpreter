@@ -26,7 +26,11 @@
 
 #undef SCI_NO_ERROR_CATCHING
 
+#ifdef SlyvLinux
+#include <SDL2/SDL.h>
+#else
 #include <SDL.h>
+#endif
 
 #include <TQSE.hpp>
 

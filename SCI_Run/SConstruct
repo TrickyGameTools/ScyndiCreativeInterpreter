@@ -53,7 +53,7 @@ else:
     
 # project
 #Environment(ENV = {'PATH' : environ['PATH']})
-Environment(ENV = {'PATH' : "/usr/local/lib"})
+#Environment(ENV = {'PATH' : "/usr/local/lib"})
 AddLib("SDL2",["SDL2","SDL2_mixer","SDL2_image","SDL2main"])
 Add("JCR6",[    
     "../../../Libs/JCR6/Source/JCR6_Core.cpp",
@@ -173,4 +173,4 @@ IncludeDirs=[
     "../../../Libs/Medals"]
     
     
-Program("bin/sci_run_%s"%platform.system().lower(), Files,LIBS=Libs,CPPPATH=IncludeDirs)
+Program("bin/sci_run_%s"%platform.system().lower(), Files,LIBS=Libs,LIBPATH="usr/local/lib",CPPPATH=IncludeDirs)

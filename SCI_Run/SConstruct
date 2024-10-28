@@ -25,6 +25,9 @@ with open("srf/ID/Identify.ini", "w") as text_file:
 Doing("Packaging","SRF")
 system("jalondi create -y -m -cm zlib -fc zlib ../SCI_Exe/SCI_Run.srf srf")
 
+# API Header
+Doing("Generating","API Headers")
+system("../APIHeader/apiheader_%s"%platform.system().lower())
 
 # Base Functions
 Files = []

@@ -22,10 +22,12 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28 I
+// Version: 24.10.28 II
 // End License
 
 #undef SCI_NO_ERROR_CATCHING
+
+#include <Slyvina.hpp>
 
 #ifdef SlyvLinux
 #include <SDL2/SDL.h>

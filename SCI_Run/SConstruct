@@ -161,7 +161,7 @@ Add("SCI Main",[
     "SCI_Script.cpp"])
     
 IncludeDirs=[    
-    "../../../Libs/JCR6/Headers".
+    "../../../Libs/JCR6/Headers",
     "../../../Libs/Units/Headers",
     "../../../Libs/TQSL/Headers",
     "../../../Libs/Statistician",

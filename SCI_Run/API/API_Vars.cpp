@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023
+// 	(c) Jeroen P. Broks, 2023, 2024
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.10 I
+// Version: 24.10.28
 // End License
 
 #include <Lunatic.hpp>
@@ -156,7 +156,7 @@ namespace Scyndi_CI {
 			SSrc{ Split(Src,'\n') };
 		for (size_t i = 0; i < SSrc->size(); i++) {
 			auto Line{ (*SSrc)[i] };
-			auto LineNumber{ i + 1ui64 };
+			size_t LineNumber{i+1}; // { i + 1ui64 };
 			if (Line.size() && (!Prefixed(Line, "//"))) {
 				auto p{ FindFirst(Line, '=') }; if (p < 0) { luaL_error(L, "Localisation syntax error in line #%d", LineNumber); return 0; }
 				auto

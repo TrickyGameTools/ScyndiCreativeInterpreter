@@ -37,3 +37,4 @@ SCI_Run/srf/Script/ScyndiCore.lua
 *.scyndi#
 *.dblite
 *.exe
+x64/Release/APIHeader.exe

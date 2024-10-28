@@ -1,0 +1,53 @@
+import platform
+print("\x1b[32mScyndi's Creative Interpreter\x1b[33m\tBuilder script for the builder\x1b[0m\n(c) Jeroen P. Broks\n")
+def Doing(a,b): print("\x1b[93m%s: \x1b[96m%s\x1b[0m"%(a,b))
+Doing("Platform",platform.system())
+
+# Doing("Testing","Quick color") # debug only!
+
+Files = []
+Libs = []
+
+def Add(cat,files):
+    for f in files: 
+        Doing(cat,f)
+        Files.append(f)
+
+def AddLib(cat,files):
+    for f in files: 
+        Doing("Lib "+cat,f)
+        Files.append(f)
+        
+        
+if platform.system()=="Linux":
+    Add("zlib",Glob("../../../Libs/JCR6/3rdParty/zlib/src/*.c"))
+else:
+    AddLib("zlib",["../../../Libs/JCR6/3rdParty/3rdParty/zlib/zlib"])
+Add("JCR6",[        
+    "../../../Libs/JCR6/Source/JCR6_Core.cpp",
+    "../../../Libs/JCR6/Source/JCR6_JQL.cpp",
+    "../../../Libs/JCR6/Source/JCR6_RealDir.cpp",
+    "../../../Libs/JCR6/Source/JCR6_Write.cpp",
+    "../../../Libs/JCR6/Source/JCR6_zlib.cpp"])
+Add("Slyvina Units",[    
+    "../../../Libs/Units/Source/SlyvArgParse.cpp",
+    "../../../Libs/Units/Source/SlyvAsk.cpp",
+    "../../../Libs/Units/Source/SlyvBank.cpp",
+    "../../../Libs/Units/Source/SlyvDir.cpp",
+    "../../../Libs/Units/Source/SlyvDirry.cpp",
+    "../../../Libs/Units/Source/SlyvMD5.cpp",
+    "../../../Libs/Units/Source/SlyvQCol.cpp",
+    "../../../Libs/Units/Source/SlyvRequestFile.cpp",
+    "../../../Libs/Units/Source/SlyvSTOI.cpp",
+    "../../../Libs/Units/Source/SlyvStream.cpp",
+    "../../../Libs/Units/Source/SlyvString.cpp",
+    "../../../Libs/Units/Source/SlyvTime.cpp",
+    "../../../Libs/Units/Source/SlyvVolumes.cpp"])
+Add("SCI Shared",["../SCI_Share/SCI_GlobalConfig.cpp"]),
+Add("SCI Builder",[
+    "SCI_Build.cpp",
+    "SCI_Build_Config.cpp",
+    "SCI_Butler.cpp",
+    "SCI_Package.cpp",
+    "SCI_Project.cpp",
+    "SCI_Script.cpp"])

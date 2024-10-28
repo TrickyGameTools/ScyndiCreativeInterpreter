@@ -163,6 +163,7 @@ Add("SCI Main",[
 IncludeDirs=[    
     "../../../Libs/JCR6/Headers",
     "../../../Libs/Units/Headers",
+    "../../../Libs/Kthura/Headers",
     "../../../Libs/TQSL/Headers",
     "../../../Libs/Statistician",
     "../../../Libs/Lunatic",

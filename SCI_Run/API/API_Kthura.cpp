@@ -1,28 +1,29 @@
-// Lic:
+// License:
+// 
 // Scyndi's Creative Interpreter
 // Kthura API
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023, 2024
+// 	(c) Jeroen P. Broks, 2023, 2024
 // 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// 		This program is free software: you can redistribute it and/or modify
+// 		it under the terms of the GNU General Public License as published by
+// 		the Free Software Foundation, either version 3 of the License, or
+// 		(at your option) any later version.
 // 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 		This program is distributed in the hope that it will be useful,
+// 		but WITHOUT ANY WARRANTY; without even the implied warranty of
+// 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// 		GNU General Public License for more details.
+// 		You should have received a copy of the GNU General Public License
+// 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Please note that some references to data like pictures or audio, do not automatically
-// fall under this licenses. Mostly this is noted in the respective files.
+// 	Please note that some references to data like pictures or audio, do not automatically
+// 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.09.24
-// EndLic
+// Version: 24.10.28
+// End License
 
 
 #include <SlyvHSVRGB.hpp>
@@ -32,12 +33,10 @@
 #include "../SCI_Script.hpp"
 #include "../SCI_Kthura.hpp"
 #include "../SCI_Crash.hpp"
-
-
 using namespace Slyvina; 
 using namespace Slyvina::Units;
 using namespace Slyvina::Kthura;
-using namespace Slyvina::Lunatic;
+using namespace Slyvina::NSLunatic;
 
 namespace Scyndi_CI {
 
@@ -181,6 +180,7 @@ namespace Scyndi_CI {
 		GetObjInt("ANIMFRAME", animframe);
 		GetObjBool("VISIBLE", visible);
 		GetObjBool("WALKING", Walking); // Read-Only
+		GetObjString("KIND", SKind); // Read-Only
 		// Actor only
 		GetObjString("WIND", Wind);
 		Crash("(Get) Unknown object field: " + ObjKey);
@@ -519,6 +519,13 @@ namespace Scyndi_CI {
 		Lunatic_PushString(L, o->data(luaL_checkstring(L, 2)));
 		return 1;
 	}
+	static int API_Kthura_CreateObject(lua_State* L) {
+		auto layer{ GetKthuraLayer() };
+		auto newobj{ layer->NewObject(Lunatic_CheckString(L,1)) };
+		layer->RemapID();
+		lua_pushinteger(L, newobj->ID());
+		return 1;
+	}
 
 
 	void Init_API_Kthura() {
@@ -549,8 +556,10 @@ namespace Scyndi_CI {
 			{ "HideByLabel",API_Kthura_HideByLabel },
 			{ "ShowByLabel", API_Kthura_ShowByLabel },
 			{ "ObjDataGet",API_Kthura_ObjDataGet },
-			{ "ObjDataSet",API_Kthura_ObjDataSet }
+			{ "ObjDataSet",API_Kthura_ObjDataSet },
+			{ "NewObj",API_Kthura_CreateObject }
 		};
+		
 		InstallAPI("Kthura", IAPI);
 	}
 }

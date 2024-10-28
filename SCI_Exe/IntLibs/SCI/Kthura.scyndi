@@ -1,22 +1,26 @@
-// License Information:
-// SCI_Exe/IntLibs/SCI/Kthura.scyndi
-// Kthura Link up for Scyndi's Creative Interpreter
-// version: 24.01.20
-// Copyright (C) 2023, 2024 Jeroen P. Broks
-// This software is provided 'as-is', without any express or implied
-// warranty.  In no event will the authors be held liable for any damages
-// arising from the use of this software.
-// Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it
-// freely, subject to the following restrictions:
-// 1. The origin of this software must not be misrepresented; you must not
-// claim that you wrote the original software. If you use this software
-// in a product, an acknowledgment in the product documentation would be
-// appreciated but is not required.
-// 2. Altered source versions must be plainly marked as such, and must not be
-// misrepresented as being the original software.
-// 3. This notice may not be removed or altered from any source distribution.
-// End License Information
+// License:
+// 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
+// 	Kthura Link up for Scyndi's Creative Interpreter
+// 	version: 24.10.28
+// 
+// 	Copyright (C) 2023, 2024 Jeroen P. Broks
+// 
+// 	This software is provided 'as-is', without any express or implied
+// 	warranty.  In no event will the authors be held liable for any damages
+// 	arising from the use of this software.
+// 
+// 	Permission is granted to anyone to use this software for any purpose,
+// 	including commercial applications, and to alter it and redistribute it
+// 	freely, subject to the following restrictions:
+// 
+// 	1. The origin of this software must not be misrepresented; you must not
+// 	   claim that you wrote the original software. If you use this software
+// 	   in a product, an acknowledgment in the product documentation would be
+// 	   appreciated but is not required.
+// 	2. Altered source versions must be plainly marked as such, and must not be
+// 	   misrepresented as being the original software.
+// 	3. This notice may not be removed or altered from any source distribution.
+// End License
 
 Module
 
@@ -164,4 +168,90 @@ End
 
 Get Var MetaData
 	Return Kthura_Meta
+End
+
+// DON'T call this directly. You can better use the "official" routines
+Const Delegate __NewObject = Lua.Kthura.NewObj
+
+Var NewObject(String Kind)
+	plua ret
+	ret = Obj["%"..__NewObject(Kind)]
+	return ret
+End
+
+Var NewTiledArea(int X, int Y, int W, int H, String Tex)
+	var r;r = NewObject("TiledArea")
+	r.X = X
+	r.Y = Y
+	r.W = W
+	r.H = H
+	r.Texture = Tex
+	r.r = 255
+	r.g = 255
+	r.b = 255
+	r.alpha = 255
+	r.Visible = True
+	return r
+End
+
+Var NewStrechedArea(int X, int Y, int W, int H, String Tex)
+	var r;r = NewObject("StrechedArea")
+	r.X = X
+	r.Y = Y
+	r.W = W
+	r.H = H
+	r.Texture = Tex
+	r.r = 255
+	r.g = 255
+	r.b = 255
+	r.alpha = 255
+	r.Visible = True
+	return r
+End	
+
+Var NewObstacle(int X, Int Y, String Tex)
+	var r;r = NewObject("Obstacle")
+	r.X = X
+	r.Y = Y
+	r.Texture = Tex
+	r.r = 255
+	r.g = 255
+	r.b = 255
+	r.alpha = 255
+	r.Visible = True
+	return r
+End	
+
+Var NewRect(int X, int Y, int W, int H, int RR=255,int RG=255,int RB=255,int RA=255)
+	var r;r = NewObject("Rect")
+	r.X = X
+	r.Y = Y
+	r.W = W
+	r.H = H	
+	r.r = RR
+	r.g = RG
+	r.b = RB
+	r.alpha = RA
+	r.Visible = True
+	return r
+End	
+
+
+Var NewZone(int X, int Y, int W, int H)
+	var r;r = NewObject("Zone")
+	r.X = X
+	r.Y = Y
+	r.W = W
+	r.H = H	
+	return r
+End	
+
+Var NewExit(Int X,int Y, String Tag,String Wind="North")
+var r;r = NewObject("Exit")
+	r.X = X
+	r.Y = Y
+	r.Tag = Tag
+	r.Data.Wind=Wind
+	r.Dominance=20
+	return r
 End

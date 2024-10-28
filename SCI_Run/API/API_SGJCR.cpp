@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.10 I
+// Version: 24.10.28
 // End License
 
 #include <SlyvString.hpp>
@@ -114,7 +114,7 @@ namespace Scyndi_CI {
 		if (FileExists(File)) {
 			auto S{ FileSize(File) };
 			auto BO{ WriteFile(File) };
-			for (size_t i = 0; i < S; i++) BO->Write((byte)Rand.Get(0, 255));
+			for (size_t i = 0; i < S; i++) BO->Write((Byte)Rand.Get(0, 255));
 			BO->Close();
 		} else {
 			cout << "\x1b[31mNOTE>\x1b[37m File \"" << File << "\" does not exist, so request to mutilate ignored!\n";

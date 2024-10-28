@@ -51,6 +51,7 @@ else:
     AddLib("zlib",["../../../Libs/JCR6/3rdParty/3rdParty/zlib/zlib"])
     
 # project
+AddLib("SDL2",["sdl2"])
 Add("JCR6",[    
     "../../../Libs/JCR6/Source/JCR6_Core.cpp",
     "../../../Libs/JCR6/Source/JCR6_JQL.cpp",
@@ -158,3 +159,13 @@ Add("SCI Main",[
     "SCI_Load.cpp",
     "SCI_Run.cpp",
     "SCI_Script.cpp"])
+    
+IncludeDirs=[    
+    "../../../Libs/JCR6/Headers".
+    "../../../Libs/Units/Headers",
+    "../../../Libs/TQSL/Headers",
+    "../../../Libs/Statistician",
+    "../../../Libs/Medals"]
+    
+    
+Program("bin/sci_run_%s"%system.platform().lower(), Files,LIBS=Libs,CPPPATH=IncludeDirs)

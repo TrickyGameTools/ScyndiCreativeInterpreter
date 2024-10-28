@@ -52,4 +52,4 @@ Add("SCI Builder",[
     "SCI_Project.cpp",
     "SCI_Script.cpp"])
     
-Program("../SCI_%s/sci_build"%platform.system(),Files,LIBS=Libs,CPPPATH=["../../../Libs/JCR6/Headers","../../../Libs/Units/Headers"])
+Program("bin/sci_build_%s"%platform.system(),Files,LIBS=Libs,CPPPATH=["../../../Libs/JCR6/Headers","../../../Libs/Units/Headers"])

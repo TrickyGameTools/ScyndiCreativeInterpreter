@@ -168,4 +168,4 @@ IncludeDirs=[
     "../../../Libs/Medals"]
     
     
-Program("bin/sci_run_%s"%system.platform().lower(), Files,LIBS=Libs,CPPPATH=IncludeDirs)
+Program("bin/sci_run_%s"%platform.system().lower(), Files,LIBS=Libs,CPPPATH=IncludeDirs)

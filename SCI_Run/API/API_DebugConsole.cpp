@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28
+// Version: 24.10.28 I
 // End License
 // Lic:
 // Scyndi's Creative Interperter
@@ -164,7 +164,7 @@ namespace Scyndi_CI {
 	}
 
 
-	bool Scyndi_CI::DebugConsoleCalled() {
+	bool DebugConsoleCalled() {
 		static TImage CheckConsole{nullptr};
 		if (DebugBuild() && KeyDown(SDLK_LSHIFT) && KeyDown(SDLK_RSHIFT) && KeyDown(SDLK_KP_MINUS)) {
 			Flush();

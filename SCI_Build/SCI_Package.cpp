@@ -1,3 +1,29 @@
+// License:
+// 
+// Scyndi's Creative Interpreter - Builder
+// Package
+// 
+// 
+// 
+// 	(c) Jeroen P. Broks, 2023, 2024
+// 
+// 		This program is free software: you can redistribute it and/or modify
+// 		it under the terms of the GNU General Public License as published by
+// 		the Free Software Foundation, either version 3 of the License, or
+// 		(at your option) any later version.
+// 
+// 		This program is distributed in the hope that it will be useful,
+// 		but WITHOUT ANY WARRANTY; without even the implied warranty of
+// 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// 		GNU General Public License for more details.
+// 		You should have received a copy of the GNU General Public License
+// 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 
+// 	Please note that some references to data like pictures or audio, do not automatically
+// 	fall under this licenses. Mostly this is noted in the respective files.
+// 
+// Version: 24.10.28
+// End License
 // Lic:
 // Scyndi's Creative Interpreter - Builder
 // Package
@@ -41,6 +67,7 @@
 using namespace Slyvina;
 using namespace Units;
 using namespace JCR6;
+using namespace std;
 
 namespace Scyndi_CI {
 	namespace Builder {
@@ -53,27 +80,27 @@ namespace Scyndi_CI {
 #pragma region ScriptRecord
 		class ScriptRecord {
 		public:
-			string
+			String
 				FullFileName,
 				FileName,
 				ResDir;
-			string ResFileName(bool wantbytecode) { 
+			String ResFileName(bool wantbytecode) { 
 				auto FN{ StripExt(FileName) }; if (CLI_Args.bool_flags["scyndidebug"]) FN = StripExt(FN); 
 				if (wantbytecode) FN += ".lbc"; else FN += ".lua";
 				return ResDir + "/" + FN; 
 			}
-			ScriptRecord(string FFN, string FN, string RD) { FullFileName = ChReplace(FFN, '\\', '/'); FileName = ChReplace(FN, '\\', '/'); ResDir = ChReplace(RD, '\\', '/'); }
+			ScriptRecord(String FFN, String FN, String RD) { FullFileName = ChReplace(FFN, '\\', '/'); FileName = ChReplace(FN, '\\', '/'); ResDir = ChReplace(RD, '\\', '/'); }
 		};
 		
-		typedef shared_ptr<vector<shared_ptr<ScriptRecord>>> SRList;
-		inline SRList NewSRList() { return make_shared<vector<shared_ptr<ScriptRecord>>>(); }
-		void SRPush(SRList L, string FFN, string FN, string RD) { L->push_back(make_shared<ScriptRecord>(FFN, FN, RD)); }
-		bool SRFind(SRList L, string FFN) {
+		typedef std::shared_ptr<std::vector<std::shared_ptr<ScriptRecord>>> SRList;
+		inline SRList NewSRList() { return std::make_shared<std::vector<std::shared_ptr<ScriptRecord>>>(); }
+		void SRPush(SRList L, String FFN, String FN, String RD) { L->push_back(std::make_shared<ScriptRecord>(FFN, FN, RD)); }
+		bool SRFind(SRList L, String FFN) {
 			FFN = ChReplace(FFN, '\\', '/');
 			for (auto a : *L) if (a->FullFileName == FFN) return true;
 			return false;
 		}
-		void SRPushUnique(SRList L, string FFN, string FN, string RD) { if (!SRFind(L,FFN)) L->push_back(make_shared<ScriptRecord>(FFN, FN, RD)); }
+		void SRPushUnique(SRList L, String FFN, String FN, String RD) { if (!SRFind(L,FFN)) L->push_back(make_shared<ScriptRecord>(FFN, FN, RD)); }
 #pragma endregion
 		
 

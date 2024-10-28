@@ -2,7 +2,7 @@
 // **********************************************
 // 
 // SCI_Run/API/API_Medals.cpp
-// (c) Jeroen Broks, 2023, All Rights Reserved.
+// (c) Jeroen Broks, 2023, 2024, All Rights Reserved.
 // 
 // This file contains material that is related
 // to a storyline that is which is strictly
@@ -34,7 +34,7 @@
 // **********************************************
 // 
 // 
-// version: 24.10.10 I
+// version: 24.10.28
 // 
 // End License
 
@@ -50,6 +50,7 @@
 using namespace Slyvina;
 using namespace NSLunatic;
 using namespace Medals;
+using namespace Units;
 
 namespace Scyndi_CI {
 

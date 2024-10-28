@@ -117,7 +117,7 @@ int main(int c, char** cli_args) {
 #endif
 			RunGame();
 #ifndef SCI_NO_ERROR_CATCHING
-		} catch (runtime_error rte) {
+		} catch (std::runtime_error rte) {
 			if (!Crashed()) {
 				Crash(std::string(rte.what()), "", false);
 			} else {

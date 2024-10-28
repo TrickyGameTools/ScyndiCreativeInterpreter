@@ -22,4 +22,4 @@ Doing("Writing","Identification for SRF")
 with open("srf/ID/Identify.ini", "w") as text_file:
     text_file.write(Fmt%Today)
 Doing("Packaging","SRF")
-system("jalondi create -y -m -cm zlib -fc zlib ../../SCI_Exe/SCI_Run.srf srf")
+system("jalondi create -y -m -cm zlib -fc zlib ../SCI_Exe/SCI_Run.srf srf")

@@ -173,4 +173,4 @@ IncludeDirs=[
     "../../../Libs/Medals"]
     
     
-Program("bin/sci_run_%s"%platform.system().lower(), Files,LIBS=Libs,LIBPATH="/usr/local/lib",CPPPATH=IncludeDirs,LINKFLAGS="-LLIBDIR,-Wl,-rpath,-Wl,LIBDIR")
+Program("bin/sci_run_%s"%platform.system().lower(), Files,LIBS=Libs,,CPPPATH=IncludeDirs) #,LIBPATH="/usr/local/lib"LINKFLAGS="-LLIBDIR,-Wl,-rpath,-Wl,LIBDIR")

@@ -1,1 +1,1 @@
-slyvina:\apps\qversion\release\qversion SCI.ini
+slyvina:\apps\qversion\release\qversion -alpha SCI.ini

@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28 II
+// Version: 24.10.30
 // End License
 
 #include <TQSE.hpp>
@@ -70,7 +70,12 @@ namespace Scyndi_CI {
 
 #pragma region SRF
 
-	std::string JCR_SRF() {	return ChReplace(StripExt(Args.myexe) + ".srf",'\\','/'); }
+	std::string JCR_SRF() {	
+		return
+			_JT_Dir::Recognize(Args.myexe) == "JCR6" ?
+			Args.myexe :
+			ChReplace(StripExt(Args.myexe) + ".srf", '\\', '/');
+	}
 
 	static void LoadSRFGINIE() {
 		if (!srf_id) {

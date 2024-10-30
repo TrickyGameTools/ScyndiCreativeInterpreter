@@ -19,7 +19,7 @@ def Add(cat,files):
 def AddLib(cat,files):
     for f in files: 
         Doing("Lib "+cat,f)
-        Files.append(f)
+        Libs.append(f)
 Add("Units",[        
     "../../../Libs/Units/Source/SlyvDir.cpp",
     "../../../Libs/Units/Source/SlyvDirry.cpp",

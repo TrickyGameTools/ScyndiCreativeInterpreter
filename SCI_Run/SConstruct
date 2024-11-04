@@ -23,6 +23,11 @@ print("\n\n")
 Doing("Writing","Identification for SRF")
 with open("srf/ID/Identify.ini", "w") as text_file:
     text_file.write(Fmt%Today)
+Doing("Copying","Scyndi Core Script")
+with open("../../../Tools/Scyndi/Script/ScyndiCore.lua","r") as lua_file:
+    lua_core_script = lua_file.read()
+with open("srf/Script/ScyndiCore.lua","w") as lua_file:
+    lua_file.write(lua_core_script)
 Doing("Packaging","SRF")
 system("jalondi create -y -m -cm zlib -fc zlib ../SCI_Exe/SCI_Run.srf srf")
 

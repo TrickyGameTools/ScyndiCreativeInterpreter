@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.30
+// Version: 24.11.04 I
 // End License
 
 #include <TQSE.hpp>
@@ -31,6 +31,7 @@
 #include <SlyvString.hpp>
 #include <SlyvQCol.hpp>
 #include <SlyvGINIE.hpp>
+#include <SlyvAsk.hpp>
 
 #include <JCR6_Core.hpp>
 
@@ -128,6 +129,11 @@ namespace Scyndi_CI {
 		return ret;
 	}
 
+	bool AskAboutVersion() {
+		QCol->Warn("Version mismatch detected!");
+		return Yes(GlobalConfig(), "AllowStrangeVersion", SaveGameID(), "The SCI version wanted by the game data actually differs from the actual version of SCI. Do you still want to continue");
+	}
+
 	std::string GameTitle() {
 		LoadGameID();
 		return res_id->Value("ID", "Title");
@@ -164,8 +170,9 @@ namespace Scyndi_CI {
 				gt{ stol((*s)[0]) },
 				mj{ stol((*s)[1]) },
 				mn{ stol((*s)[2]) };
+			QCol->Doing("SCI Version Wanted", TrSPrintF("%d.%d.%d", gt, mj, mn));
 			if (gt != QVersion.giant || mj != QVersion.major || mn != QVersion.minor) {
-				if (!ask) return false;
+				if (!ask) QCol->Error("Version mismatch!"); return false;
 				if (gt > QVersion.giant) { throw runtime_error(TrSPrintF("This game requires at least version %d.0.0 in order to run", gt)); }
 				if (gt == QVersion.giant && (mj > QVersion.major || (mj == QVersion.minor && mn > QVersion.minor))) {
 					return Yes(TrSPrintF("This game requires version %d.%d.%d of Scyndi's Creative Interpreter, which is a slightly later version than you are using now. Are you sure you wish to continue?"));
@@ -178,6 +185,10 @@ namespace Scyndi_CI {
 			exit(50);
 		}
 		return false;
+	}
+
+	bool VersionMatch() {
+		return VersionMatch(false) ? true : AskAboutVersion();
 	}
 
 	bool HideSystemMouse() {

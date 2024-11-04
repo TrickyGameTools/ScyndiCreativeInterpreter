@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28 II
+// Version: 24.11.04
 // End License
 
 #undef SCI_NO_ERROR_CATCHING
@@ -132,7 +132,10 @@ int main(int c, char** cli_args) {
 			}
 		}
 #endif
-	} else { return 1; }
+	} else { 
+		QCol->Error("Start up verification failed!");
+		return 1; 
+	}
 	StateCheck(false); // Force State Checks off.
 	KillAllStates();
 	QCol->Doing("Ending", "Scyndi's Creative Interpreter");

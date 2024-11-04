@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28 I
+// Version: 24.11.04
 // End License
 
 
@@ -174,9 +174,11 @@ namespace Scyndi_CI {
 			auto
 				WS{ GameID_GINIE()->Value("Window","Width") },
 				HS{ GameID_GINIE()->Value("Window","Height") };
+			QCol->Doing("Measuring","Desktop size");
 			auto
-				WI{ WV(WS,DesktopWidth()) },
-				HI{ WV(HS,DesktopHeight()) };
+				WI{ WV(WS,DesktopWidth(true)) },
+				HI{ WV(HS,DesktopHeight(true)) };
+			QCol->Doing("Desktop", TrSPrintF("%dx%d", WI, HI));
 			//cout << AltWidth() << "/" << AltHeight() << "/" << Upper(Left(GameID_GINIE()->Value("Window", "WINADEPTALT"), 1)) << (Upper(Left(GameID_GINIE()->Value("Window", "WINADEPTALT"), 1)) == "Y") << "\n"; // debug
 			if (AltWidth() && AltHeight() && Upper(Left(GameID_GINIE()->Value("Window", "WINADEPTALT"), 1)) == "Y") {
 				//double WR{ (double)AltWidth() / (double)WI };

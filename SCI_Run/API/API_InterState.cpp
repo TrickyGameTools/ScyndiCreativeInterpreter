@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023
+// 	(c) Jeroen P. Broks, 2023, 2024
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.10 I
+// Version: 24.11.04
 // End License
 
 #include "../SCI_Script.hpp"
@@ -65,9 +65,8 @@ namespace Scyndi_CI {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Call",IS_Call},
 			{"Load",IS_LoadState},
-			{"LoadNew",IS_LoadNewState}
-		
-		};
+			{"LoadNew",IS_LoadNewState}		
+		};		
 		InstallAPI("InterState", IAPI);
 	}
 }

@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28
+// Version: 24.11.04
 // End License
 
 #include <Lunatic.hpp>
@@ -199,7 +199,8 @@ namespace Scyndi_CI {
 		std::string
 			ApS{ Ap },
 			APU{ Upper(Ap) },
-			Scrippie{ TrSPrintF("-- Init: %s --\n\n%s, UC_%s = {}, {}\n",Ap,Ap,Ap) };
+			//Scrippie{ TrSPrintF("-- Init: %s --\n\n%s, UC_%s = {}, {}\n",Ap,Ap,Ap) };
+			Scrippie{ (String)"-- Init: " + Ap + " --\n\n" + Ap + ", UC_" + Ap + "= {},{}\n" };
 
 		if (!API.count(APU)) {
 			Crash("API '" + APU + "' does not exist!");
@@ -208,8 +209,10 @@ namespace Scyndi_CI {
 		auto _S{ State(St) };
 		for (auto k : API[APU]) {
 			_S->Register("SCI_MOD_" + ApS + "_" + k.first, k.second);
-			Scrippie += TrSPrintF("%s.%s = SCI_MOD_%s_%s\n", Ap, k.first.c_str(), Ap, k.first.c_str());
-			Scrippie += TrSPrintF("UC_%s.%s = SCI_MOD_%s_%s\n", Ap, Upper(k.first).c_str(), Ap, k.first.c_str());
+			//Scrippie += TrSPrintF("%s.%s = SCI_MOD_%s_%s\n", Ap, k.first.c_str(), Ap, k.first.c_str());
+			//Scrippie += TrSPrintF("UC_%s.%s = SCI_MOD_%s_%s\n", Ap, Upper(k.first).c_str(), Ap, k.first.c_str());
+			Scrippie += (String)Ap + "." + k.first + " = SCI_MOD_" + Ap + "_" + k.first + "\n";
+			Scrippie += (String)"UC_" + Ap + "." + k.first + " = SCI_MOD_" + Ap + "_" + k.first + "\n";
 		}
 		_S->QDoString(Scrippie);
 	}

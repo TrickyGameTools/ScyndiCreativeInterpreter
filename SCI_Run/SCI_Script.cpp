@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.04
+// Version: 24.11.04 I
 // End License
 
 #include <Lunatic.hpp>
@@ -191,30 +191,38 @@ namespace Scyndi_CI {
 		return 0; // Should never be executed, but hey, this way I can at least play safe, eh?
 	}
 
+#define InitAPIChat(abc) std::cout << "\x1b[94mScyndi API DEBUG> \x1b[0m"<<abc<<"\n"
+//#define InitAPIChat(abc)
 	static int SYS_InitAPI(lua_State* L) {
+		InitAPIChat("Reading params");
 		auto
 			St{ luaL_checkstring(L,1) },
 			Ap{ luaL_checkstring(L,2) };
-
+		InitAPIChat("-> " << St << "; " << Ap);
 		std::string
 			ApS{ Ap },
 			APU{ Upper(Ap) },
 			//Scrippie{ TrSPrintF("-- Init: %s --\n\n%s, UC_%s = {}, {}\n",Ap,Ap,Ap) };
 			Scrippie{ (String)"-- Init: " + Ap + " --\n\n" + Ap + ", UC_" + Ap + "= {},{}\n" };
-
+		InitAPIChat("API Fault Check");
 		if (!API.count(APU)) {
 			Crash("API '" + APU + "' does not exist!");
 			return 0;
 		}
+		InitAPIChat("Get State: " << St);
 		auto _S{ State(St) };
+		InitAPIChat("-> " << boolstring(_S != nullptr));
 		for (auto k : API[APU]) {
+			InitAPIChat("Registering: " << ApS << "::" << k.first << "::" << k.second);
 			_S->Register("SCI_MOD_" + ApS + "_" + k.first, k.second);
 			//Scrippie += TrSPrintF("%s.%s = SCI_MOD_%s_%s\n", Ap, k.first.c_str(), Ap, k.first.c_str());
 			//Scrippie += TrSPrintF("UC_%s.%s = SCI_MOD_%s_%s\n", Ap, Upper(k.first).c_str(), Ap, k.first.c_str());
 			Scrippie += (String)Ap + "." + k.first + " = SCI_MOD_" + Ap + "_" + k.first + "\n";
 			Scrippie += (String)"UC_" + Ap + "." + k.first + " = SCI_MOD_" + Ap + "_" + k.first + "\n";
 		}
+		InitAPIChat("Go!\n" << Scrippie << "\n\x1b[96m*End\x1b[0m");
 		_S->QDoString(Scrippie);
+		return 0;
 	}
 
 	static int SYS_Use(lua_State* L) {

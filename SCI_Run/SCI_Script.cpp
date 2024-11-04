@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.04 I
+// Version: 24.11.05
 // End License
 
 #include <Lunatic.hpp>
@@ -226,14 +226,18 @@ namespace Scyndi_CI {
 	}
 
 	static int SYS_Use(lua_State* L) {
+		InitAPIChat("SYS_Use");
 		auto
 			St{ Lunatic_CheckString(L,1) },
 			Md{ Lunatic_CheckString(L,2) };
 		auto _State{ State(St) };
+		InitAPIChat("-> " << St << ":" << Md << "!");
 		if (Resource()->EntryExists(Md + ".lbc")) {
 			QCol->Doing("Using", Md + ".lbc");
 			auto buf{ Resource()->B(Md + ".lbc") };
+			InitAPIChat("ExecuteUse");
 			_State->QDoByteCode(buf, Md);
+			InitAPIChat("Done");
 		} else if (Resource()->EntryExists(Md + ".lua")) {
 			QCol->Doing("Using", Md + ".lua");
 			auto src{ Resource()->GetString(Md + ".lua") };

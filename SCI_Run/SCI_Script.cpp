@@ -246,6 +246,7 @@ namespace Scyndi_CI {
 		} else {
 			Crash("No module named '" + Md + "' has been found");
 		}
+		return 0;
 	}
 
 	int SYS_GoToFlow(lua_State* L) {

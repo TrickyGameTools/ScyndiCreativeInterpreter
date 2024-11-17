@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.05
+// Version: 24.11.17
 // End License
 
 #include <Lunatic.hpp>
@@ -58,6 +58,7 @@ namespace Scyndi_CI {
 	static std::map < std::string, SLunatic > StateRegister{};
 
 	static std::map<std::string, std::map<std::string, lua_CFunction>> API{};
+	static std::vector<std::string> PlannedToKill{};
 
 #pragma region Paniek	
 
@@ -448,6 +449,11 @@ namespace Scyndi_CI {
 		lua_pushinteger(L,SDL_GetTicks());
 		return 1;
 	}
+
+	static int SYS_PlanToKill(lua_State* L) {
+		PlannedToKill.push_back(luaL_checkstring(L, 1));
+		return 0;
+	}
 #pragma endregion
 
 	static void InitScript() {
@@ -483,6 +489,7 @@ namespace Scyndi_CI {
 			{"SCI_Platform",SYS_Platform},
 			{"SCI_GameID",SYS_GameID},
 			{"SCI_Ticks",SYS_Ticks},
+			{"SCI_PlanToKill",SYS_PlanToKill},
 
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},
@@ -608,6 +615,14 @@ namespace Scyndi_CI {
 		return StateRegister.count(Upper(_State));
 	}
 
+	void KillState(std::string _State) {
+		Trans2Upper(_State);
+		if (HasState(_State)) {
+			StateRegister[_State]->Kill();
+			StateRegister.erase(_State);
+		}
+	}
+
 	std::string CurrentFlow() {
 		return CFlow.Name;
 	}
@@ -654,6 +669,13 @@ namespace Scyndi_CI {
 	}
 
 	void EndTheRun() { EndRun = true; }
+
+	static void PerformPlannedKills() {
+		if (PlannedToKill.size()) {
+			for (auto victim : PlannedToKill) KillState(victim);
+			PlannedToKill.clear();
+		}
+	}
 
 	void RunGame() {
 		auto RT{ GetRunType() };

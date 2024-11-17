@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.04
+// Version: 24.11.16
 // End License
 
 #undef SCI_NO_ERROR_CATCHING
@@ -114,7 +114,8 @@ int main(int c, char** cli_args) {
 #endif
 			StartGraphics();
 			auto StartTime{ TimeStamp() };
-			LoadAllStartStuff();			
+			LoadAllStartStuff();
+			QCol->Doing("Lua version", NSLunatic::LuaVersion());
 			Flow("MAIN", MainScript());
 			do { Poll(); } while (abs(TimeStamp() - StartTime) < 3);
 			GoToFlow("MAIN");

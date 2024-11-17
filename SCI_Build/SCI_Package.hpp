@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28
+// Version: 24.11.16
 // End License
 // Lic:
 // Scyndi's Creative Interpreter - Builder
@@ -96,6 +96,7 @@ namespace Scyndi_CI {
 			bool AddString(std::string package, std::string entry, std::string content,std::string author,std::string notes);
 			bool AddMedals(std::string package);
 			bool Pack();
+			bool Aliases();
 			_Package(SCI_Project*P,Slyvina::Units::GINIE D);
 			~_Package();
 

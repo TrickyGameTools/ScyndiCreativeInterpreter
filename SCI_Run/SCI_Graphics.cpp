@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.04
+// Version: 24.11.16
 // End License
 
 
@@ -33,12 +33,16 @@
 #include <SlyvQCol.hpp>
 #include <SlyvSTOI.hpp>
 
+#include <Lunatic.hpp>
+
 #include <TQSG.hpp>
 
 #include "SCI_Crash.hpp"
 #include "SCI_Graphics.hpp"
 #include "SCI_Config.hpp"
 #include "SCI_JCR.hpp"
+#include "SCI_Script.hpp"
+#include <SlyvMD5.hpp>
 
 using namespace Slyvina;
 using namespace Units;
@@ -155,6 +159,66 @@ namespace Scyndi_CI {
 		return ToInt(v);
 	}
 
+
+#pragma region AltPic for scripted pictures
+	class SCIAP {
+	private:
+	public:
+		_____TIMAGE* TiedToPic{ nullptr };
+		int W{ 0 }, H{ 0 };
+		string ScriptTag{ "" };
+		Slyvina::NSLunatic::SLunatic APState;
+	};
+	static std::map<uint64, SCIAP> SCIAPReg{};
+	static int SCIAP_W(_____TIMAGE* img) { return SCIAPReg[img->ID()].W; }
+	static int SCIAP_H(_____TIMAGE* img) { return SCIAPReg[img->ID()].H; }
+	static void SCIAP_Draw(_____TIMAGE* img, int x, int y, int f) {
+		auto APD{ &SCIAPReg[img->ID()] };
+		auto APDS{ APD->APState };
+		if (!APDS) { Crash("Alt image null state!", TrSPrintF("SCIAP driver has to call a script on ID #%d, but no state seems to be present (", img->ID()) + APD->ScriptTag + ")"); return; }
+		APDS->QDoString(TrSPrintF("Scyndi.Globals.DrawAltImage(%d,%d,%d,%d)", img->ID(), x, y, f));
+	}
+	static void SCIAP_Destroy(_____TIMAGE* img) {
+		KillState(SCIAPReg[img->ID()].ScriptTag);
+	}
+	static void SCIAP_Load(_____TIMAGE* img, JT_Dir J, String Ent) {
+		GINIE GD{};
+		String GDF = StripExt(Ent) + ".ini";
+		GD = ParseGINIE(J->EntryExists(GDF) ? J->GetString(GDF) : "[sizes]\nW=256\nH=256\n[frames]\nframes=1\n");
+		SCIAPReg[img->ID()] = SCIAP();
+		auto NR{ &SCIAPReg[img->ID()] };
+		NR->W = GD->IntValue("Sizes", "W");
+		NR->H = GD->IntValue("Sizes", "H");
+		NR->ScriptTag= "ALTPICSCRIPT" + ChReplace(Ent, '/', '_') + md5(Ent) + TrSPrintF("_%09x", img->ID());
+		NR->TiedToPic = img;
+		State(NR->ScriptTag, Ent);
+		NR->APState = State(NR->ScriptTag);		
+	}
+	static void SCIAP_GetFormat(_____TIMAGE* img, int* w, int* h) {
+		auto APD{ &SCIAPReg[img->ID()] };
+		if (!APD) { Crash("GetFormat::Null AltPic Image Error"); return; }
+		*w = APD->W;
+		*h = APD->H;
+	}
+	static size_t SCIAP_Frames(_____TIMAGE*) { return 1; }
+	static void SCIAP_Init() {
+		QCol->Doing("Init", "Scripted pictures");
+		auto IAP{ TQAltPic::Create() };
+		IAP->Destroy = SCIAP_Destroy;
+		IAP->Draw = SCIAP_Draw;
+		IAP->Ext("lua;luac;lbc");
+		IAP->Height = SCIAP_H;
+		IAP->Width = SCIAP_W;
+		IAP->LoadJCR6 = SCIAP_Load;
+		IAP->Frames = SCIAP_Frames;
+		IAP->GetFormat = SCIAP_GetFormat;
+		TQAltPic::ReIndex(false);
+
+
+	}
+
+#pragma endregion
+
 	void StartGraphics() {
 		if (WantFullScreen()) {
 			QCol->Doing("Entering", "FullScreen");
@@ -199,6 +263,7 @@ namespace Scyndi_CI {
 			//QCol->Error("Windowed mode not yet implemented");
 			//exit(500);
 		}
+		SCIAP_Init();
 		InitJCRPaniek();
 		Img("*SCIPOWER", SRF(), "GFX/PoweredBySCI.png");
 		Img("*SCIPOWER")->HotCenter();		

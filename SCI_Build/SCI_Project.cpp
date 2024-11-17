@@ -1,28 +1,29 @@
-// Lic:
+// License:
+// 
 // Scyndi's Creative Interpreter - Builder
 // Project Manager
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023, 2024
+// 	(c) Jeroen P. Broks, 2023, 2024
 // 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// 		This program is free software: you can redistribute it and/or modify
+// 		it under the terms of the GNU General Public License as published by
+// 		the Free Software Foundation, either version 3 of the License, or
+// 		(at your option) any later version.
 // 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 		This program is distributed in the hope that it will be useful,
+// 		but WITHOUT ANY WARRANTY; without even the implied warranty of
+// 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// 		GNU General Public License for more details.
+// 		You should have received a copy of the GNU General Public License
+// 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Please note that some references to data like pictures or audio, do not automatically
-// fall under this licenses. Mostly this is noted in the respective files.
+// 	Please note that some references to data like pictures or audio, do not automatically
+// 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.03.22
-// EndLic
+// Version: 24.11.16
+// End License
 
 #include <SlyvQCol.hpp>
 #include <SlyvAsk.hpp>
@@ -119,7 +120,7 @@ namespace Scyndi_CI {
 		}
 
 		std::string SCI_Project::ReleaseDirectory() {
-			auto dir{ Ask(Data,"Release","Directory","Directory for release: ") };
+			auto dir{ Ask(Data,"Release","Directory_"+Platform(),"Directory for release: ")};
 			dir = ChReplace(dir, '\\', '/');
 			if (!Suffixed(dir, "/")) dir += "/";
 			return AVolPath(dir);
@@ -139,7 +140,7 @@ namespace Scyndi_CI {
 		}
 
 		std::string SCI_Project::AssetsDir() {
-			return AVolPath(Ask(Data, "Directory", "SCI_Assets_Source", "Please tell me where the assets to include in this project are stored: "));
+			return AVolPath(Ask(Data, "Directory::"+Platform(), "SCI_Assets_Source", "Please tell me where the assets to include in this project are stored: "));
 		}
 
 		bool SCI_Project::AssetsMultiDir() {

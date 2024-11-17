@@ -1,3 +1,29 @@
+// License:
+// 
+// Scyndi's Creative Interpreter - Builder
+// Script Manager
+// 
+// 
+// 
+// 	(c) Jeroen P. Broks, 2023, 2024
+// 
+// 		This program is free software: you can redistribute it and/or modify
+// 		it under the terms of the GNU General Public License as published by
+// 		the Free Software Foundation, either version 3 of the License, or
+// 		(at your option) any later version.
+// 
+// 		This program is distributed in the hope that it will be useful,
+// 		but WITHOUT ANY WARRANTY; without even the implied warranty of
+// 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// 		GNU General Public License for more details.
+// 		You should have received a copy of the GNU General Public License
+// 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 
+// 	Please note that some references to data like pictures or audio, do not automatically
+// 	fall under this licenses. Mostly this is noted in the respective files.
+// 
+// Version: 24.11.09
+// End License
 // Lic:
 // Scyndi's Creative Interpreter - Builder
 // Script Manager
@@ -27,6 +53,7 @@
 #include <SlyvAsk.hpp>
 #include "SCI_Build_Config.hpp"
 #include "SCI_Script.hpp"
+using namespace Slyvina;
 
 using namespace Slyvina::Units;
 
@@ -49,9 +76,10 @@ namespace Scyndi_CI {
 			PrjDat->NewValue("AA_META", "02_CREATEDBY", Prj->Author());
 			PrjDat->NewValue("AA_META", "03_COPYRIGHT", Prj->Copyright());
 			PrjDat->NewValue("AA_META", "04_LICENSE", Prj->License());
-			AskList(PrjDat, "Directory", "SourceFiles", "Name your directories to search for script source files:");
-			AskList(PrjDat,"Directory", "Libraries", "Name your directories to search for libraries:");
-			PrjDat->AddNew("Directory", "Libraries", ExtractDir(ChReplace(CLI_Args.myexe, '\\', '/')) + "/IntLibs");
+			//QCol->Dark(Platform() + "\n"); // debug
+			AskList(PrjDat, "Directory::" + Platform(), "SourceFiles", "Name your directories to search for script source files:");
+			AskList(PrjDat, "Directory::" + Platform(), "Libraries", "Name your directories to search for libraries:");
+			PrjDat->AddNew("Directory::" + Platform(), "Libraries", ExtractDir(ChReplace(CLI_Args.myexe, '\\', '/')) + "/IntLibs");
 			auto cmd{ Scyndi() }; cmd += " ";
 			if (CLI_Args.bool_flags["scyndidebug"]) cmd += " -dbg ";
 			if (CLI_Args.bool_flags["scyndiforce"]) cmd += " -force ";

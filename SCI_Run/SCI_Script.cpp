@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.17
+// Version: 24.12.18
 // End License
 
 #include <Lunatic.hpp>
@@ -192,8 +192,8 @@ namespace Scyndi_CI {
 		return 0; // Should never be executed, but hey, this way I can at least play safe, eh?
 	}
 
-#define InitAPIChat(abc) std::cout << "\x1b[94mScyndi API DEBUG> \x1b[0m"<<abc<<"\n"
-//#define InitAPIChat(abc)
+//#define InitAPIChat(abc) std::cout << "\x1b[94mScyndi API DEBUG> \x1b[0m"<<abc<<"\n"
+#define InitAPIChat(abc)
 	static int SYS_InitAPI(lua_State* L) {
 		InitAPIChat("Reading params");
 		auto
@@ -235,7 +235,10 @@ namespace Scyndi_CI {
 		InitAPIChat("-> " << St << ":" << Md << "!");
 		if (Resource()->EntryExists(Md + ".lbc")) {
 			QCol->Doing("Using", Md + ".lbc");
+			if (!Resource()) Crash("Resource NULL while using dependencies! (likely an internal error. Please report)");
 			auto buf{ Resource()->B(Md + ".lbc") };
+			if (Last()->Error) { Crash("JCR6 error while using dependency", "Error:" + Last()->ErrorMessage + "\nMain: " + Last()->MainFile + "\n" + "Entry:" + Last()->Entry); }
+			if (!buf) Crash("Imported Lua Bute code was NULL!");
 			InitAPIChat("ExecuteUse");
 			_State->QDoByteCode(buf, Md);
 			InitAPIChat("Done");
@@ -357,6 +360,11 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int SYS_WaitMinTicks(lua_State* L) {
+		WaitMinTicks(luaL_optinteger(L, 1, -1));
+		return 0;
+	}
+
 	static int SYS_Call(lua_State* L) {
 		auto
 			State{ Lunatic_CheckString(L,1) },
@@ -454,6 +462,11 @@ namespace Scyndi_CI {
 		PlannedToKill.push_back(luaL_checkstring(L, 1));
 		return 0;
 	}
+
+	static int SYS_KillState(lua_State* L) {
+		KillState(luaL_checkstring(L, 1));
+		return 0;
+	}
 #pragma endregion
 
 	static void InitScript() {
@@ -477,6 +490,7 @@ namespace Scyndi_CI {
 			{"SCI_DontFlip",SYS_DontFlip},
 			{"SCI_CSay",SYS_CSay},
 			{"SCI_CSaySetConfig",SYS_CSaySetConfig},
+			{"SCI_WaitMinTicks",SYS_WaitMinTicks},
 			{"SCI_OpenURL",SYS_OpenURL},
 			{"SCI_Call",SYS_Call},
 			{"SCI_HasState",SYS_HasState},
@@ -490,6 +504,7 @@ namespace Scyndi_CI {
 			{"SCI_GameID",SYS_GameID},
 			{"SCI_Ticks",SYS_Ticks},
 			{"SCI_PlanToKill",SYS_PlanToKill},
+			{"SCI_KillState",SYS_KillState},
 
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},
@@ -638,9 +653,11 @@ namespace Scyndi_CI {
 		auto S{ State(_State) };
 		if (S->Flag("NotScyndi"))
 			src += TrSPrintF("local suc,err = pcall(%s,%s)\n", Func.c_str(), Para.c_str());
-		else
+		else {
 			//src += TrSPrintF("local suc,err = pcall(Scyndi.Globals.%s,%s)\n", Func.c_str(), Para.c_str());
-			src += "local suc,err = pcall(Scyndi.Globals." + Func + "," + Para + ")";
+			src += "if not(Scyndi.Globals['.hasmember'](\"" + Func + "\")) then SCI_Crash('" + _State + "','C++ calls to non-existent global function \"" + Func + "\" in state "+_State+"') end\n";
+			src += "local suc,err = pcall(Scyndi.Globals." + Func + "," + Para + ")\n";
+		}
 		//src += "print(suc,err)\n"; // debug
 		src += "if not suc then SCI_Crash('" + _State + "',err) end";
 		// std::cout << src << "\n"; // debug

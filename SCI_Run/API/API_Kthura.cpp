@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28
+// Version: 24.12.21
 // End License
 
 
@@ -526,6 +526,20 @@ namespace Scyndi_CI {
 		lua_pushinteger(L, newobj->ID());
 		return 1;
 	}
+	static int API_Kthura_TagList(lua_State* L) {
+		static std::vector<String> Tags{};
+		auto i{ luaL_optinteger(L,1,-1) };
+		if (i < 0) {
+			Tags.clear();
+			auto layer{ GetKthuraLayer() };
+			layer->Tags(&Tags);
+			lua_pushinteger(L,Tags.size());
+			return 1;
+		}
+		if (i >= Tags.size()) { Crash("TagList out of bounds!", TrSPrintF("%d/%d", i, Tags.size())); return 0; }
+		Lunatic_PushString(L, Tags[i]);
+		return 1;
+	}
 
 
 	void Init_API_Kthura() {
@@ -557,7 +571,8 @@ namespace Scyndi_CI {
 			{ "ShowByLabel", API_Kthura_ShowByLabel },
 			{ "ObjDataGet",API_Kthura_ObjDataGet },
 			{ "ObjDataSet",API_Kthura_ObjDataSet },
-			{ "NewObj",API_Kthura_CreateObject }
+			{ "NewObj",API_Kthura_CreateObject },
+			{ "TagList",API_Kthura_TagList}
 		};
 		
 		InstallAPI("Kthura", IAPI);

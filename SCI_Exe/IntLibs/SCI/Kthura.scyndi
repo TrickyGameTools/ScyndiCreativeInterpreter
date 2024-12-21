@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // 	Kthura Link up for Scyndi's Creative Interpreter
-// 	version: 24.10.28
+// 	version: 24.12.21
 // 
 // 	Copyright (C) 2023, 2024 Jeroen P. Broks
 // 
@@ -173,9 +173,10 @@ End
 // DON'T call this directly. You can better use the "official" routines
 Const Delegate __NewObject = Lua.Kthura.NewObj
 
-Var NewObject(String Kind)
+Var NewObject(String Kind,string Tag="")
 	plua ret
 	ret = Obj["%"..__NewObject(Kind)]
+	if Tag!="";ret.Tag=Tag;End
 	return ret
 End
 
@@ -254,4 +255,13 @@ var r;r = NewObject("Exit")
 	r.Data.Wind=Wind
 	r.Dominance=20
 	return r
+End
+
+Get Var TagList
+	ret := {}
+	l := Lua.Kthura.TagList()
+	for i=0,l-1 
+		ret[i]=Lua.Kthura.TagList(i)
+	end
+	return ret
 End

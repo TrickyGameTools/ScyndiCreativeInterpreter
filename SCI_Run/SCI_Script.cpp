@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.18
+// Version: 24.12.30
 // End License
 
 #include <Lunatic.hpp>
@@ -655,8 +655,9 @@ namespace Scyndi_CI {
 			src += TrSPrintF("local suc,err = pcall(%s,%s)\n", Func.c_str(), Para.c_str());
 		else {
 			//src += TrSPrintF("local suc,err = pcall(Scyndi.Globals.%s,%s)\n", Func.c_str(), Para.c_str());
-			src += "if not(Scyndi.Globals['.hasmember'](\"" + Func + "\")) then SCI_Crash('" + _State + "','C++ calls to non-existent global function \"" + Func + "\" in state "+_State+"') end\n";
-			src += "local suc,err = pcall(Scyndi.Globals." + Func + "," + Para + ")\n";
+			//src += "if not(Scyndi.Globals['.hasmember'](\"" + Func + "\")) then SCI_Crash('" + _State + "','C++ calls to non-existent global function \"" + Func + "\" in state "+_State+"') end\n";
+			//src += "local suc,err = pcall(Scyndi.Globals." + Func + "," + Para + ")\n";
+			src += "local suc,err = pcall(Scyndi.AllIdentifiers." + Func + "," + Para + ")\n";
 		}
 		//src += "print(suc,err)\n"; // debug
 		src += "if not suc then SCI_Crash('" + _State + "',err) end";

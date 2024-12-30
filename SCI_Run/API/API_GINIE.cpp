@@ -22,33 +22,8 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28 I
+// Version: 24.12.30
 // End License
-// Lic:
-// Scyndi's Creative Interpreter
-// GINIE API
-// 
-// 
-// 
-// (c) Jeroen P. Broks, 2023, 2024
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
-// Please note that some references to data like pictures or audio, do not automatically
-// fall under this licenses. Mostly this is noted in the respective files.
-// 
-// Version: 24.03.22
-// EndLic
 
 #include <SlyvGINIE.hpp>
 
@@ -112,16 +87,17 @@ namespace Scyndi_CI {
 		auto
 			Cat{ luaL_checkstring(L,2) },
 			Key{ luaL_checkstring(L,3) };
+		String Ret{};
 		//auto
 		//	NewValue{ luaL_optinteger(L,5,0) > 0 };
 		//if (NewValue && REC->HasValue(Cat, Key)) return 0;
 		//cout << "New Value " << Cat << ":" << Key << " (Has value:" << REC->HasValue(Cat, Key) << ") "; // Debug Only!
 		switch (lua_type(L, 4)) {
 		case LUA_TSTRING:
-			REC->NewValue(Cat, Key, luaL_checkstring(L, 4));
+			Ret = REC->NewValue(Cat, Key, luaL_checkstring(L, 4));
 			break;
 		case LUA_TNUMBER:
-			REC->NewValue(Cat, Key, luaL_checkinteger(L, 4));
+			Ret = std::to_string(REC->NewValue(Cat, Key, luaL_checkinteger(L, 4)));
 			break;
 		case LUA_TFUNCTION:
 			luaL_error(L, "Functions cannot be set as a GINIE value");
@@ -135,7 +111,8 @@ namespace Scyndi_CI {
 			return 0;
 		}
 		//cout << REC->Value(Cat, Key) << "\n"; // Debug Only
-		return 0;
+		Lunatic_PushString(L, Ret);
+		return 1;
 	}
 
 	static int API_GINIE_GetStringValue(lua_State* L) {

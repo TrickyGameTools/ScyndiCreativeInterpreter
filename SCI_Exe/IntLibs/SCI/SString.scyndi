@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/SString.scyndi
 // 	Scyndi's Creative Interpreter
-// 	version: 24.12.24
+// 	version: 24.12.30
 // 
 // 	Copyright (C) 2023, 2024 Jeroen P. Broks
 // 
@@ -36,8 +36,10 @@ Global ReadOnly Delegate StripExt = Lua.SString.StripExt
 Global ReadOnly Delegate StripDir = Lua.SString.StripDir
 Global ReadOnly Delegate ExtractDir = Lua.SString.ExtractDir
 Global ReadOnly Delegate ExtractExt = Lua.SString.ExtractExt
+
 ReadOnly Delegate Prefixed = Lua.SString.Prefixed
 ReadOnly Delegate Suffixed = Lua.SString.Suffixed
+ReadOnly Delegate Trim = Lua.SString.Trim
 	
 Global Table XSplit(String Str,String Sep=" ")
 	Int V;V = Lua.SString.Split(Str,Sep)

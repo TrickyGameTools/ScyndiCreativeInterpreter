@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28
+// Version: 24.12.30
 // End License
 
 #include <SlyvMD5.hpp>
@@ -120,6 +120,10 @@ namespace Scyndi_CI {
 		lua_pushboolean(L, Suffixed(luaL_checkstring(L, 1), luaL_checkstring(L, 2)));
 		return 1;
 	}
+	static int API_Trim(lua_State* L) {
+		Lunatic_PushString(L, Trim(luaL_checkstring(L, 1)));
+		return 1;
+	}
 
 
 	void Init_API_String() {
@@ -135,7 +139,8 @@ namespace Scyndi_CI {
 			{ "Split",API_Split },
 			{ "SplitVal",API_SplitVal },
 			{ "Prefixed",API_Prefixed },
-			{ "Suffixed",API_Suffixed }
+			{ "Suffixed",API_Suffixed },
+			{ "Trim",API_Trim }
 		};
 		InstallAPI("SString", IAPI);
 	}

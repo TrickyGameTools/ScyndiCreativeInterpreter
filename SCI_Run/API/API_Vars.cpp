@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28
+// Version: 25.01.01
 // End License
 
 #include <Lunatic.hpp>
@@ -177,6 +177,18 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_GvSub(lua_State* L) {
+		auto
+			Tag{ Lunatic_OptString(L,1,"*GENERAL") },
+			ori{ Lunatic_CheckString(L,2) },
+			tar{ ori };
+		for (auto s : GvRegister[Tag]._Bool) tar = StReplace(tar, "&" + s.first, uboolstring(s.second));
+		for (auto s : GvRegister[Tag]._Int) tar = StReplace(tar, "%" + s.first, std::to_string(s.second));
+		for (auto s : GvRegister[Tag]._Str) tar = StReplace(tar, "$" + s.first, s.second);
+		Lunatic_PushString(L, tar);
+		return 1;
+	}
+
 
 	void Init_API_Vars() {
 		if (!GvRegister.count("*GENERAL")) GvParse("*GENERAL", "# Nothing"); // Just makes sure the record exists!
@@ -188,7 +200,8 @@ namespace Scyndi_CI {
 			{"Define",API_GvDefine},
 			{"Check",API_GvCheck},
 			{"LocalParse",API_GvSFQLocal},
-			{"Clear",API_GvClear}
+			{"Clear",API_GvClear},
+			{"Sub",API_GvSub}
 		};
 		InstallAPI("InterVar", IAPI);
 	}

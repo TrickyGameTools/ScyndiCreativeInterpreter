@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023
+// 	(c) Jeroen P. Broks, 2023, 2025
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.10 I
+// Version: 25.01.01
 // End License
 
 #include <Lunatic.hpp>
@@ -144,7 +144,7 @@ namespace Scyndi_CI {
 			Name{ Lunatic_CheckString(L,3) };
 		auto
 			AutoAdd{ luaL_checkinteger(L,4) };
-		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
+		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database", PartyTag.c_str()));
 		PartyReg[PartyTag]->NewChar(AutoAdd, CharTag, Name);
 		return 0;
 	}
@@ -154,7 +154,7 @@ namespace Scyndi_CI {
 			PartyTag{ Upper(luaL_checkstring(L,1)) },
 			CharTag{ Lunatic_CheckString(L,2) };
 			//Name{ Lunatic_CheckString(L,3) };
-		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
+		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database",PartyTag.c_str()));
 		PartyReg[PartyTag]->Kill(CharTag);
 		return 0;
 	}
@@ -166,7 +166,7 @@ namespace Scyndi_CI {
 			Index{ luaL_checkinteger(L,2) };
 		auto
 			ChTag{ luaL_checkstring(L,3) };
-		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
+		if (!PartyReg.count(PartyTag)) Crash("There is no party tagged '"+PartyTag+"' in the statician database");
 		//printf("Party %s index %d will have character %s\n", PartyTag.c_str(), Index, ChTag);
 		(*PartyReg[PartyTag])[Index] = ChTag;
 		return 0;
@@ -177,7 +177,7 @@ namespace Scyndi_CI {
 			PartyTag{ Upper(luaL_checkstring(L,1)) };
 		auto
 			Index{ luaL_checkinteger(L,2) };
-		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
+		if (!PartyReg.count(PartyTag)) Crash("There is no party tagged '"+PartyTag+"' in the statician database");
 		Lunatic_PushString(L, (*PartyReg[PartyTag])[Index]);
 		return 1;
 	}
@@ -185,7 +185,7 @@ namespace Scyndi_CI {
 	static int API_StatGetPartySize(lua_State* L) {
 		auto
 			PartyTag{ Upper(luaL_checkstring(L,1)) };
-		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
+		if (!PartyReg.count(PartyTag)) Crash("There is no party tagged '" + PartyTag + "' in the statician database");
 		lua_pushinteger(L, PartyReg[PartyTag]->Size());
 		return 1;
 	}
@@ -195,7 +195,7 @@ namespace Scyndi_CI {
 			PartyTag{ Upper(luaL_checkstring(L,1)) };
 		auto
 			sz{ luaL_checkinteger(L,2) };
-		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
+		if (!PartyReg.count(PartyTag)) Crash("There is no party tagged '" + PartyTag + "' in the statician database");
 		// printf("Party size is now: %d\n", (int)sz);
 		PartyReg[PartyTag]->Size(sz);
 		return 0;

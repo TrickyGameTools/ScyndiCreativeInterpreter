@@ -143,7 +143,7 @@ global set string gsource
 	_ivglob.source = value
 end
 
-global string gsub(string ori)
+global string gSub(string ori)
 	return _ivglob.sub(ori)
 end
 

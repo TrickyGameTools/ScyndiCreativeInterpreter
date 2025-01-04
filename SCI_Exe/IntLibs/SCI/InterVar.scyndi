@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/InterVar.scyndi
 // 	Scyndi's Creative Interpreter - InterVar linkup code
-// 	version: 25.01.01 I
+// 	version: 25.01.04
 // 
 // 	Copyright (C) 2023, 2025 Jeroen P. Broks
 // 
@@ -74,7 +74,7 @@ class TInterVar
 	End
 	
 	String Sub(string Ori)
-		Return Lua.InterVar.Sub(Ori)
+		Return Lua.InterVar.Sub(Tag,Ori)
 	End
 	
 	Constructor(String _T)

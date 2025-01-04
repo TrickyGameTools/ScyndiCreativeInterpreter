@@ -1,9 +1,9 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // 	Kthura Link up for Scyndi's Creative Interpreter
-// 	version: 24.12.21
+// 	version: 25.01.04
 // 
-// 	Copyright (C) 2023, 2024 Jeroen P. Broks
+// 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
 // 
 // 	This software is provided 'as-is', without any express or implied
 // 	warranty.  In no event will the authors be held liable for any damages
@@ -27,18 +27,54 @@ Module
 // Just making sure this comes first. GewoonNiks will contain 'nil' as result, but that doesn't matter!
 Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Kthura")
 
-Const Delegate Load = Lua.Kthura.Load
-Const Delegate Pick = Lua.Kthura.Pick
+void Load(String T,String F)
+	Lua.Kthura.Load(T,F)		
+end
+	
+void Pick(String KT,String LT="")
+	Ternary(LT=="", Lua.Kthura.Pick(KT),Lua.Kthura.Pick(KT,LT))
+	Lua.Kthura.GetLayers(0)
+end
+
 Const Delegate PickLayer = Lua.Kthura.PickLayer
+Const Delegate GoToLayer = Lua.Kthura.PickLayer
 
 Void GoToMap(String Tag,String File="",string Layer="")
 	If File!=""
-		Load(File)
+		Load(Tag,File)
 	End
-	Pick(Tag)
 	If Layer!=""
-		Pick(Layer)
+		Pick(Tag,Layer)
+	Else
+		Pick(Tag)
 	End
+End
+
+QuickMeta Kthura_Layers
+	newindex
+		Lua.error("Layers is read-only!")
+	end
+	index
+		Switch Upper(Lua.tostring(Key))
+			Case "EACH"
+				int p := -1
+				ddef ret
+					p++
+					if p>=Lua.Kthura.GetLayers(2)
+						return Nil,Nil
+					End
+					return Lua.Kthura.GetLayers(1,p),p
+				End
+				return ret
+			Case "LEN" "LENGTH" "SIZE"
+				return Lua.Kthura.GetLayers(2)
+			Default
+				Return Lua.Kthura.GetLayers(1,Key)
+		End
+	End
+End
+Get Var Layers
+	Return Kthura_Layers
 End
 
 plua _Niks()
@@ -58,6 +94,21 @@ plua _ObjKeyIndex(s,string Key)
 	Case "STOPWALKING"
 		Lua.Kthura.StopWalking(s.____objtag)
 		return _Niks
+	Case "WALKTO" "MOVETO"
+		ddef func
+			Kthura[Key](s.____objtag,infinity)
+		end
+		return func
+	Case "INZONE" "INOBJ" "ISINZONE" "ISINOBJ"
+		if s.___objinobj==0
+			ddef func				
+				//return Kthura.InObj(s.____objtag,infinity)
+				t:=infinity				
+				return Ternary(Kthura.HasObj(t),Kthura.InObj(t,s.X,s.Y),False)
+			end
+			s.___objinobj=func
+		end
+		return s.___objinobj
 	Case "DATA"
 		_ObjData = _ObjData || {}
 		_ObjData[s.____objtag] = _ObjData[s.____objtag] || SetMetaTable({["____objtag"]=s.____objtag},{["__index"]=GData,["__newindex"]=SData})
@@ -82,7 +133,7 @@ end
 plua _ObjIndex(s,string key)
 	key=upper(key)
 	if !s.____table[key] 
-		s.____table[key] = SetMetaTable({["____objtag"]=key},{["__index"]=_ObjKeyIndex, ["__newindex"]=_ObjKeyNewIndex})
+		s.____table[key] = SetMetaTable({["____objtag"]=key,["___objinobj"]=0},{["__index"]=_ObjKeyIndex, ["__newindex"]=_ObjKeyNewIndex})
 	end
 	// print("Obj.",key," => ",s.____table[key]) // debug
 	return s.____table[key]
@@ -124,6 +175,20 @@ Get String LastLoadedMap
 	Return Lua.Kthura.LastLoadedMap()
 End
 
+Bool AutoRemapAll = true
+Get Bool AutoRemap
+	Return Lua.Kthura.GetAutoRemap()
+End
+Set Bool AutoRemap
+	Ternary(AutoRemapAll,Lua.Kthura.SetAutoRemap(value),Lua.Kthura.SetAutoRemap(value,Lua.Kthura.CurrentLayer()),Lua.Kthura.SetAutoRemap(value))
+End
+
+Get Bool AnyThingMoving
+	return Lua.Kthura.AnyThingMoving(0)
+End
+Get Bool AnythingWalking
+	return Lua.Kthura.AnyThingMoving(1)
+End
 
 Void ObjRGB(string Tag, Byte R,Byte G, Byte B)
 	Obj[Tag].R=R
@@ -151,7 +216,24 @@ Const Delegate Remap = Lua.Kthura.Remap
 
 Const Delegate HideByLabel = Lua.Kthura.HideByLabel
 Const Delegate ShowByLabel = Lua.Kthura.ShowByLabel
+Const Delegate HideButLabel = Lua.Kthura.HideButLabel
+Const Delegate ShowButLabel = Lua.Kthura.ShowButLabel
 
+Void RemapDominance()
+	Lua.Kthura.Remap(1)
+End
+
+Void RemapTags()
+	Lua.Kthura.Remap(2)
+End
+
+Void RemapLabels()
+	Lua.Kthura.Remap(3)
+End
+
+Void BuildBlockMap()
+	Lua.Kthura.Remap(4)
+End
 
 QuickMeta Kthura_Meta
 	index

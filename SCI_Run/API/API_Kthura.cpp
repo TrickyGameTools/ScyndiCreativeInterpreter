@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.21
+// Version: 25.01.04
 // End License
 
 
@@ -125,6 +125,8 @@ namespace Scyndi_CI {
 		SetObjBool("FORCEPASSIBLE", forcepassible);
 		SetObjInt("ANIMFRAME", animframe);
 		SetObjBool("VISIBLE", visible);
+		SetObjBool("NOTINMOTIONTHEN0", NotInMotionThen0);
+		SetObjBool("NOTMOVINGTHEN0", NotInMotionThen0);
 		// Actor only
 		SetObjString("WIND", Wind);
 		Crash("(Set) Unknown object field: " + ObjKey);
@@ -142,6 +144,8 @@ namespace Scyndi_CI {
 			ObjKey{ Upper(luaL_checkstring(L,2)) };
 		auto
 			o{ GetKthuraLayer()->Obj(ObjTag) };
+		// Method
+		
 		// Object
 		GetObjInt("X", x);
 		GetObjInt("Y", y);
@@ -181,6 +185,8 @@ namespace Scyndi_CI {
 		GetObjBool("VISIBLE", visible);
 		GetObjBool("WALKING", Walking); // Read-Only
 		GetObjString("KIND", SKind); // Read-Only
+		GetObjBool("NOTINMOTIONTHEN0", NotInMotionThen0);
+		GetObjBool("NOTMOVINGTHEN0", NotInMotionThen0);
 		// Actor only
 		GetObjString("WIND", Wind);
 		Crash("(Get) Unknown object field: " + ObjKey);
@@ -497,7 +503,21 @@ namespace Scyndi_CI {
 	}
 	
 	static int API_Kthura_Remap(lua_State* L) {
-		GetKthuraLayer()->TotalRemap();
+		switch (luaL_optinteger(L, 1, 0)) {
+		case 0:
+			GetKthuraLayer()->TotalRemap(); break;
+		case 1:
+			GetKthuraLayer()->RemapDominance(); break;
+		case 2:
+			GetKthuraLayer()->RemapTags(); break;
+		case 3:
+			GetKthuraLayer()->RemapLabels(); break;
+		case 4:
+			GetKthuraLayer()->BuildBlockmap(); break;
+		default:
+			luaL_error(L, "Unknown remap instruction: %d", luaL_optinteger(L, 1, 0));
+			break;
+		}
 		return 0;
 	}
 
@@ -505,6 +525,13 @@ namespace Scyndi_CI {
 		GetKthuraLayer()->HideByLabel(luaL_checkstring(L, 1));
 		return 0;
 	}
+	static int API_Kthura_HideButLabel(lua_State* L) {
+		GetKthuraLayer()->HideButLabel(luaL_checkstring(L, 1));
+	}
+	static int API_Kthura_ShowButLabel(lua_State* L) {
+		GetKthuraLayer()->ShowButLabel(luaL_checkstring(L, 1));
+	}
+
 	static int API_Kthura_ShowByLabel(lua_State* L) {
 		GetKthuraLayer()->ShowByLabel(luaL_checkstring(L, 1));
 		return 0;
@@ -540,6 +567,51 @@ namespace Scyndi_CI {
 		Lunatic_PushString(L, Tags[i]);
 		return 1;
 	}
+	static int API_Kthura_LayerList(lua_State* L) {
+		static std::vector<String> LayList{};
+		auto todo{ luaL_checkinteger(L,1) };
+		auto kmap{ GetKthura() };
+		switch (todo) {
+		case 0: 
+			LayList = *kmap->Layers(); // Copying all contents is safer at this point!
+			lua_pushinteger(L, LayList.size());
+			return 1;
+		case 1: {
+			auto idx{ luaL_checkinteger(L,2) };
+			if (idx < 0 && idx >= LayList.size()) { luaL_error(L, "Layerlist index (%d) out of bounds (%d)", idx, LayList.size()); return 0; }
+			Lunatic_PushString(L, LayList[idx]);
+			return 1;
+		}
+		case 2: 
+			lua_pushinteger(L, LayList.size());
+			return 1;
+		}
+	}
+	static int API_Kthura_SetAutoRemap(lua_State* L) {
+		auto kth{ GetKthura() };
+		auto val{ Lunatic_CheckBoolean(L,1) };
+		auto lay{ Lunatic_OptString(L,2,"") };
+		lay == "" ?
+			kth->AutoRemap(val) :
+			kth->Layer(lay)->AutoRemap(val);
+		return 0;
+	}
+	static int API_Kthura_GetAutoRemap(lua_State* L) {
+		lua_pushboolean(L, GetKthuraLayer()->AutoRemap());
+		return 1;
+	}
+	static int API_Kthura_AnyThingMoving(lua_State* L) {
+		auto lay{ GetKthuraLayer() };
+		auto chk{ luaL_optinteger(L,1,0) };
+		auto ret{ false };
+		for (auto o = lay->FirstObject(); o; o = o->Next()) {
+			if (o->Kind()==KthuraKind::Actor)
+				ret = (chk == 0 ? o->Moving() : o->Walking());
+			if (ret) break;
+		}
+		lua_pushboolean(L, ret);
+		return 1;
+	}
 
 
 	void Init_API_Kthura() {
@@ -569,10 +641,16 @@ namespace Scyndi_CI {
 			{ "Remap",API_Kthura_Remap },
 			{ "HideByLabel",API_Kthura_HideByLabel },
 			{ "ShowByLabel", API_Kthura_ShowByLabel },
+			{ "HideButLabel",API_Kthura_HideButLabel },
+			{ "ShowButLabel",API_Kthura_ShowButLabel },
 			{ "ObjDataGet",API_Kthura_ObjDataGet },
 			{ "ObjDataSet",API_Kthura_ObjDataSet },
 			{ "NewObj",API_Kthura_CreateObject },
-			{ "TagList",API_Kthura_TagList}
+			{ "TagList",API_Kthura_TagList },
+			{ "GetLayers",API_Kthura_LayerList },
+			{ "SetAutoRemap",API_Kthura_SetAutoRemap },
+			{ "GetAutoRemap",API_Kthura_GetAutoRemap },
+			{ "AnythingMoving",API_Kthura_AnyThingMoving }
 		};
 		
 		InstallAPI("Kthura", IAPI);

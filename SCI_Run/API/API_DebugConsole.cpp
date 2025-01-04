@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,33 +22,8 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.10.28 I
+// Version: 25.01.04
 // End License
-// Lic:
-// Scyndi's Creative Interperter
-// Debug Console
-// 
-// 
-// 
-// (c) Jeroen P. Broks, 2023
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
-// Please note that some references to data like pictures or audio, do not automatically
-// fall under this licenses. Mostly this is noted in the respective files.
-// 
-// Version: 23.11.03
-// EndLic
 
 #include <Lunatic.hpp>
 #include <SlyvString.hpp>
@@ -218,7 +193,7 @@ namespace Scyndi_CI {
 					}
 					if (!MCommands.count(Cmd)) {
 						QCol->Error("Command \"" + Cmd + "\" has not been understood");
-					} else if (MCommands[Cmd].Flow == "DEBUG_GLOBAL" || MCommands[Cmd].Flow == CurrentFlow()) {
+					} else if (MCommands[Cmd].Flow == "DEBUG_GLOBAL" || MCommands[Cmd].Flow == Upper(CurrentFlow())) {
 						if (MCommands[Cmd].IC) 
 							MCommands[Cmd].IC(Params);
 						else {
@@ -230,7 +205,7 @@ namespace Scyndi_CI {
 							Call(MCommands[Cmd].Flow, MCommands[Cmd].CallFunction, P);
 						} 
 					} else {
-						QCol->Error("Command \"" + Cmd + "\" is not for this flow, but for "+ MCommands[Cmd].Flow+" in stead.");
+						QCol->Error("Command \"" + Cmd + "\" is not for this flow ("+CurrentFlow()+"), but for "+ MCommands[Cmd].Flow+" in stead.");
 					}
 				}
 			} while (ConsoleRunning);

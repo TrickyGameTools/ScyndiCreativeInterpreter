@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.16
+// Version: 25.01.04
 // End License
 
 #define Act(A) if (!A) return false
@@ -438,7 +438,7 @@ namespace Scyndi_CI {
 			for (auto ALE : *AL) {
 				if (DebugFlag()) {
 					QCol->Doing("Alias", ALE);
-					OutputJQL += "Alias:" + ALE + ">" + PrjData->Value("Alias", ALE);
+					OutputJQL += "Alias:" + ALE + ">" + PrjData->Value("Alias", ALE)+"\n";
 				} else {
 					uint32 c{ 0 };
 					for (auto PKG : Packages) {

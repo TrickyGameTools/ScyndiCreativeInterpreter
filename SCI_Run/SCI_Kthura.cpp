@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.02
+// Version: 25.01.05
 // End License
 // Lic:
 // Scyndi's Creative Interpreter
@@ -172,6 +172,7 @@ namespace Scyndi_CI {
 		ChosenMap = GetKthura(Tag); 		
 		MapLastPicked = Tag;
 		LayerLastPicked = "";
+		ChosenLayer = nullptr;
 		
 	}
 

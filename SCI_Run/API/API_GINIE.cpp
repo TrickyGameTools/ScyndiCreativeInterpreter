@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.30
+// Version: 25.01.05
 // End License
 
 #include <SlyvGINIE.hpp>
@@ -277,11 +277,36 @@ namespace Scyndi_CI {
 	static int API_GINIE_Val(lua_State* L) {
 		AutoTag;
 		auto idx{ luaL_checkinteger(L,2) };
-		if (!LastVals) { luaL_error(L, "No vales have been set up first."); return 0; }
+		if (!LastVals) { luaL_error(L, "No values have been set up first."); return 0; }
 		if (idx < 0 || idx >= LastVals->size()) { luaL_error(L, "Cat out of bounds (%d/%d)", idx, LastVals->size()); return 0; }
 		Lunatic_PushString(L, (*LastVals)[idx]);
 		return 1;
 
+	}
+
+	static VecString LastLists{ nullptr };
+	static int API_GINIE_GrabLists(lua_State* L) {
+		AutoTag;
+		auto Cat{ luaL_checkstring(L,2) };
+		LastLists = REC->Lists(Cat);
+		lua_pushinteger(L, LastLists->size());
+		return 1;
+	}
+
+	static int API_GINIE_Lists(lua_State* L) {
+		AutoTag;
+		auto idx{ luaL_checkinteger(L,2) };
+		if (!LastLists) { luaL_error(L, "No lists have been set up first."); return 0; }
+		if (idx < 0 || idx >= LastLists->size()) { luaL_error(L, "Cat out of bounds (%d/%d)", idx, LastVals->size()); return 0; }
+		Lunatic_PushString(L, (*LastLists)[idx]);
+		return 1;
+
+	}
+	
+	static int API_GINIE_Clear(lua_State* L) {
+		AutoTag;
+		REC->Clear();
+		return 0;
 	}
 	
 
@@ -307,7 +332,10 @@ namespace Scyndi_CI {
 			{ "CatsGrab",API_GINIE_GrabCats },
 			{ "Cats",API_GINIE_Cat }, 
 			{ "ValsGrab", API_GINIE_GrabVals },
-			{ "Vals",API_GINIE_Val }
+			{ "Vals",API_GINIE_Val },
+			{ "ListsGrab", API_GINIE_GrabLists },
+			{ "Lists",API_GINIE_Lists },
+			{ "Clear",API_GINIE_Clear }
 		};
 		InstallAPI("GINIE", IAPI);
 	}

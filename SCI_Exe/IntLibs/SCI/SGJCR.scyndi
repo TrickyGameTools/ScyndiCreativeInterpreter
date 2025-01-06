@@ -92,11 +92,11 @@ Class TSGJCR
 	End
 	
 	Bool HasText(string TxTag)
-		Return Lua.SGJCR.HasText(TxTag)
+		Return Lua.SGJCR.HasText(Tag,TxTag)
 	End
 	
 	Bool HasBin(string BnTag)
-		Return Lua.SGJCR.HasBin(BnTag)
+		Return Lua.SGJCR.HasBin(Tag,BnTag)
 	End
 	
 	Void Save()

@@ -239,6 +239,9 @@ Class StatChar
 	Bool ListHave(string Key,String Needle)
 		Me.StatListContains(PartyTag,CharTag,Key,Needle)
 	End
+	Bool ListHas(string Key,String Needle)
+		Me.StatListContains(PartyTag,CharTag,Key,Needle)
+	End
 	
 	Bool ListContains(string Key,String Needle)
 		Me.StatListContains(PartyTag,CharTag,Key,Needle)
@@ -254,6 +257,21 @@ Class StatChar
 	
 	Int ListSize(String Key)
 		Return Me.StatListSize(PartyTag,CharTag,Key)
+	End
+	Int ListCount(String Key)
+		Return Me.StatListSize(PartyTag,CharTag,Key)
+	End
+	Var ListEach(String Key)
+		int sz:=Me.StatListSize(PartyTag,CharTag,Key)
+		Int ps:=-1
+		ddef ret
+			ps++
+			if ps>=sz
+				return nil,nil
+			end
+			return List[key][ps],ps
+		end
+		return ret
 	End
 	
 	Bool HaveStat(string key)

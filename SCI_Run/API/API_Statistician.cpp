@@ -330,7 +330,7 @@ namespace Scyndi_CI {
 			{ "StatPointsSet",API_StatPointsSet },
 			{ "StatPointsGet",API_StatPointsGet },
 			{ "StatListAdd",API_StatListAdd },
-			{ "StatListRemove",API_StatListRemove },
+			{ "StatListRemove",API_StatListRemove },			
 			{ "StatListGet",API_StatListGet },
 			{ "StatListSet",API_StatListSet },
 			{ "StatListSort",API_StatListSort },

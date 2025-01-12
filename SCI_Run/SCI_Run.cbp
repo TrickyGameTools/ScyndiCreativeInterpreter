@@ -35,7 +35,36 @@
 		<Linker>
 			<Add option="`sdl2-config --libs`" />
 		</Linker>
-		<Unit filename="main.cpp" />
+		<Unit filename="../../../Libs/Kthura/Source/Kthura_Core.cpp" />
+		<Unit filename="../../../Libs/Kthura/Source/Kthura_Draw.cpp" />
+		<Unit filename="../../../Libs/Kthura/Source/Kthura_Draw_TQSG.cpp" />
+		<Unit filename="../../../Libs/Kthura/Source/Kthura_LoadCompiled.cpp" />
+		<Unit filename="../../../Libs/Kthura/Source/Kthura_Walk_Dijkstra.cpp" />
+		<Unit filename="../../../Libs/Units/Source/DieParse.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvBank.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvDijkstra.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvDir.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvString.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvTime.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvVolumes.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvWindows.cpp" />
+		<Unit filename="SCI_Audio.cpp" />
+		<Unit filename="SCI_Audio.hpp" />
+		<Unit filename="SCI_Config.cpp" />
+		<Unit filename="SCI_Config.hpp" />
+		<Unit filename="SCI_Crash.cpp" />
+		<Unit filename="SCI_Crash.hpp" />
+		<Unit filename="SCI_Graphics.cpp" />
+		<Unit filename="SCI_Graphics.hpp" />
+		<Unit filename="SCI_JCR.cpp" />
+		<Unit filename="SCI_JCR.hpp" />
+		<Unit filename="SCI_Kthura.cpp" />
+		<Unit filename="SCI_Kthura.hpp" />
+		<Unit filename="SCI_Load.cpp" />
+		<Unit filename="SCI_Load.hpp" />
+		<Unit filename="SCI_Run.cpp" />
+		<Unit filename="SCI_Script.cpp" />
+		<Unit filename="SCI_Script.hpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

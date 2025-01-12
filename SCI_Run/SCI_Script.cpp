@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.04
+// Version: 25.01.12
 // End License
 
 #include <Lunatic.hpp>
@@ -52,6 +52,9 @@ using namespace std;
 
 namespace Scyndi_CI {
 	struct SCFlow { std::string Name; SLunatic State{ nullptr }; };
+	struct TLastReturn { int LType{ LUA_TNIL }; String Type{ "nil" }, RStr{ "" }; lua_Number RNum{ 0 }; bool RBool{ false }; };
+	TLastReturn LastReturn;
+
 	SCFlow CFlow;
 	bool EndRun{ false };
 	int DontFlip{ 0 };
@@ -169,6 +172,51 @@ namespace Scyndi_CI {
 				QCol->Doing("Line", sbi.Line);
 			}
 		}
+	}
+
+	static int SYS_InterReturn(lua_State* L) {
+		LastReturn.LType = lua_type(L, 1);
+		switch (LastReturn.LType) {
+		case LUA_TSTRING:
+			LastReturn.Type = "string";
+			LastReturn.RStr = Lunatic_CheckString(L, 1);
+			break;
+		case LUA_TNIL:
+			LastReturn.Type = "nil";
+			break;
+		case LUA_TNUMBER:
+			LastReturn.Type = "number";
+			LastReturn.RNum = luaL_checknumber(L, 1);
+			break;
+		case LUA_TBOOLEAN:
+			LastReturn.Type = "boolean";
+			LastReturn.RBool = Lunatic_CheckBoolean(L, 1);
+			break;
+		default:
+			QCol->Error("You can only return strings, numbers and booleans through the interreturn system. All else will be nil.");
+			break;
+		}
+		return 0;
+	}
+	static int SYS_GetLastReturn(lua_State* L) {
+		switch (LastReturn.LType) {
+		case LUA_TNIL:
+			lua_pushnil(L);
+			break;
+		case LUA_TBOOLEAN:
+			lua_pushboolean(L, LastReturn.RBool);
+			break;
+		case LUA_TNUMBER:
+			lua_pushnumber(L, LastReturn.RNum);
+			break;
+		case LUA_TSTRING:
+			Lunatic_PushString(L, LastReturn.RStr);
+			break;
+		default:
+			QCol->Error(TrSPrintF("Unknown InterReturn type (%d)", LastReturn.LType));
+			lua_pushnil(L);
+		}
+		return 1;
 	}
 
 	static int SYS_Crash(lua_State* L) {
@@ -405,7 +453,7 @@ namespace Scyndi_CI {
 		}
 		if (!Param.size()) Param = "nil";
 		Call(State, Func, Param);
-		return 0;
+		return SYS_GetLastReturn(L); // Vies! Bah! Maar zou moeten werken!
 	}
 
 
@@ -508,6 +556,8 @@ namespace Scyndi_CI {
 			{"SCI_Ticks",SYS_Ticks},
 			{"SCI_PlanToKill",SYS_PlanToKill},
 			{"SCI_KillState",SYS_KillState},
+			{"SCI_InterReturn",SYS_InterReturn},
+			{"SCI_GetInterReturn",SYS_GetLastReturn},
 
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},
@@ -663,7 +713,8 @@ namespace Scyndi_CI {
 			src += "local suc,err = pcall(Scyndi.AllIdentifiers." + Func + "," + Para + ")\n";
 		}
 		//src += "print(suc,err)\n"; // debug
-		src += "if not suc then SCI_Crash('" + _State + "',err) end";
+		src += "if not suc then\n print('\\x1b[91mError in State: "+_State+"', '\\x1b[92mGround call: "+Func+"'); SCI_Crash('" + _State + "', err) end\n\n";
+		src += "SCI_InterReturn(err)\n\n";
 		// std::cout << src << "\n"; // debug
 		S->QDoString(src);
 	}

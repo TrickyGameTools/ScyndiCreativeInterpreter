@@ -229,6 +229,12 @@
 		<Unit filename="../../../Libs/Lunatic/Lunatic.hpp" />
 		<Unit filename="../../../Libs/Medals/Medals.cpp" />
 		<Unit filename="../../../Libs/Medals/Medals.hpp" />
+		<Unit filename="../../../Libs/Statistician/Statistician.cpp" />
+		<Unit filename="../../../Libs/Statistician/Statistician.hpp" />
+		<Unit filename="../../../Libs/Statistician/Statistician_LoadJCR6.cpp" />
+		<Unit filename="../../../Libs/Statistician/Statistician_LoadJCR6.hpp" />
+		<Unit filename="../../../Libs/Statistician/Statistician_SaveJCR6.cpp" />
+		<Unit filename="../../../Libs/Statistician/Statistician_SaveJCR6.hpp" />
 		<Unit filename="../../../Libs/TQSL/Source/TQSA.cpp" />
 		<Unit filename="../../../Libs/TQSL/Source/TQSE.cpp" />
 		<Unit filename="../../../Libs/TQSL/Source/TQSG.cpp" />

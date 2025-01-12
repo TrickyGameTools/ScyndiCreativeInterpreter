@@ -1,55 +1,56 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter
 // Real File
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2024
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 24.10.28
-// End License
 // Lic:
 // Scyndi's Creative Interpreter
 // Real File
-// 
-// 
-// 
+//
+//
+//
 // (c) Jeroen P. Broks, 2024
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 24.03.22
 // EndLic
+// End License
 
+#include <Slyvina.hpp>
 #include <Lunatic.hpp>
 #include <SlyvRequestFile.hpp>
 #include <SlyvDirry.hpp>
@@ -58,6 +59,13 @@
 
 #include "../SCI_Script.hpp"
 
+#ifdef SlyvLinux
+#include <TQSE.hpp>
+#define NoRequestFile
+#endif
+
+
+
 using namespace Slyvina;
 using namespace Units;
 using namespace NSLunatic;
@@ -65,6 +73,10 @@ using namespace NSLunatic;
 namespace Scyndi_CI {
 
 	static int API_RF_RequestFile(lua_State* L) {
+#ifdef NoRequestFile
+	    TQSE::Notify("Unfortunately Requesting files is currently not available on this platform yet.");
+	    return 0;
+#else
 		auto ret {
 			RequestFile(
 				Lunatic_OptString(L, 1, "Please select a file"),
@@ -74,9 +86,14 @@ namespace Scyndi_CI {
 			};
 		Lunatic_PushString(L, ret);
 		return 1;
+#endif
 	}
 
 	static int API_RF_RequestSaveFile(lua_State* L) {
+#ifdef NoRequestFile
+	    TQSE::Notify("Unfortunately Requesting files is currently not available on this platform yet.");
+	    return 0;
+#else
 		auto ret {
 			RequestFile(
 				Lunatic_OptString(L, 1, "Please select a file"),
@@ -84,9 +101,10 @@ namespace Scyndi_CI {
 				Lunatic_OptString(L,3,"All:*") + "\000",
 				true)
 			};
-		
+
 		Lunatic_PushString(L, ret);
 		return 1;
+#endif
 	}
 
 	static int API_RF_SaveText(lua_State* L) {

@@ -101,6 +101,10 @@
 		<Unit filename="../../../Libs/Kthura/Source/Kthura_Draw_TQSG.cpp" />
 		<Unit filename="../../../Libs/Kthura/Source/Kthura_LoadCompiled.cpp" />
 		<Unit filename="../../../Libs/Kthura/Source/Kthura_Walk_Dijkstra.cpp" />
+		<Unit filename="../../../Libs/TQSL/Source/TQSA.cpp" />
+		<Unit filename="../../../Libs/TQSL/Source/TQSE.cpp" />
+		<Unit filename="../../../Libs/TQSL/Source/TQSG.cpp" />
+		<Unit filename="../../../Libs/TQSL/Source/TQSG_BlopPlasma.cpp" />
 		<Unit filename="../../../Libs/Units/Source/DieParse.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvBank.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvDijkstra.cpp" />

@@ -232,11 +232,13 @@
 		<Unit filename="../../../Libs/TQSL/Source/TQSG.cpp" />
 		<Unit filename="../../../Libs/TQSL/Source/TQSG_BlopPlasma.cpp" />
 		<Unit filename="../../../Libs/Units/Source/DieParse.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvArgParse.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvAsk.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvBank.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvDijkstra.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvDir.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvDirry.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvMD5.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvQCol.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvSTOI.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvStream.cpp" />

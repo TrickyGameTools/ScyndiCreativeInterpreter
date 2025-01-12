@@ -106,15 +106,22 @@
 		<Unit filename="../../../Libs/TQSL/Source/TQSG.cpp" />
 		<Unit filename="../../../Libs/TQSL/Source/TQSG_BlopPlasma.cpp" />
 		<Unit filename="../../../Libs/Units/Source/DieParse.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvAsk.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvBank.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvDijkstra.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvDir.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvDirry.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvQCol.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvSTOI.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvStream.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvString.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvTime.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvVolumes.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvWindows.cpp" />
+		<Unit filename="../SCI_Share/SCI_GlobalConfig.cpp" />
+		<Unit filename="../SCI_Share/SCI_GlobalConfig.hpp" />
+		<Unit filename="../SCI_Share/SCI_Header.hpp" />
+		<Unit filename="../SCI_Share/Version.hpp" />
 		<Unit filename="SCI_Audio.cpp" />
 		<Unit filename="SCI_Audio.hpp" />
 		<Unit filename="SCI_Config.cpp" />
@@ -132,6 +139,12 @@
 		<Unit filename="SCI_Run.cpp" />
 		<Unit filename="SCI_Script.cpp" />
 		<Unit filename="SCI_Script.hpp" />
-		<Extensions />
+		<Extensions>
+			<lib_finder>
+				<lib name="SDL2_image" />
+				<lib name="SDL2_mixer" />
+				<lib name="sdl2" />
+			</lib_finder>
+		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

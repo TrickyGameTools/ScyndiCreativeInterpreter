@@ -59,11 +59,15 @@
 
 #include "../SCI_Script.hpp"
 
-#ifdef SlyvLinux
-#include <TQSE.hpp>
-#define NoRequestFile
-#endif
 
+#ifdef SlyvLinux
+#define NoFileRequest
+#endif // SlyvLinux
+
+#ifdef NoFileRequest
+#include <TQSE.hpp>
+using namespace Slyvina::TQSE;
+#endif // NoFileRequest
 
 
 using namespace Slyvina;
@@ -73,10 +77,10 @@ using namespace NSLunatic;
 namespace Scyndi_CI {
 
 	static int API_RF_RequestFile(lua_State* L) {
-#ifdef NoRequestFile
-	    TQSE::Notify("Unfortunately Requesting files is currently not available on this platform yet.");
-	    return 0;
-#else
+	    #ifdef NoFileRequest
+	    Notify("Unfortunately file requesting is not yet possible in "+Platform()+"\n\nThis has been planned for future versions, though!");
+	    lua_pushstring(L,"");
+	    #else
 		auto ret {
 			RequestFile(
 				Lunatic_OptString(L, 1, "Please select a file"),
@@ -85,15 +89,15 @@ namespace Scyndi_CI {
 				false)
 			};
 		Lunatic_PushString(L, ret);
+	    #endif // NoFileRequest
 		return 1;
-#endif
 	}
 
 	static int API_RF_RequestSaveFile(lua_State* L) {
-#ifdef NoRequestFile
-	    TQSE::Notify("Unfortunately Requesting files is currently not available on this platform yet.");
-	    return 0;
-#else
+        #ifdef NoFileRequest
+	    Notify("Unfortunately file requesting is not yet possible in "+Platform()+"\n\nThis has been planned for future versions, though!");
+	    lua_pushstring(L,"");
+	    #else
 		auto ret {
 			RequestFile(
 				Lunatic_OptString(L, 1, "Please select a file"),
@@ -103,8 +107,8 @@ namespace Scyndi_CI {
 			};
 
 		Lunatic_PushString(L, ret);
+		#endif
 		return 1;
-#endif
 	}
 
 	static int API_RF_SaveText(lua_State* L) {

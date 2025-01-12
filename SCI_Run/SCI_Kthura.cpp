@@ -1,54 +1,54 @@
 // License:
-//
+// 
 // Scyndi's Creative Interpreter
 // Kthura Manager
-//
-//
-//
+// 
+// 
+// 
 // 	(c) Jeroen P. Broks, 2023, 2024, 2025
-//
+// 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-//
+// 
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//
+// 
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-//
+// 
 // Version: 25.01.05
+// End License
 // Lic:
 // Scyndi's Creative Interpreter
 // Kthura Manager
-//
-//
-//
+// 
+// 
+// 
 // (c) Jeroen P. Broks, 2023, 2024
-//
+// 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-//
+// 
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//
+// 
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
-//
+// 
 // Version: 24.09.24
 // EndLic
-// End License
 
 #include <SlyvQCol.hpp>
 
@@ -94,7 +94,7 @@ namespace Scyndi_CI {
 			QCol->Doing("=>", "Done");
 		}
 	}
-
+	
 	Slyvina::Kthura::Kthura GetKthura(std::string Tag) {
 		Init_SCI_Kthura();
 		Trans2Upper(Tag);
@@ -104,10 +104,10 @@ namespace Scyndi_CI {
 		return MapRegister[Tag];
 	}
 
-	Slyvina::Kthura::Kthura GetKthura() {
+	Slyvina::Kthura::Kthura GetKthura() { 
 		Init_SCI_Kthura();
 		if (!ChosenMap) Crash("Requested the chosen map, but none have been chosen yet!");
-		return ChosenMap;
+		return ChosenMap; 
 	}
 
 	void SCI_LoadKthura(std::string Tag, std::string MapDir) {
@@ -151,7 +151,7 @@ namespace Scyndi_CI {
 		ChosenLayer = GetKthuraLayer(MapTag,LayerTag);
 	}
 
-	void PickKthuraLayer(std::string LayerTag) {
+	void PickKthuraLayer(std::string LayerTag) {		
 		ChosenLayer = GetKthuraLayer(LayerTag);
 		LayerLastPicked = LayerTag;
 	}
@@ -166,14 +166,14 @@ namespace Scyndi_CI {
 
 	bool InKthuraObject(KthuraObject* o, int x, int y) { return SCI_KthuraDraw->InsideObject(o, x, y); }
 
-	void PickKthura(std::string Tag) {
+	void PickKthura(std::string Tag) { 
 		Init_SCI_Kthura();
 		QCol->Doing("Picking Kthura", Tag);
-		ChosenMap = GetKthura(Tag);
+		ChosenMap = GetKthura(Tag); 		
 		MapLastPicked = Tag;
 		LayerLastPicked = "";
 		ChosenLayer = nullptr;
-
+		
 	}
 
 }

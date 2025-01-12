@@ -44,6 +44,7 @@
 		<Unit filename="../../../Libs/Units/Source/SlyvBank.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvDijkstra.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvDir.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvSTOI.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvString.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvTime.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvVolumes.cpp" />

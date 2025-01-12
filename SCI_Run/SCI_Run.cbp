@@ -101,6 +101,8 @@
 		<Unit filename="../../../Libs/Kthura/Source/Kthura_Draw_TQSG.cpp" />
 		<Unit filename="../../../Libs/Kthura/Source/Kthura_LoadCompiled.cpp" />
 		<Unit filename="../../../Libs/Kthura/Source/Kthura_Walk_Dijkstra.cpp" />
+		<Unit filename="../../../Libs/Lunatic/Lunatic.cpp" />
+		<Unit filename="../../../Libs/Lunatic/Lunatic.hpp" />
 		<Unit filename="../../../Libs/TQSL/Source/TQSA.cpp" />
 		<Unit filename="../../../Libs/TQSL/Source/TQSE.cpp" />
 		<Unit filename="../../../Libs/TQSL/Source/TQSG.cpp" />

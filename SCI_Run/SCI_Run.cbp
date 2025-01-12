@@ -101,6 +101,130 @@
 		<Unit filename="../../../Libs/Kthura/Source/Kthura_Draw_TQSG.cpp" />
 		<Unit filename="../../../Libs/Kthura/Source/Kthura_LoadCompiled.cpp" />
 		<Unit filename="../../../Libs/Kthura/Source/Kthura_Walk_Dijkstra.cpp" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lapi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lapi.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lauxlib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lauxlib.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lbaselib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lcode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lcode.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lcorolib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lctype.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lctype.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/ldblib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/ldebug.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/ldebug.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/ldo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/ldo.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/ldump.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lfunc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lfunc.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lgc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lgc.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/linit.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/liolib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/ljumptab.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/llex.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/llex.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/llimits.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lmathlib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lmem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lmem.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/loadlib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lobject.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lobject.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lopcodes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lopcodes.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lopnames.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/loslib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lparser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lparser.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lprefix.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lstate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lstate.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lstring.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lstring.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lstrlib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/ltable.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/ltable.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/ltablib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/ltm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/ltm.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lua.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lua.hpp" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/luaconf.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lualib.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lundump.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lundump.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lutf8lib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lvm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lvm.h" />
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lzio.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lzio.h" />
 		<Unit filename="../../../Libs/Lunatic/Lunatic.cpp" />
 		<Unit filename="../../../Libs/Lunatic/Lunatic.hpp" />
 		<Unit filename="../../../Libs/TQSL/Source/TQSA.cpp" />

@@ -227,6 +227,8 @@
 		<Unit filename="../../../Libs/Lunatic/Lua/Raw/src/lzio.h" />
 		<Unit filename="../../../Libs/Lunatic/Lunatic.cpp" />
 		<Unit filename="../../../Libs/Lunatic/Lunatic.hpp" />
+		<Unit filename="../../../Libs/Medals/Medals.cpp" />
+		<Unit filename="../../../Libs/Medals/Medals.hpp" />
 		<Unit filename="../../../Libs/TQSL/Source/TQSA.cpp" />
 		<Unit filename="../../../Libs/TQSL/Source/TQSE.cpp" />
 		<Unit filename="../../../Libs/TQSL/Source/TQSG.cpp" />

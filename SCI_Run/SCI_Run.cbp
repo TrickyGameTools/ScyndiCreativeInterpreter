@@ -35,6 +35,11 @@
 		<Linker>
 			<Add option="`sdl2-config --libs`" />
 		</Linker>
+		<Unit filename="../../../Libs/JCR6/Source/JCR6_Core.cpp" />
+		<Unit filename="../../../Libs/JCR6/Source/JCR6_JQL.cpp" />
+		<Unit filename="../../../Libs/JCR6/Source/JCR6_RealDir.cpp" />
+		<Unit filename="../../../Libs/JCR6/Source/JCR6_Write.cpp" />
+		<Unit filename="../../../Libs/JCR6/Source/JCR6_zlib.cpp" />
 		<Unit filename="../../../Libs/Kthura/Source/Kthura_Core.cpp" />
 		<Unit filename="../../../Libs/Kthura/Source/Kthura_Draw.cpp" />
 		<Unit filename="../../../Libs/Kthura/Source/Kthura_Draw_TQSG.cpp" />

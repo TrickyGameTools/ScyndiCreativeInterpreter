@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.04
+// Version: 25.01.13
 // End License
 
 
@@ -33,7 +33,7 @@
 #include "../SCI_Script.hpp"
 #include "../SCI_Kthura.hpp"
 #include "../SCI_Crash.hpp"
-using namespace Slyvina; 
+using namespace Slyvina;
 using namespace Slyvina::Units;
 using namespace Slyvina::Kthura;
 using namespace Slyvina::NSLunatic;
@@ -145,7 +145,7 @@ namespace Scyndi_CI {
 		auto
 			o{ GetKthuraLayer()->Obj(ObjTag) };
 		// Method
-		
+
 		// Object
 		GetObjInt("X", x);
 		GetObjInt("Y", y);
@@ -354,7 +354,7 @@ namespace Scyndi_CI {
 
 	static int API_Kthura_Spawn(lua_State* L) {
 		auto Tag{ Lunatic_CheckString(L,1) };
-		//auto o{ GetKthuraLayer()->Obj(Tag) };		
+		//auto o{ GetKthuraLayer()->Obj(Tag) };
 		auto n{ lua_gettop(L) }, t{ lua_type(L,2) };
 		auto errtype = std::string("");
 		// Who said function overloading was not possible in Lua? ;)
@@ -501,7 +501,7 @@ namespace Scyndi_CI {
 		lua_pushboolean(L, GetKthuraLayer()->Block((int)luaL_checkinteger(L, 1), (int)luaL_checkinteger(L, 2)));
 		return 1;
 	}
-	
+
 	static int API_Kthura_Remap(lua_State* L) {
 		switch (luaL_optinteger(L, 1, 0)) {
 		case 0:
@@ -527,9 +527,11 @@ namespace Scyndi_CI {
 	}
 	static int API_Kthura_HideButLabel(lua_State* L) {
 		GetKthuraLayer()->HideButLabel(luaL_checkstring(L, 1));
+		return 0;
 	}
 	static int API_Kthura_ShowButLabel(lua_State* L) {
 		GetKthuraLayer()->ShowButLabel(luaL_checkstring(L, 1));
+		return 0;
 	}
 
 	static int API_Kthura_ShowByLabel(lua_State* L) {
@@ -572,7 +574,7 @@ namespace Scyndi_CI {
 		auto todo{ luaL_checkinteger(L,1) };
 		auto kmap{ GetKthura() };
 		switch (todo) {
-		case 0: 
+		case 0:
 			LayList = *kmap->Layers(); // Copying all contents is safer at this point!
 			lua_pushinteger(L, LayList.size());
 			return 1;
@@ -582,7 +584,7 @@ namespace Scyndi_CI {
 			Lunatic_PushString(L, LayList[idx]);
 			return 1;
 		}
-		case 2: 
+		case 2:
 			lua_pushinteger(L, LayList.size());
 			return 1;
 		}
@@ -652,7 +654,7 @@ namespace Scyndi_CI {
 			{ "GetAutoRemap",API_Kthura_GetAutoRemap },
 			{ "AnythingMoving",API_Kthura_AnyThingMoving }
 		};
-		
+
 		InstallAPI("Kthura", IAPI);
 	}
 }

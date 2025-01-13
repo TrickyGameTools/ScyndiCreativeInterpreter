@@ -2,7 +2,7 @@
 // **********************************************
 // 
 // SCI_Run/API/API_Medals.cpp
-// (c) Jeroen Broks, 2023, 2024, All Rights Reserved.
+// (c) Jeroen Broks, 2023, 2024, 2025, All Rights Reserved.
 // 
 // This file contains material that is related
 // to a storyline that is which is strictly
@@ -34,7 +34,7 @@
 // **********************************************
 // 
 // 
-// version: 24.10.28
+// version: 25.01.13
 // 
 // End License
 

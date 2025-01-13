@@ -1,27 +1,27 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter
 // Graphics Manager
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2023, 2024
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 24.11.16
 // End License
 
@@ -67,6 +67,8 @@ namespace Scyndi_CI {
 			if (crash) { throw std::runtime_error(TrSPrintF("There is no image tagged '%s'", Tag.c_str())); }
 			return nullptr;
 		}
+		if (!ImageRegister[Tag]) QCol->Warn("Image Tag '"+Tag+"' turns out to contain a null pointer!");
+		if (!ImageRegister[Tag]->Valid()) QCol->Warn("Image Tag "+Tag+" turns out to be invalid!");
 		return ImageRegister[Tag];
 	}
 
@@ -192,7 +194,7 @@ namespace Scyndi_CI {
 		NR->ScriptTag= "ALTPICSCRIPT" + ChReplace(Ent, '/', '_') + md5(Ent) + TrSPrintF("_%09x", img->ID());
 		NR->TiedToPic = img;
 		State(NR->ScriptTag, Ent);
-		NR->APState = State(NR->ScriptTag);		
+		NR->APState = State(NR->ScriptTag);
 	}
 	static void SCIAP_GetFormat(_____TIMAGE* img, int* w, int* h) {
 		auto APD{ &SCIAPReg[img->ID()] };
@@ -266,7 +268,7 @@ namespace Scyndi_CI {
 		SCIAP_Init();
 		InitJCRPaniek();
 		Img("*SCIPOWER", SRF(), "GFX/PoweredBySCI.png");
-		Img("*SCIPOWER")->HotCenter();		
+		Img("*SCIPOWER")->HotCenter();
 		Fnt("*SYSFONT", SRF(), "Font/DosFont.jfbf");
 		Cls();
 		SetColor(0, 0, 105); Rect(0, 0, ScreenWidth(), ScreenHeight()); SetColor(255, 255, 255);

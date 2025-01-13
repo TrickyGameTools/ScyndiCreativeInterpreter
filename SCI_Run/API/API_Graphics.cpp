@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.04
+// Version: 25.01.13
 // End License
 
 #include <SlyvString.hpp>
@@ -75,6 +75,7 @@ namespace Scyndi_CI {
 			y{ luaL_checkinteger(L,3) },
 			frame{ luaL_optinteger(L,4,0) };
 		Img(Tag)->Draw(x, y, frame);
+		return 0;
 	}
 
 	static int API_DrawRotatedImage(lua_State* L) {
@@ -88,7 +89,7 @@ namespace Scyndi_CI {
 		Rotate(deg);
 		Img(Tag)->XDraw(x, y, frame);
 		Rotate(0);
-
+        return 0;
 	}
 
 	static int API_TileImage(lua_State* L) {
@@ -100,7 +101,9 @@ namespace Scyndi_CI {
 			w{ luaL_checkinteger(L,4) },
 			h{ luaL_checkinteger(L,5) },
 			frame{ luaL_optinteger(L, 6, 0) };
+		//std::cout << "DEBUG: TILE "	<< Tag << TrSPrintF(" (%d,%d) %dx%d F:%d",x,y,w,h,frame)<<std::endl;
 		Img(Tag)->Tile(x, y, w, h, frame);
+		return 0;
 	}
 
 
@@ -112,6 +115,7 @@ namespace Scyndi_CI {
 			y{ luaL_checkinteger(L,3) },
 			frame{ luaL_optinteger(L,4,0) };
 		Img(Tag)->TrueDraw(x, y, frame);
+		return 0;
 	}
 
 	static int API_HotCenter(lua_State* L) { Img(luaL_checkstring(L, 1))->HotCenter(); return 0; }
@@ -131,6 +135,7 @@ namespace Scyndi_CI {
 		}
 		return 0;
 	}
+
 	static int API_ColorHSV(lua_State* L) {
 		auto
 			hue = luaL_checknumber(L, 1),

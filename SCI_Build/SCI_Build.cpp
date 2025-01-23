@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.12
+// Version: 25.01.18
 // End License
 // Lic:
 // Scyndi's Creative Interpreter - Builder
@@ -79,6 +79,7 @@ int main(int ac, char** args) {
 	AddFlag_Bool(Cfg, "debug", false);
 	AddFlag_Bool(Cfg, "scyndidebug", false); // Use debug builds of Scyndi compilations
 	AddFlag_Bool(Cfg, "scyndiforce", false);
+	AddFlag_Bool(Cfg, "ignorebutler",false);
 	CLI_Args = ParseArg(ac, args, Cfg);
 	if (!CLI_Args.arguments.size()) {
 		QCol->Magenta("Usage: ");
@@ -86,9 +87,10 @@ int main(int ac, char** args) {
 		QCol->Green(" [<switches>] ");
 		QCol->Cyan("<Project>\n\n");
 		QCol->Magenta("Available switches:\n");
-		QCol->White("\t-debug       "); QCol->Green("Create a debug build\n");
-		QCol->White("\t-scyndidebug "); QCol->Green("Use the debug compilations of Scyndi scripts\n");
-		QCol->White("\t-scyndiforce "); QCol->Green("Forces Scyndi to compile ALL required scripts regardless if they were modified or not\n");
+		QCol->White("\t-debug        "); QCol->Green("Create a debug build\n");
+		QCol->White("\t-scyndidebug  "); QCol->Green("Use the debug compilations of Scyndi scripts\n");
+		QCol->White("\t-scyndiforce  "); QCol->Green("Forces Scyndi to compile ALL required scripts regardless if they were modified or not\n");
+		QCol->White("\t-ignorebutler "); QCol->Green("If Butler is set in this project it will now be removed (release builds only)\n");
 		QCol->Reset();
 		return 0;
 	}

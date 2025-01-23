@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.16
+// Version: 25.01.18
 // End License
 
 #include <SlyvQCol.hpp>
@@ -32,6 +32,7 @@
 #include <SlyvMD5.hpp>
 #include <SlyvDir.hpp>
 #include <SlyvStream.hpp>
+#include <SlyvDir.hpp>
 
 #include "../SCI_Share/Version.hpp"
 
@@ -60,13 +61,13 @@ namespace Scyndi_CI {
 				MakeDir(PPath);
 			}
 			QCol->Doing("Creating Project", Project);
-			SaveString(Project,"[Project]\nCreated=" + CurrentDate() + "; " + CurrentTime() + "\n");		
+			SaveString(Project,"[Project]\nCreated=" + CurrentDate() + "; " + CurrentTime() + "\n");
 			return true;
 		}
 
 		bool SCI_Project::WindowSettings() {
-			if (DebugFlag()) 
-				ID->Value("BUILD", "TYPE", "debug"); 
+			if (DebugFlag())
+				ID->Value("BUILD", "TYPE", "debug");
 			else {
 				ID->Value("BUILD", "TYPE", "release");
 				if (Yes("RELEASE", "WINDOWS_CONSOLE_RELEASE", "Release from console in Windows"))
@@ -85,7 +86,7 @@ namespace Scyndi_CI {
 			ID->Value("Alt", "Use", boolstring(Alt));
 			if (Alt) {
 				ID->Value("Alt", "Width",Ask(Data, "SCI::Window", "AltWidth", "Alt width", "1200"));
-				ID->Value("Alt", "Height",Ask(Data, "SCI::Window", "AltHeight", "Alt Height", "1000"));				
+				ID->Value("Alt", "Height",Ask(Data, "SCI::Window", "AltHeight", "Alt Height", "1000"));
 				if (Units::Yes(Data, "SCI::Window", "WinAdeptAlt", "Automatically adept Window Size to keep Alt Screen Ratios correct")) ID->Value("Window", "WinAdeptAlt", "Y");
 			}
 			ID->Value("Mouse", "Hide", boolstring(Units::Yes(Data, "SCI::Mouse", "Hide", "Do you want to hide the system's mouse pointer")));
@@ -107,9 +108,9 @@ namespace Scyndi_CI {
 		std::string SCI_Project::OutputName() {
 			if (!Data->HasValue("Project", "Outputname")) {
 				QCol->LMagenta("Output Name\n");
-				QCol->White("This name will be used to name the .exe file, and the main resource file.\n\n");				
+				QCol->White("This name will be used to name the .exe file, and the main resource file.\n\n");
 			}
-			return Ask(Data, "Project", "OutputName", "Please enter the output name: ", Title());			
+			return Ask(Data, "Project", "OutputName", "Please enter the output name: ", Title());
 		}
 
 		std::string SCI_Project::DebugJQLFile() {
@@ -124,6 +125,10 @@ namespace Scyndi_CI {
 			dir = ChReplace(dir, '\\', '/');
 			if (!Suffixed(dir, "/")) dir += "/";
 			return AVolPath(dir);
+		}
+
+		std::string SCI_Project::ReleaseDirectory(std::string pf) {
+		    return ReleaseDirectory()+(Suffixed(ReleaseDirectory(),"/")?"":"/")+pf+"/";
 		}
 
 		std::string SCI_Project::PrefferedStorage() {
@@ -156,7 +161,7 @@ namespace Scyndi_CI {
 		std::string SCI_Project::Vraag(std::string cat, std::string key, std::string question, std::string defaultvalue) {
 			return Ask(Data, cat, key, question, defaultvalue);
 		}
-		
+
 
 
 		Scyndi_CI::Builder::SCI_Project::SCI_Project(std::string _Project) {
@@ -179,8 +184,8 @@ namespace Scyndi_CI {
 			if (!DebugFlag()) {
 				Export_Windows();
 				//Export_Mac();
-				//Export_Linux();
-				Butler(this);
+				Export_Linux_Basic();
+				//Butler(this); // temporarily on dummy
 			}
 		}
 
@@ -193,30 +198,58 @@ namespace Scyndi_CI {
 			}
 		}
 
+		void SCI_Project::JCRtoMe(std::string d, std::string an="") {
+		    auto JD{FileList(ReleaseDirectory("JCR6")) };
+		    for (auto J:*JD) QCF(ReleaseDirectory("JCR6")+J,ReleaseDirectory(d)+(an==""?J:an));
+		}
+
+
 		void SCI_Project::Export_Windows() {
 			QCol->Doing("Exporting to", "Windows");
-			auto mydir{ ExtractDir(CLI_Args.myexe) }; // cout << mydir << endl; 
+			auto mydir{ ExtractDir(CLI_Args.myexe) }; // cout << mydir << endl;
 			auto content{ FileList(mydir) };
+			auto od{ReleaseDirectory("Win64")};
+			if (!IsDir(od)) {
+                QCol->Doing("Creating",od); MakeDir(od);
+            }
 			for (auto f : *content) {
 				if (Lower(ExtractExt(f)) == "dll") {
 					auto ori{ mydir + "/" + f };
-					auto tar{ ReleaseDirectory() + f };
+					auto tar{ od + f };
 					//cout << ori << " >> " << tar << endl;
 					QCF(ori, tar);
 				}
 			}
-			QCF(mydir + "/SCI_Run.exe", ReleaseDirectory() + OutputName() + ".exe");
-			QCF(mydir + "/SCI_Run.srf", ReleaseDirectory() + OutputName() + ".srf");
+			QCF(mydir + "/SCI_Run.exe", od + OutputName() + ".exe");
+			QCF(mydir + "/SCI_Run.srf", od + OutputName() + ".srf");
+			JCRtoMe("Win64");
+			/*
 			SaveString(
-				ReleaseDirectory() + OutputName(),
+				ReleaseDirectory("Win64") + OutputName(),
 				"#! /usr/bin/bash\n"
 				"\n\n"
 				"# This shell script SHOULD run the game in Linux providing that WINE has been installed\n"
-				"# No official support, though. Make sure that this file has the 'x' attribute or it will NOT run at all\n\n" 
+				"# No official support, though. Make sure that this file has the 'x' attribute or it will NOT run at all\n\n"
 				"wine \""+OutputName()+".exe\"\n\n"
 			);
+			*/
 		}
 
+        void SCI_Project::Export_Linux_Basic() {
+            QCol->Doing("Exporting to", "Linux"," "); QCol->LMagenta("BASIC\n");
+            // The Basic Linux install will contain, the executable, the srf file and the jcr data file, and nothing more.
+            // Dependencies will have to be installed separately.
+            auto od{ReleaseDirectory("Linux_Basic")};
+            auto mydir{ ExtractDir(CLI_Args.myexe) };
+            auto on{ ChReplace(Lower(OutputName()),' ','_')};
+			if (!IsDir(od)) {
+                QCol->Doing("Creating dir",od); MakeDir(od);
+            }
+
+           	QCF(mydir + "/SCI_Run", od + on);
+			QCF(mydir + "/SCI_Run.srf", od + on+".srf");
+			JCRtoMe("Linux_Basic");
+        }
 
 	}
 }

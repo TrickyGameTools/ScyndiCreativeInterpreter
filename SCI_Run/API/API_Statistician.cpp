@@ -22,13 +22,14 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.13
+// Version: 25.01.23
 // End License
 
 #include <Lunatic.hpp>
 #include <Statistician.hpp>
 #include <SlyvString.hpp>
 #include <SlyvQCOL.hpp>
+#include <Slyvina.hpp>
 
 #include "../SCI_Script.hpp"
 #include "../SCI_Crash.hpp"
@@ -71,6 +72,15 @@ namespace Scyndi_CI {
 	static int API_Stat_HasParty(lua_State* L) {
 		lua_pushboolean(L, PartyReg.count(Upper(luaL_checkstring(L, 1))));
 		return 1;
+	}
+
+	static int API_HaveChar(lua_State *L) {
+        auto
+            PartyTag{ Upper(Lunatic_CheckString(L,1)) },
+            CharTag{ Lunatic_CheckString(L,2) };
+        if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database"));
+        lua_pushboolean(L,PartyReg[PartyTag]->HasChar(CharTag));
+        return 1;
 	}
 
 	static int API_Stat_CreateParty(lua_State* L) {
@@ -265,13 +275,14 @@ namespace Scyndi_CI {
 
 	static int API_StatListContains(lua_State* L) {
 		BaseTag;
-		auto Lst{ CharData->GetList(luaL_checkstring(L,3)) };
+		auto Lst{ CharData->GetList(luaL_checkstring(L,3))->GetList() };
 		auto Needle{ Lunatic_CheckString(L,4) };
 		auto IgnoreCase{ luaL_optinteger(L,5,0) };
 		if (IgnoreCase) Trans2Upper(Needle);
-		for (size_t i = 0; i < Lst->GetList()->size(); ++i) {
+		for (size_t i = 0; i < Lst->size(); ++i) {
 			auto it1 = (*Lst)[i];
 			if (IgnoreCase) Trans2Upper(it1);
+            //printf("ListContainsCheck: i=%d; #HayStack=%d;  FoundInHayStack=%s; Needle=%s; IgnoreCase=%s\n",i,Lst->size(),it1.c_str(),Needle.c_str(),boolstring(IgnoreCase).c_str());
 			if (Needle == it1) { lua_pushboolean(L, true); return 1; }
 		}
 		lua_pushboolean(L, false);
@@ -282,6 +293,13 @@ namespace Scyndi_CI {
 		BaseTag;
 		lua_pushinteger(L,CharData->GetList(luaL_checkstring(L, 3))->GetList()->size());
 		return 1;
+	}
+
+	static int API_StatListUnique(lua_State*L) {
+	    BaseTag;
+	    auto uList{CharData->GetList(luaL_checkstring(L, 3))->GetList()};
+	    VecUniqueOnly(uList);
+	    return 0;
 	}
 
 	static int API_StatGetCharName(lua_State* L) {
@@ -310,6 +328,22 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+#define API_Link(API,Meth) \
+	static int API(lua_State *L) { \
+	    BaseTag; \
+	    auto \
+            st{Lunatic_CheckString(L,3)}, \
+            fc{Lunatic_CheckString(L,4)},\
+            ts{Lunatic_OptString(L,5,"")}; \
+	    ts==""?CharData->Meth(st,fc):CharData->Meth(st,fc,ts);\
+	    return 0;\
+	}
+API_Link(API_LinkStat,LinkStat);
+API_Link(API_LinkData,LinkData);
+API_Link(API_LinkList,LinkList);
+API_Link(API_LinkPnts,LinkPoints);
+
+
 
 	void Init_API_Statistician() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -337,11 +371,18 @@ namespace Scyndi_CI {
 			{ "StatListSet",API_StatListSet },
 			{ "StatListSort",API_StatListSort },
 			{ "StatListSize",API_StatListSize },
+			{ "StatListUnique", API_StatListUnique },
 			{ "StatListContains",API_StatListContains },
 			{ "StatSetCharName",API_StatSetCharName },
 			{ "StatGetCharName",API_StatGetCharName },
 			{ "HaveCharStat",API_HaveStat },
-			{ "KillChar",API_KillChar }
+			{ "HaveChar", API_HaveChar },
+			{ "HasChar", API_HaveChar },
+			{ "KillChar",API_KillChar },
+			{ "LinkStat",API_LinkStat },
+			{ "LinkData",API_LinkData },
+			{ "LinkList",API_LinkList },
+			{ "LinkPnts",API_LinkPnts }
 		};
 		InstallAPI("Statistician", IAPI);
 	}

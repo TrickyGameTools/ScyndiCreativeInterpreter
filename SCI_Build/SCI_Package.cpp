@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.04
+// Version: 25.01.18
 // End License
 
 #define Act(A) if (!A) return false
@@ -59,14 +59,14 @@ namespace Scyndi_CI {
 				FullFileName,
 				FileName,
 				ResDir;
-			String ResFileName(bool wantbytecode) { 
-				auto FN{ StripExt(FileName) }; if (CLI_Args.bool_flags["scyndidebug"]) FN = StripExt(FN); 
+			String ResFileName(bool wantbytecode) {
+				auto FN{ StripExt(FileName) }; if (CLI_Args.bool_flags["scyndidebug"]) FN = StripExt(FN);
 				if (wantbytecode) FN += ".lbc"; else FN += ".lua";
-				return ResDir + "/" + FN; 
+				return ResDir + "/" + FN;
 			}
 			ScriptRecord(String FFN, String FN, String RD) { FullFileName = ChReplace(FFN, '\\', '/'); FileName = ChReplace(FN, '\\', '/'); ResDir = ChReplace(RD, '\\', '/'); }
 		};
-		
+
 		typedef std::shared_ptr<std::vector<std::shared_ptr<ScriptRecord>>> SRList;
 		inline SRList NewSRList() { return std::make_shared<std::vector<std::shared_ptr<ScriptRecord>>>(); }
 		void SRPush(SRList L, String FFN, String FN, String RD) { L->push_back(std::make_shared<ScriptRecord>(FFN, FN, RD)); }
@@ -77,7 +77,7 @@ namespace Scyndi_CI {
 		}
 		void SRPushUnique(SRList L, String FFN, String FN, String RD) { if (!SRFind(L,FFN)) L->push_back(make_shared<ScriptRecord>(FFN, FN, RD)); }
 #pragma endregion
-		
+
 
 
 		std::map<std::string, std::string> _Package::ReservedDirs {
@@ -91,8 +91,12 @@ namespace Scyndi_CI {
 			if (pkg == "*MAIN") return MainPackage;
 			if (!Packages.count(pkg)) {
 				if (_Parent->Yes("Release_Package_MergeWithMain", pkg, "Merge package " + pkg + " with main package")) return MainPackage;
-				auto jname{ _Parent->ReleaseDirectory() + _Parent->OutputName() + "." + pkg + ".jcr" };
-				QCol->Doing("Creating", jname," ");
+				auto jname{ _Parent->ReleaseDirectory("JCR6") + _Parent->OutputName() + "." + pkg + ".jcr" };
+				auto pdir{ExtractDir(jname)};
+				if (!IsDir(pdir)) {
+                    QCol->Doing("Creating dir",pdir); MakeDir(pdir);
+				}
+				QCol->Doing("Creating JCR6", jname," ");
 				QCol->Doing("For Package", pkg);
 				Packages[pkg] = CreateJCR6(jname,_Parent->PrefferedStorage());
 				if (Yes("Release_Package_Optional", pkg, "Is this package optional and can the game function without it")) {
@@ -120,7 +124,7 @@ namespace Scyndi_CI {
 		std::string _Package::Package(std::string dir) {
 			if (_debug) return "*DEBUG";
 			if (dir == "*SCRIPT*") return "*MAIN";
-			return Ask(PrjData, "DIR2PACKAGE", dir, TrSPrintF("Which package is '%s' part of? ", dir.c_str()), "*MAIN");			
+			return Ask(PrjData, "DIR2PACKAGE", dir, TrSPrintF("Which package is '%s' part of? ", dir.c_str()), "*MAIN");
 		}
 
 		bool _Package::EligableScriptBundle(std::string bundle) {
@@ -171,10 +175,10 @@ namespace Scyndi_CI {
 								if (FileSize(ffile) > 4000) Storage = _Parent->PrefferedStorage();
 								GetPackage(Package)->AddFile(ffile, file, Storage, Author, Notes);
 								auto de{ GetPackage(Package)->Entries[Upper(file)] };
-								if (de->Storage() == "Store") 
+								if (de->Storage() == "Store")
 									QCol->LMagenta("Stored\n");
-								else { 
-									QCol->LMagenta("Packed "); 
+								else {
+									QCol->LMagenta("Packed ");
 									QCol->LGreen(de->Storage());
 									QCol->LCyan(TrSPrintF(" %5.1f%%\n", ((double)de->CompressedSize() / (double)de->RealSize()) * 100));
 								}
@@ -224,7 +228,7 @@ namespace Scyndi_CI {
 			//cout << " GGRR!\n"; // debug
 			if (_debug) {
 				QCol->Doing("Script Link", bundle);
-				OutputJQL += "From:" + bundle + "\n";				
+				OutputJQL += "From:" + bundle + "\n";
 				if (bytecode) {
 					//OutputJQL += "Steal:Bytecode.lbc>" + directory + "/" + entry + ".lbc\n";
 					OutputJQL += "Steal:Bytecode.lbc>" + entry + "\n";
@@ -255,12 +259,12 @@ namespace Scyndi_CI {
 							GetPackage(package)->AddBank(JS->B("translation.lua"), entry, "Store", _Parent->Author());
 					}
 				}
-				//QCol->Error("Release not yet implemented for script"); 
+				//QCol->Error("Release not yet implemented for script");
 			}
 			return ret;
 		}
 
-		
+
 
 		bool _Package::PackScript() {
 			QCol->LMagenta("Script inclusion\n");
@@ -301,11 +305,11 @@ namespace Scyndi_CI {
 					for (auto bndl : *DepNeed) {
 						//auto bndl{ sl + "/" + _bndl };
 						auto J = JCR6_Dir(bndl->FullFileName);
-						if (Last()->Error) { 
-							QCol->Error(TrSPrintF("JCR ERROR: %s", Last()->ErrorMessage.c_str())); 
+						if (Last()->Error) {
+							QCol->Error(TrSPrintF("JCR ERROR: %s", Last()->ErrorMessage.c_str()));
 							QCol->Doing("JCR6 Main:", Last()->MainFile);
 							QCol->Doing("JCR6 Entry:", Last()->Entry);
-							return false; 
+							return false;
 						}
 						if (!J->EntryExists("Configuration.ini")) {
 							QCol->Error(TrSPrintF("Bundle '%s' does not contain configuration", bndl->FullFileName.c_str()));
@@ -319,7 +323,7 @@ namespace Scyndi_CI {
 							string dep{ "" };
 							if (Prefixed(Upper(ldep), "LIBS/")) {
 								//QCol->Error("Dependencies NOT YET supported!"); return false;
-								//* 
+								//*
 								dep = ldep.substr(5);
 								auto found{ false };
 								QCol->Doing("=> Dep", ldep);
@@ -454,7 +458,7 @@ namespace Scyndi_CI {
 					}
 					switch (c) {
 					case 1: break; // Nothing wrong
-					case 0: 
+					case 0:
 						QCol->Error("Original not found for alias: " + ALE);
 						return false;
 					default:
@@ -474,9 +478,14 @@ namespace Scyndi_CI {
 				OutputJQL = "JQL\n\n";
 			} else {
 				QCol->Doing("Build mode", "Release");
-				auto ofile{ P->ReleaseDirectory() + P->OutputName() + ".jcr" };
+				auto ofile{ P->ReleaseDirectory("JCR6") + P->OutputName() + ".jcr" };
+				auto odir{ExtractDir(ofile)};
+				if (!IsDir(odir)) {
+                    QCol->Doing("Creating dir",odir);
+                    MakeDir(odir);
+				}
 				QCol->Doing("Creating", ofile);
-				MainPackage = CreateJCR6(ofile);				
+				MainPackage = CreateJCR6(ofile);
 				Packages["*MAIN"] = MainPackage;
 			}
 		}

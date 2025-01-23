@@ -1,27 +1,27 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter
 // Script & State Manager
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2023, 2024, 2025
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 25.01.12
 // End License
 
@@ -63,7 +63,7 @@ namespace Scyndi_CI {
 	static std::map<std::string, std::map<std::string, lua_CFunction>> API{};
 	static std::vector<std::string> PlannedToKill{};
 
-#pragma region Paniek	
+#pragma region Paniek
 
 	static int PaniekLua(lua_State* L) {
 		auto Uitleg{ NewVecString() };
@@ -428,8 +428,8 @@ namespace Scyndi_CI {
 				for (int j = 0; j < B.size(); ++j) A += TrSPrintF("\\x%02x", B[j]);
 				A += "\"";
 				Param += A;
-				// This may seem a bit over the top, but trust me, 
-				// the more direct approach led me to many many crashes in the Apollo engine, 
+				// This may seem a bit over the top, but trust me,
+				// the more direct approach led me to many many crashes in the Apollo engine,
 				// and I wanted to make sure that was NOT gonna happen again!
 			} break;
 			case LUA_TNUMBER:
@@ -491,7 +491,7 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
-	static int SYS_ATAN2(lua_State* L) { 
+	static int SYS_ATAN2(lua_State* L) {
 		auto
 			a{ (double)luaL_checknumber(L,1) },
 			b{ (double)luaL_checknumber(L,2) };
@@ -588,8 +588,8 @@ namespace Scyndi_CI {
 	bool _statecheck{ true };
 	Slyvina::NSLunatic::SLunatic State(std::string _State) {
 		Trans2Upper(_State);
-		if (!StateRegister.count(_State)) { 
-			//throw std::runtime_error(TrSPrintF("State '%s' doesn't exist", _State.c_str())); 
+		if (!StateRegister.count(_State)) {
+			//throw std::runtime_error(TrSPrintF("State '%s' doesn't exist", _State.c_str()));
 			if (_statecheck) {
 				Crash(TrSPrintF("State '%s' doesn't exist", _State.c_str()));
 			} else {
@@ -616,7 +616,7 @@ namespace Scyndi_CI {
 		static auto Core{ SRF()->GetString("Script/ScyndiCore.lua") };
 		//StateRegister[_State] = LunaticByByteCode(Buf,_Entry);
 		QCol->Doing("Loading", _Entry, "\t"); QCol->Doing("to state", _State);
-		StateRegister[_State] = LunaticBySource(Core); 
+		StateRegister[_State] = LunaticBySource("--[[ Scyndi ]]\n"+Core);
 		std::string initscript{
 			"-- InitScript: " + _State + " --\n\n"
 			"SCI_StateName = '"+_State+"'\n\n"
@@ -662,10 +662,10 @@ namespace Scyndi_CI {
 			auto src{ _Res->GetString(_Entry) };
 			StateRegister[_State]->QDoString(src);
 		} else if (ext == "LBC") {
-			QCol->Doing("Obtaining", _Entry);			
+			QCol->Doing("Obtaining", _Entry);
 			auto bnk{ _Res->B(_Entry) };
 			if (Last()->Error) {
-				Crash("Load State JCR6 Error!", "Error: " + Last()->ErrorMessage + "\nMain:" + Last()->MainFile + "\nEntry:" + Last()->Entry); 
+				Crash("Load State JCR6 Error!", "Error: " + Last()->ErrorMessage + "\nMain:" + Last()->MainFile + "\nEntry:" + Last()->Entry);
 				return;
 			}
 			StateRegister[_State]->QDoByteCode(bnk->Direct(), bnk->Size(), _Entry);

@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Graphics.Scyndi
 // 	Scyndi's Creative Interpreter - Graphics linkup
-// 	version: 25.01.12
+// 	version: 25.01.23
 // 
 // 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
 // 
@@ -93,18 +93,25 @@ Class TImage
 	End
 	
 	Get Int Width
-		int W
-		int H
-		W,H = Lua.Graphics.GetImageFormat(Tag)
-		Return W
+		int _W
+		int _H
+		_W,_H = Lua.Graphics.GetImageFormat(Tag)
+		Return _W
 	End
 	
 	Get Int Height
-		int W
-		int H
-		W,H = Lua.Graphics.GetImageFormat(Tag)
-		Return H
+		int _W
+		int _H
+		_W,_H = Lua.Graphics.GetImageFormat(Tag)
+		Return _H
 	End
+	
+	//Get Int W
+	//	Return Width
+	//End
+	//Get Int H
+	//	Return Height
+	//End
 	
 	Void HotBottomCenter()
 		Self.Hot(Self.Width div 2, Self.Height)

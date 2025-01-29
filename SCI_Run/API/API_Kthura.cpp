@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.13
+// Version: 25.01.29
 // End License
 
 
@@ -124,6 +124,7 @@ namespace Scyndi_CI {
 		SetObjBool("BLOCK", impassible);
 		SetObjBool("FORCEPASSIBLE", forcepassible);
 		SetObjInt("ANIMFRAME", animframe);
+		SetObjInt("FRAME", animframe);
 		SetObjBool("VISIBLE", visible);
 		SetObjBool("NOTINMOTIONTHEN0", NotInMotionThen0);
 		SetObjBool("NOTMOVINGTHEN0", NotInMotionThen0);
@@ -182,6 +183,7 @@ namespace Scyndi_CI {
 		GetObjBool("BLOCK", impassible);
 		GetObjBool("FORCEPASSIBLE", forcepassible);
 		GetObjInt("ANIMFRAME", animframe);
+		GetObjInt("FRAME", animframe);
 		GetObjBool("VISIBLE", visible);
 		GetObjBool("WALKING", Walking); // Read-Only
 		GetObjString("KIND", SKind); // Read-Only

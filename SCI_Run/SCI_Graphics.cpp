@@ -274,6 +274,7 @@ namespace Scyndi_CI {
 		SetColor(0, 0, 105); Rect(0, 0, ScreenWidth(), ScreenHeight()); SetColor(255, 255, 255);
 		Img("*SCIPOWER")->Draw(ScreenWidth() / 2, ScreenHeight() / 2);
 		Flip();
+		SDL_Delay(1500);
 		Img("*DEATH", SRF(), "GFX/Death.png");
 		if (AltWidth() && AltHeight()) {
 			QCol->Doing("AltScreen", TrSPrintF("%05dx%05d", AltWidth(), AltHeight()));

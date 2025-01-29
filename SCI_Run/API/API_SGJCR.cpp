@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.13
+// Version: 25.01.29
 // End License
 
 #include <SlyvString.hpp>
@@ -75,7 +75,7 @@ namespace Scyndi_CI {
 		static SGRec Create(string Tag) {
 			Trans2Upper(Tag);
 			Register[Tag] = make_shared<_SGRec>();
-			Register[Tag]->DoType[SGJCR_Types::ID] = true;			
+			Register[Tag]->DoType[SGJCR_Types::ID] = true;
 			return Register[Tag];
 		}
 	};
@@ -153,7 +153,7 @@ namespace Scyndi_CI {
 
 	static int API_SGJCRGetBank(lua_State* L) {
 		AutoRec;
-		auto 
+		auto
 			EntryN{ Upper(luaL_checkstring(L,2)) },
 			BankTag{ Lunatic_CheckString(L,3) };
 		auto
@@ -189,7 +189,7 @@ namespace Scyndi_CI {
 			STag{ Upper(luaL_checkstring(L,2)) };
 		if (!Rec->PartyEntries.count(STag)) return 0;
 		Lunatic_PushString(L, Rec->PartyEntries[STag]);
-		return 1;		
+		return 1;
 	}
 
 	static int API_SGJCRSave(lua_State* L) {
@@ -216,7 +216,7 @@ namespace Scyndi_CI {
 						"GameID=" + SaveGameID() + "\n"
 						"Engine=SCI\n"
 					};
-					
+
 					JO->AddString(oID, "ID/Identify.ini");
 				} break;
 				case SGJCR_Types::TxtData:
@@ -239,7 +239,7 @@ namespace Scyndi_CI {
 					for (auto& TS : Rec->PartyEntries) {
 						QCol->Doing("-> Statistician", TS.first, " "); QCol->LMagenta("(" + TS.second + ")\n");
 						auto P = JSG_GetParty(TS.first);
-						StatSaveJCR6(P, JO, "Statistician." + TS.second);
+						StatSaveJCR6(P, JO, "Statistician." + TS.second,"zlib"); //,"zlib");
 					}
 					//luaL_error(L, "RPG Stat Data is not yet supported! Please come back later for that one!");
 					return 0;
@@ -299,7 +299,7 @@ namespace Scyndi_CI {
 				}
 				break;
 			case SGJCR_Types::RPGStat:
-				//luaL_error(L, "RPGStat data loading is not yet implemented in this version");				
+				//luaL_error(L, "RPGStat data loading is not yet implemented in this version");
 				//return 0;
 				for (auto& TS : Rec->PartyEntries) {
 					QCol->Doing("-> Statistician", TS.first, " "); QCol->LMagenta("(" + TS.second + ")\n");

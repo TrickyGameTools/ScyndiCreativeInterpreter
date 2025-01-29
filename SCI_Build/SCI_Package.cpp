@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.18
+// Version: 25.01.29
 // End License
 
 #define Act(A) if (!A) return false
@@ -34,6 +34,7 @@
 #include <SlyvDir.hpp>
 #include <SlyvDirry.hpp>
 #include <SlyvVecSearch.hpp>
+#include <SlyvVolumes.hpp>
 
 #include "SCI_Package.hpp"
 #include "SCI_Build_Config.hpp"
@@ -374,7 +375,7 @@ namespace Scyndi_CI {
 		bool _Package::AddMedals(std::string package) {
 			if (_debug || package == "*DEBUG") {
 				if (_Parent->UseMedals()) {
-					std::string MedalP{ "E:/projects/applications/site/Medals/Medals.ini" };
+					std::string MedalP{ AVolPath("Scyndi:projects/applications/site/Medals/Medals.ini") };
 					auto Medal{ Dirry("$AppSupport$/Medals.JBC") };
 					if (FileExists(MedalP)) {
 						QCol->Doing("Importing", MedalP);
@@ -463,6 +464,37 @@ namespace Scyndi_CI {
 						return false;
 					default:
 						QCol->Error("Multiple occurances found for alias: " + ALE + ", but only one will actually be used in the game!");
+					}
+				}
+			}
+			auto ALL{PrjData->Lists("Alias")};
+				for (auto ALEL : *ALL) {
+                    auto ALLL{PrjData->List("Alias",ALEL)};
+                    for (auto ALE:*ALLL) {
+                        if (DebugFlag()) {
+                            QCol->Doing("Alias", ALE);
+                            OutputJQL += "Alias:" + ALEL + ">" + ALE+"\n";
+                        } else {
+                            uint32 c{ 0 };
+                            for (auto PKG : Packages) {
+                            //QCol->Red("DEBUG: " + ALE + "::" + PKG.first + "\n");
+                            if (PKG.second->Entries.count(Upper(ALE))) {
+                                QCol->Doing("Alias", ALEL, "");
+                                QCol->Yellow(" to ");
+                                QCol->Cyan(ALE);
+                                QCol->LMagenta("   " + PKG.first + "\n");
+                                PKG.second->Alias(ALEL, ALE);
+                                c++;
+                            }
+                        }
+                        switch (c) {
+                        case 1: break; // Nothing wrong
+                        case 0:
+                            QCol->Error("Original not found for alias: " + ALE);
+                            return false;
+                        default:
+                            QCol->Error("Multiple occurances found for alias: " + ALE + ", but only one will actually be used in the game!");
+                        }
 					}
 				}
 			}

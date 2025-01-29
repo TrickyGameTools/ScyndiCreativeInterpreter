@@ -1,0 +1,389 @@
+// License:
+// 	SCI_Exe/IntLibs/SCI/Statistician.scyndi
+// 	Statistician Support
+// 	version: 25.01.12
+// 
+// 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
+// 
+// 	This software is provided 'as-is', without any express or implied
+// 	warranty.  In no event will the authors be held liable for any damages
+// 	arising from the use of this software.
+// 
+// 	Permission is granted to anyone to use this software for any purpose,
+// 	including commercial applications, and to alter it and redistribute it
+// 	freely, subject to the following restrictions:
+// 
+// 	1. The origin of this software must not be misrepresented; you must not
+// 	   claim that you wrote the original software. If you use this software
+// 	   in a product, an acknowledgment in the product documentation would be
+// 	   appreciated but is not required.
+// 	2. Altered source versions must be plainly marked as such, and must not be
+// 	   misrepresented as being the original software.
+// 	3. This notice may not be removed or altered from any source distribution.
+// End License
+
+
+Module
+
+// Just making sure this comes first. GewoonNiks will contain 'nil' as result, but that doesn't matter!
+plua GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Statistician")
+
+plua Me = Lua.Statistician
+
+readonly delegate HasParty = Me.HasParty
+	
+Void DontWrite()
+	Lua.error("Writing to a readonly property!")
+End
+
+void BufNewIndex(_s,string Key,int value)
+	plua s
+	s = _s["_*Parent*_"]
+	Me.SetStatBuf(s.PartyTag,s.CharTag,s.StatKey,Key,value)
+end
+
+int BufIndex(_s,string Key)
+	plua s	
+	s = _s["_*Parent*_"]	
+	return Me.GetStatBuf(s.PartyTag,s.CharTag,s.StatKey,Key)
+end
+
+Class StatStat
+	ReadOnly Var Parent
+	ReadOnly String StatKey
+	ReadOnly Var Buff
+	Get String CharTag
+		return Parent.CharTag
+	end
+	Get String PartyTag
+		Return Parent.Parent.PartyTag
+	End
+	Constructor(_P,string _K)
+		Parent=_P
+		StatKey=_K		
+		Buff = SetMetaTable({["_*Parent*_"]=self},{["__newindex"]=BufNewIndex,["__index"]=BufIndex})
+	End
+	
+	Get Int Base
+		Return Parent.BaseStat(StatKey)
+	End
+	
+	Set Int Base
+		Parent.BaseStat(StatKey,Value)
+	End
+	
+	Get Int Total
+		Return Me.GetTotalStat(PartyTag,CharTag,StatKey)
+	End
+End
+
+Var XStatIndex(s,string Key)
+	plua parent
+	plua Reg 
+	parent = s["*_Parent_*"]
+	Reg = s["*_Register_*"]
+	Key = Upper(key)	
+	if !Reg[Key]
+		Reg[Key] = New StatStat(parent,Key)
+	end
+	Return Reg[Key]
+End
+
+Int StatIndex(s,string StatKey)
+	Return Me.GetTotalStat(s["*_PartyTag_*"],s["*_CharTag_*"],StatKey)
+End
+
+Int BStatIndex(s,string StatKey)
+	Lua.assert(StatKey!="","G:Cannot index empty string as Stat")
+	Return Me.GetBaseStat(s["*_PartyTag_*"],s["*_CharTag_*"],StatKey)
+End
+
+
+Void StatNewIndex(s, string StatKey, Int Value)
+	//print("NewIndex",StatKey,Value)
+	Lua.assert(StatKey!="","S:Cannot index empty string as Stat")
+	Me.SetBaseStat(s["*_PartyTag_*"],s["*_CharTag_*"],StatKey,Value)
+End
+
+//Class StatPoints
+//	ReadOnly String PointTag
+//	ReadOnly Var Parent
+//	Get string CharTag
+//		return Parent.CharTag
+//	End
+//	Get String PartyTag
+//		return Parent.Parent.PartyTag
+//	End
+//End
+
+plua PointReg
+Init
+	PointReg = {}
+	PointReg.HAVE = 0
+	PointReg.MAX = 1
+	PointReg.MIN = 2
+	PointReg.MAXIMUM = 1
+	PointReg.MINIMUM = 2
+	PointReg.MAXCOPY = 3
+	PointReg.MINCOPY = 4
+End
+
+Var PointsGetF(s,String Fld)
+	plua Parent
+	plua Key
+	Parent = s["*_Parent_*"]
+	Key    = s["*_Key_*"]
+	Fld    = Upper(Fld)
+	Lua.assert(PointReg[Fld],sprintf("No field named %s in a point record",Fld))
+	return Me.StatPointsGet( Parent.PartyTag, Parent.CharTag, Key, PointReg[Fld])
+End
+
+void PointsSetF(s,String Fld, Value)
+	plua Parent
+	plua Key
+	Parent = s["*_Parent_*"]
+	Key    = s["*_Key_*"]
+	Fld    = Upper(Fld)
+	Lua.assert(PointReg[Fld],sprintf("No field named %s in a point record",Fld))
+	Me.StatPointsSet(Parent.PartyTag,Parent.CharTag,Key,PointReg[Fld],Value)
+End
+
+Var PointsGet(s,string Key)
+	plua parent
+	plua reg
+	parent = s["*_Parent_*"]
+	reg    = s["*_Reg_*"]
+	Key    = Upper(Key)
+	if !Reg[Key]
+		Reg[Key] = SetMetaTable({["*_Parent_*"]=parent,["*_Key_*"]=Key},{["__index"]=PointsGetF,["__newindex"]=PointsSetF})
+	end
+	Return Reg[Key]
+End
+
+String DataGet(s,string Key)
+	plua ret
+	ret = Me.GetCharData(s["*_PartyTag_*"],s["*_CharTag_*"],Key)
+	return ret
+end
+
+Void DataSet(s,string Key,string Value)
+	Me.SetCharData(s["*_PartyTag_*"],s["*_CharTag_*"],Key,Value)
+End
+
+
+var ListIndexGet(s,Int Idx)
+	plua parent
+	plua Key
+	parent = s["*_Parent_*"]
+	Key = s["*_Key_*"]
+	return Me.StatListGet(parent.PartyTag,parent.CharTag,Key,Idx)
+end
+
+var ListIndexSet(s,int Idx, String Value)
+	plua parent
+	plua Key
+	parent = s["*_Parent_*"]
+	Key = s["*_Key_*"]
+	return Me.StatListSet(parent.PartyTag,parent.CharTag,Key,Idx,Value)
+end
+
+Var ListGet(s,string Key)
+	plua r
+	plua parent
+	parent=s["*_Parent_*"]
+	r=s["*_Reg_*"]
+	Key = Upper(Key)
+	if !r[Key]
+		r[Key] = SetMetaTable({["*_Parent_*"]=parent, ["*_Key_*"]=Key},{["__index"]=ListIndexGet,["__newindex"]=ListIndexSet})
+	end
+	return r[Key]
+End
+
+
+Class StatChar
+	ReadOnly Var Parent
+	ReadOnly String CharTag
+	ReadOnly Var Data
+	ReadOnly Var Point
+	ReadOnly Var List
+	ReadOnly Var Points
+	
+	Get String PartyTag
+		Return Parent.PartyTag
+	End
+	
+	Get String Name
+		Return Me.StatGetCharName(PartyTag,CharTag)
+	End
+	
+	Set String Name
+		Me.StatSetCharName(PartyTag,CharTag,Value)
+	end
+	
+	Int BaseStat(string Key,value)
+		if value
+			Me.SetBaseStat(PartyTag,CharTag,Key,value)
+			return value
+		end
+		return Me.GetBaseStat(PartyTag,CharTag,Key)
+	End	
+
+	ReadOnly Var Stat
+	ReadOnly Var BStat
+	ReadOnly Var XStat
+		
+	Void ListAdd(String Key,String Value)
+		Me.StatListAdd(PartyTag,CharTag,Key,Value)
+	End
+	
+	Bool ListHave(string Key,String Needle)
+		Me.StatListContains(PartyTag,CharTag,Key,Needle)
+	End
+	Bool ListHas(string Key,String Needle)
+		Me.StatListContains(PartyTag,CharTag,Key,Needle)
+	End
+	
+	Bool ListContains(string Key,String Needle)
+		Me.StatListContains(PartyTag,CharTag,Key,Needle)
+	End
+
+	Void ListRemove(string Key,String Victim)
+		Me.StatListRemove(PartyTag,CharTag,Key,Victim)
+	End
+	
+	Void ListSort(String Key)
+		Me.StatListSort(PartyTag,CharTag,Key)
+	End
+	
+	Int ListSize(String Key)
+		Return Me.StatListSize(PartyTag,CharTag,Key)
+	End
+	Int ListCount(String Key)
+		Return Me.StatListSize(PartyTag,CharTag,Key)
+	End
+	Var ListEach(String Key)
+		int sz:=Me.StatListSize(PartyTag,CharTag,Key)
+		Int ps:=-1
+		ddef ret
+			ps++
+			if ps>=sz
+				return nil,nil
+			end
+			return List[key][ps],ps
+		end
+		return ret
+	End
+	
+	Bool HaveStat(string key)
+		return Me.HaveCharStat(PartyTag,CharTag,key)
+	end
+	
+	Constructor(P,String _T)
+		Parent=P
+		CharTag=_T
+		Data   = SetMetaTable({["*_PartyTag_*"]=PartyTag,["*_CharTag_*"]=CharTag},{["__newindex"]=DataSet,["__index"]=DataGet})
+		Stat   = SetMetaTable({["*_PartyTag_*"]=PartyTag,["*_CharTag_*"]=CharTag},{["__index"]=StatIndex,["__newindex"]=StatNewIndex})
+		BStat  = SetMetaTable({["*_PartyTag_*"]=PartyTag,["*_CharTag_*"]=CharTag},{["__index"]=BStatIndex,["__newindex"]=StatNewIndex})
+		XStat  = SetMetaTable({["*_Parent_*"]=Self, ["*_Register_*"]={}},{["__newindex"]=DontWrite,["__index"]=XStatIndex})
+		Point  = SetMetaTable({["*_Parent_*"]=Self, ["*_Reg_*"]={}},{["__newindex"]=DontWrite,["__index"]=PointsGet})
+		List   = SetMetaTable({["*_Parent_*"]=Self, ["*_Reg_*"]={}},{["__newindex"]=DontWrite,["__index"]=ListGet})
+		Points = Point
+	End
+End
+
+Var CharGet(s,string Key)
+	Key = Upper(Key)
+	if !s["_*Reg*_"][Key]
+		s["_*Reg*_"][Key] = New StatChar(s["_*Parent*_"],Key)
+	end
+	Return s["_*Reg*_"][Key]
+end
+
+Var PartyGet(s,Key)
+	Switch Lua.type(key)
+		case "string"
+			if Upper(key)=="SIZE" || Upper(Key)=="LEN"
+				return Me.GetPartySize(s["_*Tag*_"]);
+			end
+		case "number"
+			return Me.GetParty(s["_*Tag*_"],key)
+		default
+			Lua.error("Index error")
+	End
+End
+
+Void PartySet(s,Key,Value)
+	Switch Lua.type(key)
+		case "string"
+			if Upper(key)=="SIZE" || Upper(Key)=="LEN" || Upper(Key)=="MAX"
+				Me.SetPartySize(s["_*Tag*_"],Value)
+			else
+				Lua.error("Unknown key for Party: "..Key)
+			end
+		case "number"
+			//printf("Party Set: %d => %s\n",key,value)
+			Me.SetParty(s["_*Tag*_"],key,Value)
+		default
+			Lua.error("Index error")
+	End
+End
+
+
+Class StatParty
+	ReadOnly String PartyTag
+	ReadOnly Bool AutoDel
+	ReadOnly Var Char
+	ReadOnly Var Party
+	Constructor(String _Tag,AD)
+		AutoDel = AD==true
+		PartyTag=_Tag
+		Char  = SetMetaTable({["_*Reg*_"]={},["_*Parent*_"]=Self},{["__index"] =  CharGet,["__newindex"] = DontWrite })
+		Party = SetMetaTable({["_*Tag*_"]=PartyTag},{["__index"]=PartyGet,["__newindex"]=PartySet}) 
+	end
+	Destructor
+		if AutoDel
+			Me.KillParty(PartyTag)
+		end
+	end
+	Void NewChar(a,b,c)
+		switch Lua.type(a)
+			case "boolean"
+				int a1 = 0
+				if a
+					a1 = 1
+				end
+				Me.StatNewChar(PartyTag,b,c || b,a1)
+			case "string"
+				Me.StatNewChar(PartyTag,a,b || a,0)
+			default
+				Lua.error("Illegal function call")
+		end
+		//print("Char created")
+	end
+	
+	Void KillChar(String T)
+		Me.StatKillChar(PartyTag,T)
+	End
+End
+
+Var Create(string t="")
+	var tt 
+	tt = Me.CreateParty(t)
+	return New StatParty(tt,t=="")
+End
+
+Void Kill(string t)
+	Me.KillParty(t)
+End
+
+Var Obtain(string t)
+	return New StatParty(t)
+End
+
+Var CreateNew(string T)
+	if HasParty(T)
+		Return Obtain(T)
+	Else
+		Return Create(T)
+	End
+End

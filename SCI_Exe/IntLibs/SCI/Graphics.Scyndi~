@@ -1,0 +1,372 @@
+// License:
+// 	SCI_Exe/IntLibs/SCI/Graphics.Scyndi
+// 	Scyndi's Creative Interpreter - Graphics linkup
+// 	version: 25.01.12
+// 
+// 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
+// 
+// 	This software is provided 'as-is', without any express or implied
+// 	warranty.  In no event will the authors be held liable for any damages
+// 	arising from the use of this software.
+// 
+// 	Permission is granted to anyone to use this software for any purpose,
+// 	including commercial applications, and to alter it and redistribute it
+// 	freely, subject to the following restrictions:
+// 
+// 	1. The origin of this software must not be misrepresented; you must not
+// 	   claim that you wrote the original software. If you use this software
+// 	   in a product, an acknowledgment in the product documentation would be
+// 	   appreciated but is not required.
+// 	2. Altered source versions must be plainly marked as such, and must not be
+// 	   misrepresented as being the original software.
+// 	3. This notice may not be removed or altered from any source distribution.
+// End License
+
+
+Module
+
+// Just making sure this comes first. GewoonNiks will contain 'nil' as result, but that doesn't matter!
+Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Graphics")
+
+PLUA _LoadImage = Lua.Graphics.LoadImage
+PLUA _LinkFont = Lua.Graphics.LinkFont
+
+const delegate Cls = Lua.Graphics.Cls
+global const delegate Cls = Lua.Graphics.Cls
+
+const delegate Line = Lua.Graphics.Line
+global const delegate Line = Lua.Graphics.Line
+
+Class TImage
+	ReadOnly String Tag
+		
+	Get Bool AutoDel
+		return Left(Tag,3)=="***"
+	End
+		
+	Constructor(String _Tag)
+		Tag = _Tag
+	End
+	
+	Destructor
+		if AutoDel
+			Lua.Graphics.KillImage(Tag)
+		End
+	End
+	
+	Get Int Frames
+		return Lua.Graphics.ImageFrames(Tag)
+	End
+	
+	Void Draw(int x, int y, int Frame=0)
+		Lua.Graphics.Draw(Tag,x,y,frame)
+	End
+	
+	Void DrawR(int x, int y, int rotatedeg,int Frame = 0) 
+		Lua.Graphics.DrawRotated(Tag,x,y,rotatedeg,frame)
+	End
+	
+	Void Tile(int x,int y, int w, int h, int frame=0)
+		Lua.Graphics.Tile(Tag,x,y,w,h,frame)
+	End
+	
+	Void Stretch(int x,int y,int w, int h, int frame=0)
+		Lua.Graphics.Stretch(Tag,x,y,w,h,frame)
+	end
+	
+	Void HotCenter()
+		Lua.Graphics.HotCenter(Tag)
+	End
+		
+	
+	Void Hot(int x,int y)
+		Lua.Graphics.Hot(Tag,x,y)
+	End
+	
+	
+	Void TrueDraw(int x, int y, int Frame=0)
+		Lua.Graphics.TrueDraw(Tag,x,y,frame)
+	End
+	
+	Var GetFormat()
+		return Lua.Graphics.GetImageFormat(Tag)
+	End
+	
+	Get Int Width
+		int W
+		int H
+		W,H = Lua.Graphics.GetImageFormat(Tag)
+		Return W
+	End
+	
+	Get Int Height
+		int W
+		int H
+		W,H = Lua.Graphics.GetImageFormat(Tag)
+		Return H
+	End
+	
+	Void HotBottomCenter()
+		Self.Hot(Self.Width div 2, Self.Height)
+	End
+
+	
+	void Blit(string tag,infinity) 
+		Lua.Graphics.Blit(tag,infinity)
+	End
+
+
+	Static Var Load(String File, String _Tag="")
+		String RTag 
+		RTag = _LoadImage(File,_Tag)
+		Return New TImage(RTag)
+	End
+	
+	Static ReadOnly Delegate HasTag = Lua.Graphics.HasImageTag
+		
+	Static Var Obtain(String RTag)
+		if ! HasTag(RTag)
+			Lua.error(SPrintF("There is no image tagged '%s', so it cannot be obtained!",RTag))
+		end
+		return New TImage(RTag)
+	End
+	
+	Static Var LoadNew(String File,String _Tag)
+		if _Tag==""
+			Lua.error("Tagless TImage.LoadNew request")
+		End
+		if HasTag(_Tag)
+			return New TImage(_Tag)
+		End
+		//Return Self.Load(File,_Tag)
+		String RTag 
+		RTag = _LoadImage(File,_Tag)
+		Return New TImage(RTag)
+	End
+		
+End
+
+Var LoadImage(string File, String Tag="")
+	Return TImage.Load(File,Tag)
+End
+
+global Var LoadImage(string File, String Tag="")
+	Return TImage.Load(File,Tag)
+End
+
+Var LoadNewImage(string File, String Tag) 
+	Return TImage.LoadNew(File,Tag)
+End
+
+global Var LoadNewImage(string File, String Tag) 
+	Return TImage.LoadNew(File,Tag)
+End
+
+Var ObtainImage(String Tag)
+	Return New TImage(Tag)
+End
+
+Global Var ObtainImage(String Tag)
+	Return New TImage(Tag)
+End
+
+Class TImageFont
+	ReadOnly String Tag
+	Static ReadOnly Delegate HasTag = Lua.Graphics.HasFontTag
+		
+		
+	Get Bool AutoDel
+		return Left(Tag,3)=="***"
+	End
+		
+	Constructor(String _Tag)
+		Tag = _Tag
+	End
+	
+	Destructor
+		if AutoDel
+			Lua.Graphics.KillFont(Tag)
+		End
+	End
+	
+	Static Var Load(String File, String _Tag="")
+		String RTag 
+		RTag = _LinkFont(File,_Tag)
+		Return New TImageFont(RTag)
+	End
+	
+	Static Var Obtain(String RTag)
+		if !HasTag(RTag)
+			Lua.error(SPrintF("There is no image tagged '%s', so it cannot be obtained!",RTag))
+		end
+		return New TImageFont(RTag)
+	end		
+
+	Void Text(string Txt,Int X,Int Y,Int HAlign=0,Int VAlign=0)
+		Lua.Graphics.Text(Tag,Txt,X,Y,HAlign,VAlign)
+	End
+	
+	Void Dark(string Txt,Int X,Int Y,Int AlignH=0,Int AlignV=0)
+		Lua.Graphics.DarkText(Tag,Txt,X,Y,AlignH,AlignV)
+	End
+	
+	// DEPRECATED! Only added because there's some code rot in scripts coming from Apollo!
+	Void DarkText(string Txt,Int X,Int Y,Int AlignH=0,Int AlignV=0)
+		Lua.Graphics.DarkText(Tag,Txt,X,Y,AlignH,AlignV)
+	End
+	
+	Var Size(string Txt)
+		//Return Lua.Graphics.TextSize(Tag,Txt)
+		int x
+		int y
+		//print("Size",Tag,Txt,Lua.Graphics.TextSize(Tag,Txt)) // debug
+		x,y = Lua.Graphics.TextSize(Tag,Txt)
+		//print("Return",x,y)
+		return x,y
+	end
+	
+	Int Width(string Txt)
+		int x
+		int y
+		x,y = Lua.Graphics.TextSize(Tag,Txt)
+		return x
+	end
+	
+	Int Height(string Txt)
+		int x
+		int y
+		x,y = Lua.Graphics.TextSize(Tag,Txt)
+		return y
+	end
+	
+	
+	// Multi line by width
+	Var MLBW(string _txt,int wd)
+		string txt
+		var Ret = NewArray()
+		string L
+		string W
+		txt=_txt
+		for i=1,Len(txt)
+			string C
+			C=Mid(txt,i,1)
+			Switch C
+				case " "
+					If W!=""
+						if Self.Width(sprintf("%s %s",L,W))<wd
+							L = sprintf("%s %s",L,W)
+							W = ""
+						else
+							Ret[len(ret)]=Trim(L)
+							L = W
+							W = ""
+						end
+					end
+				case "\n" 
+					If W!=""
+						if Self.Width(sprintf("%s %s",L,W))<wd
+							L = sprintf("%s %s",L,W)
+							W = ""
+						end
+						Ret[len(ret)]=Trim(L)
+						L = W						
+					end
+				default
+					W = sprintf("%s%s",W,C)
+			end
+		end
+		If W!=""
+			if Self.Width(sprintf("%s %s",L,W))<wd
+				Ret[len(ret)] = sprintf("%s %s",L,W)
+			Else
+				Ret[len(ret)] = Trim(L)
+				Ret[len(ret)] = W
+			end
+			Return Ret
+		End
+	End
+
+End
+
+Var LinkFont(String F,String Tag="")
+	Return TImageFont.Load(F,Tag)
+End
+
+Global Var LinkFont(String F,String Tag="")
+	Return TImageFont.Load(F,Tag)
+End
+
+		
+
+Var ObtainFont(String Tag)
+	Return TImageFont.Obtain(Tag)
+End
+
+Global Var ObtainFont(String Tag)
+	Return TImageFont.Obtain(Tag)
+End
+
+Var LinkNewFont(String F,String Tag)
+	If Lua.Graphics.HasFontTag(Tag)
+		Return ObtainFont(Tag)
+	Else
+		Return LinkFont(F,Tag)
+	End
+End
+
+Global Var LinkNewFont(String F,String Tag)
+	If Lua.Graphics.HasFontTag(Tag)
+		Return ObtainFont(Tag)
+	Else
+		Return LinkFont(F,Tag)
+	End
+End
+
+
+const delegate Color = Lua.Graphics.Color
+global const delegate SetColor=Lua.Graphics.Color
+const delegate GetColor = Lua.Graphics.GetColor
+global const delegate GetColor = Lua.Graphics.GetColor
+const delegate ColorHSV = Lua.Graphics.ColorHSV
+global const delegate SetColorHSV=Lua.Graphics.ColorHSV
+Const delegate Alpha = Lua.Graphics.Alpha
+Const delegate SetAlpha = Lua.Graphics.Alpha
+Global Const Delegate SetAlpha = Lua.Graphics.Alpha
+Const delegate Scale = Lua.Graphics.Scale
+Global Const delegate SetScale = Lua.Graphics.Scale
+
+const delegate Rect = Lua.Graphics.Rect
+global const delegate Rect = Lua.Graphics.Rect
+
+
+get int Width
+	return Lua.Graphics.Width(0)
+end
+
+get int W
+	return Lua.Graphics.Width(0)
+end
+
+Get Int TrueWidth
+	return Lua.Graphics.Width(1)
+end
+
+get int Height
+	return Lua.Graphics.Height(0)
+end
+
+get int H
+	return Lua.Graphics.Height(0)
+end
+
+
+Get Int TrueHeight
+	return Lua.Graphics.Height(1)
+end
+
+Global const delegate Flip = Lua.Graphics.Flip
+const delegate Flip = Lua.Graphics.Flip
+
+Init
+	Lua.Graphics.LoadImage = LoadImage
+End

@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // 	Kthura Link up for Scyndi's Creative Interpreter
-// 	version: 25.01.29
+// 	version: 25.01.05
 // 
 // 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
 // 
@@ -131,10 +131,6 @@ plua _ObjKeyNewIndex(s,string Key,value)
 end
 
 plua _ObjIndex(s,string key)
-	if !(Prefixed(key,"%") || Kthura.HasObj(key))
-		print("\x1b[93m"..lua.debug.traceback().."\x1b[0m\n")
-		Lua.error("Can't read non-existent object: "..key)
-	end
 	key=upper(key)
 	if !s.____table[key] 
 		s.____table[key] = SetMetaTable({["____objtag"]=key,["___objinobj"]=0},{["__index"]=_ObjKeyIndex, ["__newindex"]=_ObjKeyNewIndex})
@@ -256,10 +252,6 @@ Get Var MetaData
 	Return Kthura_Meta
 End
 
-Get Var Data
-	Return Kthura_Meta
-End
-
 // DON'T call this directly. You can better use the "official" routines
 Const Delegate __NewObject = Lua.Kthura.NewObj
 
@@ -355,4 +347,3 @@ Get Var TagList
 	end
 	return ret
 End
-

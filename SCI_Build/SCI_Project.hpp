@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.18
+// Version: 25.01.29
 // End License
 // Lic:
 // Scyndi's Creative Interpreter - Builder
@@ -79,7 +79,7 @@ namespace Scyndi_CI {
 
 			// Makes debugging easier to make this priave
 			std::string ReleaseDirectory();
-			void JCRtoMe(std::string d);
+			void JCRtoMe(std::string d,std::string an="");
 
 		public:
 

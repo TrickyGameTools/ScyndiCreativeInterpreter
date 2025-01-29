@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.18
+// Version: 25.01.29
 // End License
 
 #include <SlyvQCol.hpp>
@@ -198,7 +198,7 @@ namespace Scyndi_CI {
 			}
 		}
 
-		void SCI_Project::JCRtoMe(std::string d, std::string an="") {
+		void SCI_Project::JCRtoMe(std::string d, std::string an) {
 		    auto JD{FileList(ReleaseDirectory("JCR6")) };
 		    for (auto J:*JD) QCF(ReleaseDirectory("JCR6")+J,ReleaseDirectory(d)+(an==""?J:an));
 		}

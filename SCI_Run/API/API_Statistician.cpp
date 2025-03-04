@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.23
+// Version: 25.03.04
 // End License
 
 #include <Lunatic.hpp>
@@ -55,6 +55,7 @@ namespace Scyndi_CI {
 
 	static map<string, Party> PartyReg{};
 
+//{ "Only used for savegame. Headers are in API_SGJCR.cpp"
 #pragma region "Only used for savegame. Headers are in API_SGJCR.cpp"
 	Party JSG_GetParty(string T,bool create) {
 		Trans2Upper(T);
@@ -68,6 +69,15 @@ namespace Scyndi_CI {
 		PartyReg[T] = P;
 	}
 #pragma endregion
+//}
+
+	static int API_Stat_LinkOverview(lua_State *L) {
+		auto PartyTag{ Upper(Lunatic_CheckString(L,1)) };
+		if (!PartyReg.count(PartyTag)) Crash(TrSPrintF("There is no party tagged '%s' in the statician database",PartyTag.c_str()));
+		PartyReg[PartyTag]->LinkOverview();
+		return 0;
+	}
+
 
 	static int API_Stat_HasParty(lua_State* L) {
 		lua_pushboolean(L, PartyReg.count(Upper(luaL_checkstring(L, 1))));
@@ -382,7 +392,8 @@ API_Link(API_LinkPnts,LinkPoints);
 			{ "LinkStat",API_LinkStat },
 			{ "LinkData",API_LinkData },
 			{ "LinkList",API_LinkList },
-			{ "LinkPnts",API_LinkPnts }
+			{ "LinkPnts",API_LinkPnts },
+			{ "LinkOverview", API_Stat_LinkOverview }
 		};
 		InstallAPI("Statistician", IAPI);
 	}

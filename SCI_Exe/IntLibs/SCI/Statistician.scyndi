@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Statistician.scyndi
 // 	Statistician Support
-// 	version: 25.01.23
+// 	version: 25.03.04
 // 
 // 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
 // 
@@ -280,6 +280,11 @@ Class StatChar
 	Bool HaveStat(string key)
 		return Me.HaveCharStat(PartyTag,CharTag,key)
 	end
+
+	Bool HasStat(string key)
+		return Me.HaveCharStat(PartyTag,CharTag,key)
+	end
+
 	
 	Void LinkStat(string st1,string TarChTag,string st2="")
 		// For k,v in spairs(Me); print(k); End // Debug
@@ -293,7 +298,7 @@ Class StatChar
 
 	Void LinkList(string st1,string TarChTag,string st2="")
 		// For k,v in spairs(Me); print(k); End // Debug
-		Me.LinkData(PartyTag,CharTag,st1,TarChTag,st2)
+		Me.LinkList(PartyTag,CharTag,st1,TarChTag,st2)
 	End
 	Void LinkPoints(string st1,string TarChTag,string st2="")
 		// For k,v in spairs(Me); print(k); End // Debug
@@ -391,6 +396,12 @@ Class StatParty
 	Bool HasChar(String T)
 		return Me.HasChar(PartyTag,T)
 	End
+	
+	// Only for debug purposes
+	Void LinkOverview()
+		Me.LinkOverview(PartyTag)
+	End
+
 End
 
 Var Create(string t="")

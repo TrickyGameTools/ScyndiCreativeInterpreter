@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.29
+// Version: 25.03.04
 // End License
 // Lic:
 // Scyndi's Creative Interpreter - Builder
@@ -118,7 +118,8 @@ namespace Scyndi_CI {
 			void Export_Windows();
 			// void Export_Mac(); // No concern now, as long as Apple blocks everything out completely.
 
-			void Export_Linux_Basic(); // Linux users wil have to fill me in on this one.
+			void Export_Linux_Basic(); // Linux users will have to fill me in on this one.
+			void Export_Linux_AppImage();
 
 		};
 

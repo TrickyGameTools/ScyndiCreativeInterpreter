@@ -1,27 +1,27 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter - Runtime
 // Start up
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2023, 2024
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 24.11.16
 // End License
 
@@ -77,7 +77,7 @@ namespace Scyndi_CI {
 			Author{ GameAuthor() },
 			ByAuthor{ "By: " + Author },
 			Copy{ GameCopyright() };
-		
+
 
 		auto
 			TP{ std::max((uint64)0,(uint64)40 - (Tit.size() / 2)) },
@@ -101,7 +101,8 @@ namespace Scyndi_CI {
 void SCI_BankPanic(std::string err) { Crash("Banking error:"+err); }
 
 int main(int c, char** cli_args) {
-	using namespace Scyndi_CI;	
+	using namespace Scyndi_CI;
+	JCR6::AllowStoreMismatch = true;
 	Header("Scyndi's Creative Interpreter");
 	QCol->Doing("Run File", ChReplace(cli_args[0],'\\','/'));
 	QCol->Doing("Run from", CurrentDir());
@@ -133,13 +134,13 @@ int main(int c, char** cli_args) {
 			}
 		}
 #endif
-	} else { 
+	} else {
 		QCol->Error("Start up verification failed!");
-		return 1; 
+		return 1;
 	}
 	StateCheck(false); // Force State Checks off.
 	KillAllStates();
 	QCol->Doing("Ending", "Scyndi's Creative Interpreter");
 	QCol->Reset();
-	return 0;	
+	return 0;
 }

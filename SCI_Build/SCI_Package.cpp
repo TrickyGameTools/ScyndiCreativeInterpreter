@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.29
+// Version: 25.03.04
 // End License
 
 #define Act(A) if (!A) return false
@@ -468,33 +468,34 @@ namespace Scyndi_CI {
 				}
 			}
 			auto ALL{PrjData->Lists("Alias")};
-				for (auto ALEL : *ALL) {
-                    auto ALLL{PrjData->List("Alias",ALEL)};
-                    for (auto ALE:*ALLL) {
-                        if (DebugFlag()) {
-                            QCol->Doing("Alias", ALE);
-                            OutputJQL += "Alias:" + ALEL + ">" + ALE+"\n";
-                        } else {
-                            uint32 c{ 0 };
-                            for (auto PKG : Packages) {
-                            //QCol->Red("DEBUG: " + ALE + "::" + PKG.first + "\n");
-                            if (PKG.second->Entries.count(Upper(ALE))) {
-                                QCol->Doing("Alias", ALEL, "");
-                                QCol->Yellow(" to ");
-                                QCol->Cyan(ALE);
-                                QCol->LMagenta("   " + PKG.first + "\n");
-                                PKG.second->Alias(ALEL, ALE);
-                                c++;
-                            }
-                        }
-                        switch (c) {
-                        case 1: break; // Nothing wrong
-                        case 0:
-                            QCol->Error("Original not found for alias: " + ALE);
-                            return false;
-                        default:
-                            QCol->Error("Multiple occurances found for alias: " + ALE + ", but only one will actually be used in the game!");
-                        }
+			for (auto ALEL : *ALL) {
+                auto ALLL{PrjData->List("Alias",ALEL)};
+                for (auto ALE:*ALLL) {
+					if (DebugFlag()) {
+						QCol->Doing("Alias", ALE);
+						OutputJQL += "Alias:" + ALEL + ">" + ALE+"\n";
+					} else {
+						QCol->Doing("Multi-Alias",ALEL);
+						uint32 c{ 0 };
+						for (auto PKG : Packages) {
+							//QCol->Red("DEBUG: " + ALE + "::" + PKG.first + "\n");
+							if (PKG.second->Entries.count(Upper(ALEL))) {
+								QCol->Doing("Alias", ALEL, "");
+								QCol->Yellow(" to ");
+								QCol->Cyan(ALE);
+								QCol->LMagenta("   " + PKG.first + "\n");
+								PKG.second->Alias(ALEL, ALE);
+								c++;
+							}
+						}
+						switch (c) {
+						case 1: break; // Nothing wrong
+						case 0:
+							QCol->Error("Original not found for alias: " + ALE);
+							return false;
+						default:
+							QCol->Error("Multiple occurences found for alias: " + ALE + ", but only one will actually be used in the game!");
+						}
 					}
 				}
 			}

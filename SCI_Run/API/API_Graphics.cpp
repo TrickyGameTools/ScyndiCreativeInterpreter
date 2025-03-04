@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.13
+// Version: 25.03.04
 // End License
 
 #include <SlyvString.hpp>
@@ -333,6 +333,14 @@ namespace Scyndi_CI {
 		return 3;
 	}
 
+	static int API_Plot(lua_State*L){
+		auto
+			X{luaL_checkinteger(L,1)},
+			Y{luaL_checkinteger(L,2)};
+		Plot(X,Y);
+		return 0;
+	}
+
 
 	void Init_API_Graphics() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -365,6 +373,7 @@ namespace Scyndi_CI {
 			{ "Rect",API_Rect },
 			{ "Line",API_Line },
 			{ "Blit",API_Blit },
+			{ "Plot",API_Plot },
 			{ "Flip",API_Flip }
 		};
 		InstallAPI("Graphics", IAPI);

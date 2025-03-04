@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,33 +22,10 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.09
+// Version: 25.03.04
 // End License
-// Lic:
-// Scyndi's Creative Interpreter - Builder
-// Script Manager
-// 
-// 
-// 
-// (c) Jeroen P. Broks, 2023
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
-// Please note that some references to data like pictures or audio, do not automatically
-// fall under this licenses. Mostly this is noted in the respective files.
-// 
-// Version: 23.11.03
-// EndLic
+
+
 #include <SlyvStream.hpp>
 #include <SlyvAsk.hpp>
 #include "SCI_Build_Config.hpp"
@@ -70,6 +47,10 @@ namespace Scyndi_CI {
 			return ret;
 		}
 
+#ifdef SlyvLinux
+union CEX { int i; char c[3]; };
+#endif // SlyvLinux
+
 		bool CompileScripts(SCI_Project* Prj, GINIE PrjDat) {
 			QCol->Doing("Compiling", "Scripts");
 			PrjDat->NewValue("AA_META", "01_TITLE", Prj->Title());
@@ -86,7 +67,14 @@ namespace Scyndi_CI {
 			cmd += Prj->File();
 			QCol->Doing("==>", cmd);
 			QCol->Reset(); std::cout << "\n\n\n";
+			#ifdef SlyvLinux
+			// Avoid the Linux 256fold bug. Issue in Linux itself, nothing I can do about it but "cheat".
+			CEX _CEX;
+			_CEX.i=system(cmd.c_str());
+			int excode{_CEX.c[1]};
+			#else
 			auto excode{ system(cmd.c_str()) };
+			#endif // SlyvLinux
 			if (excode == 1)
 				QCol->Error("Scyndi did apparently encounter an error during the compile session");
 			else if (excode < 0)

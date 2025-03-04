@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.13
+// Version: 25.03.04
 // End License
 
 #include <TQSE.hpp>
@@ -51,7 +51,7 @@ namespace Scyndi_CI {
 			lua_pushinteger(L, MouseX());
 		else
 			lua_pushinteger(L, floor(((double)MouseX() / ScreenWidth(true)) * ScreenWidth(false)));
-		return 1;		
+		return 1;
 	}
 
 	static int API_Events_MouseY(lua_State* L) {
@@ -75,7 +75,7 @@ namespace Scyndi_CI {
 	}
 
 	static int API_Events_MouseHit(lua_State* L) {
-		lua_pushboolean(L, MouseHit(luaL_optinteger(L, 1, 1)));		
+		lua_pushboolean(L, MouseHit(luaL_optinteger(L, 1, 1)));
 		return 1;
 	}
 
@@ -90,7 +90,7 @@ namespace Scyndi_CI {
 		auto name{ luaL_checkstring(L,1) };
 		SDL_Keycode ret{ SDL_GetKeyFromName(name) };
 		if (ret == SDLK_UNKNOWN) { QCol->Warn(TrSPrintF("Key name '%s' was not recognized!\7",name)); }
-		lua_pushinteger(L, (int)ret);		
+		lua_pushinteger(L, (int)ret);
 		return 1;
 	}
 
@@ -115,6 +115,15 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_Events_GetChar(lua_State *L) {
+		//char ret[2];
+		//ret[0] = (char)GetChar();
+		//ret[1] = 0;
+		//lua_pushstring(L,ret);
+		lua_pushinteger(L,(int)GetChar());
+		return 1;
+	}
+
 	void Init_API_Events() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Poll", API_Events_Poll},
@@ -122,6 +131,7 @@ namespace Scyndi_CI {
 			{ "KeyHit",API_Events_KeyHit },
 			{ "KeyDown",API_Events_KeyDown },
 			{ "GetKey",API_Events_GetKey },
+			{ "GetChar", API_Events_GetChar },
 			{ "MouseX",API_Events_MouseX },
 			{ "MouseY",API_Events_MouseY },
 			{ "MouseDown",API_Events_MouseDown },
@@ -134,6 +144,7 @@ namespace Scyndi_CI {
 			{ "MouseButtonFromName",API_Events_MouseButtonFromName },
 			{ "Sleep", API_Sleep}
 		};
+		//for (auto&debug:IAPI) std::cout << "\x07DEBUG EVENTS: "<<debug.first<<"\n";
 		InstallAPI("Events", IAPI);
 	}
 }

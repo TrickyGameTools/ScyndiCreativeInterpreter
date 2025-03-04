@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Events.scyndi
 // 	Scyndi's Creative Interpreter - Events API link up
-// 	version: 25.01.05
+// 	version: 25.03.04
 // 
 // 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
 // 
@@ -42,6 +42,7 @@ Const Delegate Flush = Lua.Events.Flush
 Const Delegate Yes = Lua.Events.Yes
 Const Delegate Delay = Lua.Events.Sleep
 Const Delegate Sleep = Lua.Events.Sleep
+Const Delegate GetChar = Lua.Events.GetChar
 
 const Int MouseLeftButton = Lua.Events.MouseButtonFromName("LEFT")
 const Int MouseRightButton = Lua.Events.MouseButtonFromName("LEFT")

@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.29
+// Version: 25.03.05
 // End License
 
 #include <SlyvQCol.hpp>
@@ -32,7 +32,7 @@
 #include <SlyvMD5.hpp>
 #include <SlyvDir.hpp>
 #include <SlyvStream.hpp>
-#include <SlyvDir.hpp>
+#include <SlyvDirry.hpp>
 
 #include "../SCI_Share/Version.hpp"
 
@@ -185,6 +185,9 @@ namespace Scyndi_CI {
 				Export_Windows();
 				//Export_Mac();
 				Export_Linux_Basic();
+				#ifdef SlyvLinux
+				Export_Linux_AppImage();
+				#endif // SlyvLinux
 				//Butler(this); // temporarily on dummy
 			}
 		}
@@ -236,6 +239,7 @@ namespace Scyndi_CI {
 		}
 
         void SCI_Project::Export_Linux_Basic() {
+        	if (!Yes("Linux_Basic","Do","Do you want a Linux Basic build")) return;
             QCol->Doing("Exporting to", "Linux"," "); QCol->LMagenta("BASIC\n");
             // The Basic Linux install will contain, the executable, the srf file and the jcr data file, and nothing more.
             // Dependencies will have to be installed separately.
@@ -250,6 +254,118 @@ namespace Scyndi_CI {
 			QCF(mydir + "/SCI_Run.srf", od + on+".srf");
 			JCRtoMe("Linux_Basic");
         }
+
+        static String NewAppImageTool(GINIE d) {
+        	auto IT{d->Value("AppImage","AltAppImageTool")};
+        	while (IT=="" && (!FileExists(IT)))  {
+				d->Value("AppImage","AltAppImageTool","");
+				IT=Ask(d,"AppImage","AltAppImageTool","AppImageTool not found! Where can I find it? Full name with path please: ");
+			}
+			return IT;
+
+        }
+
+        union _ec {byte b[4];int i;};
+        void SCI_Project::Export_Linux_AppImage() {
+			if (!Yes("AppImage","Do","Do you want to export this project to Linux .AppImage")) return;
+			QCol->Doing("Exporting to", "Linux"," "); QCol->LMagenta("AppImage\n");
+			#ifndef SlyvLinux
+			QCol->Error("Linux is required in order to create an .AppImage");
+			return;
+			#endif // SlyvLinux
+			auto mydir{ ExtractDir(CLI_Args.myexe) }; // cout << mydir << endl;
+			String Session{""};
+			String RDP{Ask(Data,"AppImage","RAMDISKDIR","Which directory should I use to mount RAM disk used to create .AppImage?",Dirry("$Home$/SCI_RAMDISK"))};
+			int RDS{AskInt(Data,"AppImage","MAXGB","Maximum size for the RAM disk in gigabytes: ",6)};
+			String Icon{Ask(Data,"AppImage","Icon","Icon file:")};
+			String Categories{Ask(Data,"AppImage","Categories","Which categories should I add to the manifest? ","Game;")};
+			String Desktop{"[Desktop Entry]\n"};
+			String DTName{Ask(Data,"AppImage","DT.NAME","Desktop -> Name:")};
+			String DTExec{Ask(Data,"AppImage","DT.EXEC","Desktop -> Exec:",DTName)};
+			Desktop+="Name="+DTName+"\n";
+			Desktop+="Exec="+DTExec+"\n";
+			Desktop+="Icon=GameIcon\n";
+			Desktop+="Type=Application\n";
+			Desktop+="Categories="+Categories+"\n";
+			if (!IsDir(RDP)) {
+				QCol->Doing("Creating",RDP);
+				MakeDir(RDP);
+			}
+			do {
+				static uint32 c{0};
+				Session=md5(CurrentDate()+" "+CurrentTime())+TrSPrintF("_%d",++c);
+			} while (IsDir(RDP+"/"+Session));
+			String SESD{RDP+"/"+Session};
+			QCol->Doing("Session",Session);
+			String MOUNT{TrSPrintF("sudo mount -t tmpfs -o size=%dG -o mode=1777 tmpfs ",RDS)+SESD};
+			QCol->Doing("Mount",SESD);
+			MakeDir(SESD);
+			QCol->Grey("$ "+MOUNT+"\n");
+			_ec e; e.i=system(MOUNT.c_str());
+			if (e.i) {
+				QCol->Error(TrSPrintF("Mount failed: %d.%d.%d.%d (%i)",e.b[0],e.b[1],e.b[2],e.b[3],e.i));
+				exit(e.b[1]); // This seems to be the true exit code (bug in Linux?)
+				return;
+			}
+			String AppDir{SESD+"/"+DTExec+".AppDir"};
+			QCol->Doing("Creating",AppDir);
+			MakeDir(AppDir);
+			QCol->Doing("Saving","Desktop");
+			SaveString(AppDir+"/"+DTExec+".desktop",Desktop);
+			//QCol->Doing("Icon",Icon);
+			QCF(Icon,AppDir+"/GameIcon.png");
+			static String libraries[6] {
+				"lib/x86_64-linux-gnu/libc.so.6",
+				"lib/x86_64-linux-gnu/libgcc_s.so.1",
+				"lib/x86_64-linux-gnu/libstdc++.so.6",
+				"usr/local/lib/libSDL2-2.0.so.0",
+				"usr/local/lib/libSDL2_image-2.0.so.0",
+				"usr/local/lib/libSDL2_mixer-2.0.so.0"
+			};
+			for(auto& lib:libraries) {
+				QCol->Doing("Library",lib);
+				auto D{ExtractDir(lib)};
+				auto TD{AppDir+"/"+D};
+				if (IsDir(TD)) {QCol->Doing("Creating",TD); MakeDir(TD); }
+				FileCopy("/"+lib,TD+"/"+StripDir(lib));
+			}
+			MakeDir(AppDir+"/usr/bin");
+			QCF(mydir + "/SCI_Run",     AppDir+"/usr/bin/SCI_Run");
+			QCF(mydir + "/SCI_Run.srf", AppDir+"/usr/bin/SCI_Run.srf");
+			String MEX{"chmod +x "+AppDir+"/usr/bin/SCI_Run"}; system(MEX.c_str());
+			auto JD{FileList(ReleaseDirectory("JCR6")) };
+		    for (auto J:*JD) QCF(ReleaseDirectory("JCR6")+J,AppDir+"/usr/bin/"+J);
+
+		    String AppRun{"#!/usr/bin/sh\n"};
+		    AppRun+="$APPDIR/usr/bin/SCI_Run ";
+		    AppRun+="\"$APPDIR/usr/bin/"+Data->Value("Project","OutputName")+".jcr\"\n";
+		    AppRun+="echo Exit code $?\n\n# Script Generated with SCI_Build\n#(c) Jeroen P. Broks\n\n";
+		    SaveString(AppDir+"/AppRun",AppRun);
+		    String ARX{"chmod +x "+AppDir+"/AppRun"}; system(ARX.c_str());
+		    String AppImageTool{mydir+"/appimagetool-x86_64.AppImage" };
+		    AppImageTool=FileExists(AppImageTool)?AppImageTool:NewAppImageTool(Data);
+		    String AITC{"'"+AppImageTool+"' "+AppDir};
+		    QCol->Doing("Creating","AppImage");
+		    QCol->Grey("$ "+AITC+"\n");
+		    String OldD{CurrentDir()};
+		    //ChangeDir(ExtractDir(AppDir));
+		    String RelDir{ReleaseDirectory("Linux_AppImage")};
+		    if (!IsDir(RelDir)) { QCol->Doing("Creating",RelDir); MakeDir(RelDir);}
+		    ChangeDir(RelDir);
+		    e.i=system(AITC.c_str());
+		    ChangeDir(OldD);
+			if (e.i) {
+				QCol->Error(TrSPrintF("AppImage Creation failed: %d.%d.%d.%d (%i)",e.b[0],e.b[1],e.b[2],e.b[3],e.i));
+				exit(e.b[1]); // This seems to be the true exit code (bug in Linux?)
+				return;
+			}
+			QCol->Doing("Unmounting",SESD);
+			MOUNT="sudo umount "+SESD;
+			system(MOUNT.c_str());
+			MOUNT="rm -R "+SESD;
+			QCol->Doing("Destroying",SESD);
+			system(MOUNT.c_str());
+       }
 
 	}
 }

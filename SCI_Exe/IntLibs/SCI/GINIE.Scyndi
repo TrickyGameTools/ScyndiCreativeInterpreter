@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/GINIE.Scyndi
 // 	Scyndi's Creative Interpreter - Link - GINIE
-// 	version: 25.01.05
+// 	version: 25.03.25
 // 
 // 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
 // 
@@ -156,6 +156,10 @@ Class TGINIE
 			Ret[i]=Lua.GINIE.Lists(Tag,i)
 		end
 		return Ret
+	End
+	
+	Void Kill(string Cat,String What="EVERYTHING")
+		Lua.GINIE.CatKill(Cat,What)
 	End
 
 End

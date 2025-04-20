@@ -1,27 +1,27 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter
 // Events API for scripts
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2023, 2024, 2025
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 25.03.04
 // End License
 
@@ -124,6 +124,11 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	static int API_Annoy(lua_State *L) {
+		TQSE::Notify(luaL_checkstring(L,1));
+		return 0;
+	}
+
 	void Init_API_Events() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Poll", API_Events_Poll},
@@ -142,7 +147,8 @@ namespace Scyndi_CI {
 			{ "Flush",API_Events_Flush },
 			{ "Yes",API_Events_Yes },
 			{ "MouseButtonFromName",API_Events_MouseButtonFromName },
-			{ "Sleep", API_Sleep}
+			{ "Sleep", API_Sleep},
+			{ "Annoy", API_Annoy }
 		};
 		//for (auto&debug:IAPI) std::cout << "\x07DEBUG EVENTS: "<<debug.first<<"\n";
 		InstallAPI("Events", IAPI);

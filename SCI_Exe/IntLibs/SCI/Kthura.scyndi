@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // 	Kthura Link up for Scyndi's Creative Interpreter
-// 	version: 25.01.29
+// 	version: 25.04.01 II
 // 
 // 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
 // 
@@ -26,14 +26,23 @@ Module
 
 // Just making sure this comes first. GewoonNiks will contain 'nil' as result, but that doesn't matter!
 Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Kthura")
+plua MyKthura
+
+Init
+	// A bug caused internal overwriting, eh?
+	// Not gonna make that happen again!
+	//print("???")
+	MyKthura = Lua.Kthura
+	Lua.Kthura = nil
+End
 
 void Load(String T,String F)
-	Lua.Kthura.Load(T,F)		
+	MyKthura.Load(T,F)		
 end
 	
 void Pick(String KT,String LT="")
-	Ternary(LT=="", Lua.Kthura.Pick(KT),Lua.Kthura.Pick(KT,LT))
-	Lua.Kthura.GetLayers(0)
+	Ternary(LT=="", MyKthura.Pick(KT),MyKthura.Pick(KT,LT))
+	MyKthura.GetLayers(0)
 end
 
 Const Delegate PickLayer = Lua.Kthura.PickLayer
@@ -60,16 +69,16 @@ QuickMeta Kthura_Layers
 				int p := -1
 				ddef ret
 					p++
-					if p>=Lua.Kthura.GetLayers(2)
+					if p>=MyKthura.GetLayers(2)
 						return Nil,Nil
 					End
-					return Lua.Kthura.GetLayers(1,p),p
+					return MyKthura.GetLayers(1,p),p
 				End
 				return ret
 			Case "LEN" "LENGTH" "SIZE"
-				return Lua.Kthura.GetLayers(2)
+				return MyKthura.GetLayers(2)
 			Default
-				Return Lua.Kthura.GetLayers(1,Key)
+				Return MyKthura.GetLayers(1,Key)
 		End
 	End
 End
@@ -83,16 +92,16 @@ end
 plua _ObjData
 
 void SData(s,string key,value)
-	Lua.Kthura.ObjDataSet(s.____objtag,Key,Lua.tostring(value))
+	MyKthura.ObjDataSet(s.____objtag,Key,Lua.tostring(value))
 end
 string GData(s,string key)
-	Return Lua.Kthura.ObjDataGet(s.____objtag,Key)
+	Return MyKthura.ObjDataGet(s.____objtag,Key)
 End
 
 plua _ObjKeyIndex(s,string Key)
 	Switch (Upper(Key))
 	Case "STOPWALKING"
-		Lua.Kthura.StopWalking(s.____objtag)
+		MyKthura.StopWalking(s.____objtag)
 		return _Niks
 	Case "WALKTO" "MOVETO"
 		ddef func
@@ -114,19 +123,19 @@ plua _ObjKeyIndex(s,string Key)
 		_ObjData[s.____objtag] = _ObjData[s.____objtag] || SetMetaTable({["____objtag"]=s.____objtag},{["__index"]=GData,["__newindex"]=SData})
 		return _ObjData[s.____objtag]
 	Default
-		return Lua.Kthura.GetObj(s.____objtag,Key)
+		return MyKthura.GetObj(s.____objtag,Key)
 	End
 end
 
 plua _ObjKeyNewIndex(s,string Key,value)
 	if (Lua.type(value)=="boolean" || Lua.type(value)=="nil")
 		if value
-			Lua.Kthura.SetObj(s.____objtag,Key,1)
+			MyKthura.SetObj(s.____objtag,Key,1)
 		else
-			Lua.Kthura.SetObj(s.____objtag,Key,0)
+			MyKthura.SetObj(s.____objtag,Key,0)
 		end
 	else
-		Lua.Kthura.SetObj(s.____objtag,Key,value)
+		MyKthura.SetObj(s.____objtag,Key,value)
 	end
 end
 
@@ -160,7 +169,7 @@ End
 	
 
 Get String CurrentMap
-	Return Lua.Kthura.CurrentMap()
+	Return MyKthura.CurrentMap()
 End
 
 Set String CurrentMap
@@ -168,7 +177,11 @@ Set String CurrentMap
 End
 
 Get String CurrentLayer
-	Return Lua.Kthura.CurrentLayer()
+	if type(MyKthura.CurrentLayer)!="function"
+		Lua.error(sprintf("Hey! What the fuck is going on here? Somehow the script placed %s with value '%s' in the Kthura.CurrentLayer linkup to C++!",type(MyKthura.CurrentLayer),MyKthura.CurrentLayer))
+		Return ""
+	End
+	Return MyKthura.CurrentLayer()
 End
 
 Set String CurrentLayer
@@ -176,22 +189,27 @@ Set String CurrentLayer
 End
 
 Get String LastLoadedMap
-	Return Lua.Kthura.LastLoadedMap()
+	Return MyKthura.LastLoadedMap()
+End
+
+// Lazy!
+Get String LastLoaded
+	Return MyKthura.LastLoadedMap()
 End
 
 Bool AutoRemapAll = true
 Get Bool AutoRemap
-	Return Lua.Kthura.GetAutoRemap()
+	Return MyKthura.GetAutoRemap()
 End
 Set Bool AutoRemap
-	Ternary(AutoRemapAll,Lua.Kthura.SetAutoRemap(value),Lua.Kthura.SetAutoRemap(value,Lua.Kthura.CurrentLayer()),Lua.Kthura.SetAutoRemap(value))
+	Ternary(AutoRemapAll,MyKthura.SetAutoRemap(value),MyKthura.SetAutoRemap(value,MyKthura.CurrentLayer()),MyKthura.SetAutoRemap(value))
 End
 
 Get Bool AnyThingMoving
-	return Lua.Kthura.AnyThingMoving(0)
+	return MyKthura.AnyThingMoving(0)
 End
 Get Bool AnythingWalking
-	return Lua.Kthura.AnyThingMoving(1)
+	return MyKthura.AnyThingMoving(1)
 End
 
 Void ObjRGB(string Tag, Byte R,Byte G, Byte B)
@@ -224,27 +242,27 @@ Const Delegate HideButLabel = Lua.Kthura.HideButLabel
 Const Delegate ShowButLabel = Lua.Kthura.ShowButLabel
 
 Void RemapDominance()
-	Lua.Kthura.Remap(1)
+	MyKthura.Remap(1)
 End
 
 Void RemapTags()
-	Lua.Kthura.Remap(2)
+	MyKthura.Remap(2)
 End
 
 Void RemapLabels()
-	Lua.Kthura.Remap(3)
+	MyKthura.Remap(3)
 End
 
 Void BuildBlockMap()
-	Lua.Kthura.Remap(4)
+	MyKthura.Remap(4)
 End
 
 QuickMeta Kthura_Meta
 	index
-		return Lua.Kthura.GetMeta(Key)
+		return MyKthura.GetMeta(Key)
 	end
 	newindex
-		Lua.Kthura.SetMeta(Key,Value)
+		MyKthura.SetMeta(Key,Value)
 	end
 end
 	
@@ -349,9 +367,9 @@ End
 
 Get Var TagList
 	ret := {}
-	l := Lua.Kthura.TagList()
+	l := MyKthura.TagList()
 	for i=0,l-1 
-		ret[i]=Lua.Kthura.TagList(i)
+		ret[i]=MyKthura.TagList(i)
 	end
 	return ret
 End

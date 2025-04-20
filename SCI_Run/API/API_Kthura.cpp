@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.29
+// Version: 25.04.01
 // End License
 
 
@@ -89,6 +89,7 @@ namespace Scyndi_CI {
 			ObjKey{ Upper(luaL_checkstring(L,2)) };
 		auto
 			o{ GetKthuraLayer()->Obj(ObjTag) };
+		SetObjString("KIND",SKind);
 		SetObjInt("X", x);
 		SetObjInt("Y", y);
 		SetObjInt("W", w);
@@ -148,6 +149,7 @@ namespace Scyndi_CI {
 		// Method
 
 		// Object
+		GetObjString("KIND",SKind);
 		GetObjInt("X", x);
 		GetObjInt("Y", y);
 		GetObjInt("W", w);

@@ -128,15 +128,6 @@ Init
 	PointReg.MINCOPY = 4
 End
 
-Var PointsGetF(s,String Fld)
-	plua Parent
-	plua Key
-	Parent = s["*_Parent_*"]
-	Key    = s["*_Key_*"]
-	Fld    = Upper(Fld)
-	Lua.assert(PointReg[Fld],sprintf("No field named %s in a point record",Fld))
-	return Me.StatPointsGet( Parent.PartyTag, Parent.CharTag, Key, PointReg[Fld])
-End
 
 void PointsSetF(s,String Fld, Value)
 	plua Parent
@@ -147,6 +138,34 @@ void PointsSetF(s,String Fld, Value)
 	Lua.assert(PointReg[Fld],sprintf("No field named %s in a point record",Fld))
 	Me.StatPointsSet(Parent.PartyTag,Parent.CharTag,Key,PointReg[Fld],Value)
 End
+
+Var PointsGetF(s,String Fld)
+	plua Parent
+	plua Key
+	Parent = s["*_Parent_*"]
+	Key    = s["*_Key_*"]
+	Fld    = Upper(Fld)
+	switch Fld
+		Case "INC"
+			ddef ginc
+				int vv := Me.StatPointsGet( Parent.PartyTag, Parent.CharTag, Key, 0)
+				int vi := Infinity
+				PointsSetF(s,"HAVE",vv+vi)
+			end
+			return ginc
+		Case "DEC"
+			ddef gdec
+				int vv := Me.StatPointsGet( Parent.PartyTag, Parent.CharTag, Key, 0)
+				int vi := Infinity
+				PointsSetF(s,"HAVE",vv-vi)
+			end
+			return gdec			
+		Default
+			Lua.assert(PointReg[Fld],sprintf("No field named %s in a point record",Fld))
+			return Me.StatPointsGet( Parent.PartyTag, Parent.CharTag, Key, PointReg[Fld])
+	end
+End
+
 
 Var PointsGet(s,string Key)
 	plua parent
@@ -305,6 +324,15 @@ Class StatChar
 		Me.LinkPnts(PartyTag,CharTag,st1,TarChTag,st2)
 	End
 	
+	Get Table ListOfStats
+		sz:=Me.ListOfStats(PartyTag,CharTag,-1) // gets me the size of the list
+		rt:={}
+		For i=0,sz-1
+			rt[i]=Me.ListOfStats(PartyTag,CharTag,i)
+		End
+		return rt
+	End
+	
 	
 	Constructor(P,String _T)
 		Parent=P
@@ -400,6 +428,15 @@ Class StatParty
 	// Only for debug purposes
 	Void LinkOverview()
 		Me.LinkOverview(PartyTag)
+	End
+	
+	Get Var CharList
+		ret:={}
+		cnt:=Me.CharList(PartyTag,-1)
+		for i=0,cnt-1
+			ret[i] = Me.CharList(PartyTag,i)
+		end
+		return ret
 	End
 
 End

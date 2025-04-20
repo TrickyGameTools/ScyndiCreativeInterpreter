@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Graphics.Scyndi
 // 	Scyndi's Creative Interpreter - Graphics linkup
-// 	version: 25.03.04
+// 	version: 25.04.01
 // 
 // 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
 // 
@@ -40,6 +40,9 @@ global const delegate Line = Lua.Graphics.Line
 const delegate Plot = Lua.Graphics.Plot
 global const delegate Plot = Lua.Graphics.Plot
 
+// Only meant for debug purposes
+const delegate ListImages = Lua.Graphics.ListImages
+
 Class TImage
 	ReadOnly String Tag
 		
@@ -69,8 +72,8 @@ Class TImage
 		Lua.Graphics.DrawRotated(Tag,x,y,rotatedeg,frame)
 	End
 	
-	Void Tile(int x,int y, int w, int h, int frame=0)
-		Lua.Graphics.Tile(Tag,x,y,w,h,frame)
+	Void Tile(int x,int y, int w, int h, int frame=0,int insx=0,int insy=0)
+		Lua.Graphics.Tile(Tag,x,y,w,h,frame,insx,insy)
 	End
 	
 	Void Stretch(int x,int y,int w, int h, int frame=0)
@@ -180,10 +183,42 @@ Global Var ObtainImage(String Tag)
 	Return New TImage(Tag)
 End
 
+Class TTextImg
+	ReadOnly String Txt
+	ReadOnly Var Fnt
+	ReadOnly Bool IsDark
+	Get Int Width
+		Return Fnt.Width(Txt)
+	End
+	Get Int Height
+		Return Fnt.Height(Txt)
+	End
+	Void Dark(Int _X,Int _Y,Int HAlign=0,Int VAlign=0)
+		Fnt.Dark(Txt,_X,_Y,HAlign,VAlign)
+	End
+	Void Draw(Int _X,Int _Y,Int HAlign=0,Int VAlign=0)
+		If IsDark
+			self.Dark(_X,_Y,HAlign,Valign)
+		Else
+			Fnt.Text(Txt,_X,_Y,HAlign,VAlign)
+		End
+	End
+	
+	
+	Constructor(_F,String _T,_D)
+		Fnt  = _F
+		Txt  = _T
+		IsDark = _D == true
+	End
+End	
+
 Class TImageFont
 	ReadOnly String Tag
 	Static ReadOnly Delegate HasTag = Lua.Graphics.HasFontTag
 		
+	Var IText(String _T,_D)
+		return new TTextImg(self,_T,_D)
+	End
 		
 	Get Bool AutoDel
 		return Left(Tag,3)=="***"

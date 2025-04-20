@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.03.04
+// Version: 25.03.25
 // End License
 
 #define Act(A) if (!A) return false
@@ -406,7 +406,7 @@ namespace Scyndi_CI {
 					QCol->Doing("Stealing from", Medal);
 					auto J{ JCR6_Dir(Medal) };
 					auto mcontent{ J->GetString("Score") };
-					AddString("*MAIN", "ID/Medals", mcontent, "Jeroen P. Broks", "To be kept within THIS project alone!");
+					AddString("*MAIN", "ID/Medals.ini", mcontent, "Jeroen P. Broks", "To be kept within THIS project alone!");
 				}
 			}
 			return true;

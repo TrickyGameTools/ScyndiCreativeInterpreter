@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.03.05
+// Version: 25.03.25
 // End License
 
 #include <SlyvQCol.hpp>
@@ -80,7 +80,7 @@ namespace Scyndi_CI {
 			ID->Value("Window", "Full", boolstring(Full));
 			if (!Full) {
 				ID->Value("Window", "Width", Ask(Data, "SCI::Window", "WinWidth", "Window width (suffix with % to make it calculate on the desktop size)", "1200"));
-				ID->Value("WIndow", "Height", Ask(Data, "SCI::Window", "WinHeight", "Window height (suffix with % to make it calculate on the desktop size)", "1000"));
+				ID->Value("Window", "Height", Ask(Data, "SCI::Window", "WinHeight", "Window height (suffix with % to make it calculate on the desktop size)", "1000"));
 			}
 			auto Alt{ Units::Yes(Data,"SCI::Window","UseAlt","Use the Alt Height system") };
 			ID->Value("Alt", "Use", boolstring(Alt));

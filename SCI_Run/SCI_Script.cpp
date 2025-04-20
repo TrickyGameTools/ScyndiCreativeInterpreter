@@ -490,6 +490,7 @@ namespace Scyndi_CI {
 
 	static int SYS_PlanToKill(lua_State* L) {
 		PlannedToKill.push_back(luaL_checkstring(L, 1));
+		QCol->Doing("To kill",luaL_checkstring(L, 1));
 		return 0;
 	}
 
@@ -595,7 +596,7 @@ namespace Scyndi_CI {
 		static auto Core{ SRF()->GetString("Script/ScyndiCore.lua") };
 		//StateRegister[_State] = LunaticByByteCode(Buf,_Entry);
 		QCol->Doing("Loading", _Entry, "\t"); QCol->Doing("to state", _State);
-		StateRegister[_State] = LunaticBySource("--[[ Scyndi ]]\n"+Core);
+		StateRegister[_State] = LunaticBySource("--[[ Scyndi ]]\n"+Core,"Scyndi Core Script");
 		std::string initscript{
 			"-- InitScript: " + _State + " --\n\n"
 			"SCI_StateName = '"+_State+"'\n\n"
@@ -774,6 +775,7 @@ namespace Scyndi_CI {
 				Crash(TrSPrintF("Unknown Run-Type (D%d)", (int)RT), "This is an internal error in Scyndi's Creative Interpreter\nPlease go to https://github.com/TrickyGameTools/ScyndiCreativeInterpreter/issues\nand write an issue about this matter!");
 				return;
 			}
+			PerformPlannedKills();
 		} while (!EndRun);
 		QCol->Yellow("Sequence ended!\n");
 	}

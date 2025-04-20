@@ -60,6 +60,16 @@ namespace Scyndi_CI {
 
 	std::string WindowCaption() { return GameID_GINIE()->Value("Window", "Caption"); }
 
+	void ListImages() {
+		char Last{'\b'};
+		for(auto& it:ImageRegister) {
+			if (Last!=it.first[0]) {
+				QCol->LGreen(TrSPrintF("- = %c = -\n",it.first[0]));
+				Last=it.first[0];
+			}
+			QCol->Yellow("\t"+it.first+"\n");
+		}
+	}
 
 	TImage Img(std::string Tag, bool crash) {
 		Trans2Upper(Tag);
@@ -88,7 +98,9 @@ namespace Scyndi_CI {
 			return;
 		}
 		Trans2Upper(Tag);
-		Img(Tag, LoadImage(J, File));
+		auto GotImg{LoadImage(J, File)};
+		if (!GotImg) Crash("Failed loading \""+File+"\" (into tag:"+Tag+")","TQSG Rerpoted: "+TQSG::LastError());
+		Img(Tag, GotImg);
 		if (Last()->Error) Crash("JCR6 error: " + Last()->ErrorMessage, "MainFile: " + Last()->MainFile + "\nEntry: " + Last()->Entry);
 	}
 

@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.13
+// Version: 25.03.25
 // End License
 
 #include <SlyvGINIE.hpp>
@@ -191,7 +191,7 @@ namespace Scyndi_CI {
 			FFile{ SaveGameDir() + "/" + PFile },
 			Tag{ Upper(Lunatic_CheckString(L,2)) },
 			AutoSaveFile{ SaveGameDir() + "/" + Lunatic_OptString(L,3,"") },
-			AutoSaveHead{ Lunatic_OptString(L,4,"") };			
+			AutoSaveHead{ Lunatic_OptString(L,4,"") };
 		if (!FileExists(FFile)) { // { Crash("File not found: " + PFile, "Full File Name: " + FFile); return 0; }
 #ifdef API_GINIE_DEBUG
 			std::cout << "GINIE HOME FILE '"<<FFile<<"' does not exist! Creating \n";
@@ -302,13 +302,22 @@ namespace Scyndi_CI {
 		return 1;
 
 	}
-	
+
 	static int API_GINIE_Clear(lua_State* L) {
 		AutoTag;
 		REC->Clear();
 		return 0;
 	}
-	
+
+	static int API_GINIE_CatKill(lua_State *L) {
+		using namespace std;
+		static map<string,GINIE_Kill> CKW{ {"ALL",GINIE_Kill::All},{"EVERYTHING",GINIE_Kill::All},{"VALUES",GINIE_Kill::Values},{"LISTS",GINIE_Kill::Lists}};
+		AutoTag;
+		string Cat{luaL_checkstring(L,2)};
+		string What{Upper(luaL_optstring(L,3,"EVERYTHING"))}; if (!CKW.count(What)) { luaL_error(L,"Unknown CatKill Type: %s",What.c_str()); return 0; }
+		REC->Kill(Cat,CKW[What]);
+		return 0;
+	}
 
 
 
@@ -330,12 +339,13 @@ namespace Scyndi_CI {
 			{ "ListSize",API_GINIEListSize },
 			{ "ListEntry",API_GINIEListEntry },
 			{ "CatsGrab",API_GINIE_GrabCats },
-			{ "Cats",API_GINIE_Cat }, 
+			{ "Cats",API_GINIE_Cat },
 			{ "ValsGrab", API_GINIE_GrabVals },
 			{ "Vals",API_GINIE_Val },
 			{ "ListsGrab", API_GINIE_GrabLists },
 			{ "Lists",API_GINIE_Lists },
-			{ "Clear",API_GINIE_Clear }
+			{ "Clear",API_GINIE_Clear },
+			{ "CatKill",API_GINIE_CatKill }
 		};
 		InstallAPI("GINIE", IAPI);
 	}

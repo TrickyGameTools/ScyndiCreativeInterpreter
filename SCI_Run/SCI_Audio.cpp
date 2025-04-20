@@ -1,30 +1,31 @@
 // Lic:
 // Scyndi's Creative Interpreter
 // Audio Manager
-// 
-// 
-// 
+//
+//
+//
 // (c) Jeroen P. Broks, 2023
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 23.11.26
 // EndLic
 #include "SCI_JCR.hpp"
 #include "SCI_Audio.hpp"
+#include "SCI_Crash.hpp"
 
 using namespace Slyvina;
 using namespace Units;
@@ -46,12 +47,17 @@ namespace Scyndi_CI {
 		return AudioRegister[Tag];
 	}
 
-	void Aud(std::string Tag, Slyvina::TQSA::TAudio AU) { 
+	void Aud(std::string Tag, Slyvina::TQSA::TAudio AU) {
 		Trans2Upper(Tag);
-		AudioRegister[Tag] = AU;		
+		AudioRegister[Tag] = AU;
 	}
 
-	void Aud(std::string Tag, Slyvina::JCR6::JT_Dir J, std::string File) { Aud(Tag, LoadAudio(Resource(), File)); }
+	void Aud(std::string Tag, Slyvina::JCR6::JT_Dir J, std::string File) {
+		if (!J->EntryExists(File)) Crash("Audio entry does not exist: "+File);
+		auto Buf{LoadAudio(J,File)};
+		if (!Buf) Crash("Loading audio failed: "+File);
+		Aud(Tag, Buf);
+	}
 	void Aud(std::string Tag, std::string File) { Aud(Tag, JCR6::JCR6_Dir(File), File); }
 	bool HasAud(std::string Tag) { return AudioRegister.count(Upper(Tag)); }
 

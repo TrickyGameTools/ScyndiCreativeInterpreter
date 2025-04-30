@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // 	Kthura Link up for Scyndi's Creative Interpreter
-// 	version: 25.04.01 II
+// 	version: 25.04.30
 // 
 // 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
 // 
@@ -236,10 +236,21 @@ Const Delegate Kill = Lua.Kthura.Kill
 Const Delegate Block = Lua.Kthura.Block
 Const Delegate Remap = Lua.Kthura.Remap
 
+Const Delegate Blocked = Lua.Kthura.Block
+
 Const Delegate HideByLabel = Lua.Kthura.HideByLabel
 Const Delegate ShowByLabel = Lua.Kthura.ShowByLabel
 Const Delegate HideButLabel = Lua.Kthura.HideButLabel
 Const Delegate ShowButLabel = Lua.Kthura.ShowButLabel
+
+Void HideByZone(String Z,O)
+	MyKthura.HideByZone(Z,O!=nil && O!=false)
+End
+
+Void ShowByZone(String Z,O)
+	MyKthura.ShowByZone(Z,O!=nil && O!=false)
+End
+
 
 Void RemapDominance()
 	MyKthura.Remap(1)
@@ -374,3 +385,6 @@ Get Var TagList
 	return ret
 End
 
+Get Delegate EachTag
+	return Each(TagList)
+End

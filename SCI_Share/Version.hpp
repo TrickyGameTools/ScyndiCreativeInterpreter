@@ -21,6 +21,6 @@ namespace Scyndi_CI {
 		}
 	};
 
-	static QVersionClass QVersion{1,7,7,"20250420095628","Alpha"};
+	static QVersionClass QVersion{1,7,8,"20250430165052","Alpha"};
 
 } // namespace Scyndi_CI

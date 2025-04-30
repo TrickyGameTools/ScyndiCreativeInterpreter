@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.04.01
+// Version: 25.04.30
 // End License
 
 
@@ -619,6 +619,23 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+	static int API_Kthura_ShowByZone(lua_State*L) {
+		auto lay{GetKthuraLayer()};
+		auto tag{Lunatic_CheckString(L,1)};
+		auto outside{Lunatic_CheckBoolean(L,2)};
+
+		lay->ShowByZone(tag,outside);
+
+		return 0;
+	}
+
+	static int API_Kthura_HideByZone(lua_State*L) {
+		auto lay{GetKthuraLayer()};
+		auto tag{Lunatic_CheckString(L,1)};
+		auto outside(Lunatic_CheckBoolean(L,2));
+		lay->HideByZone(tag,outside);
+		return 0;
+	}
 
 	void Init_API_Kthura() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -656,7 +673,9 @@ namespace Scyndi_CI {
 			{ "GetLayers",API_Kthura_LayerList },
 			{ "SetAutoRemap",API_Kthura_SetAutoRemap },
 			{ "GetAutoRemap",API_Kthura_GetAutoRemap },
-			{ "AnythingMoving",API_Kthura_AnyThingMoving }
+			{ "AnythingMoving",API_Kthura_AnyThingMoving },
+			{ "HideByZone",API_Kthura_HideByZone },
+			{ "ShowByZone",API_Kthura_ShowByZone }
 		};
 
 		InstallAPI("Kthura", IAPI);

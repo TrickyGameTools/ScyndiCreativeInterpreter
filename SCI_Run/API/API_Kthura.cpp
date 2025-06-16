@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.04.30
+// Version: 25.06.15
 // End License
 
 
@@ -191,6 +191,7 @@ namespace Scyndi_CI {
 		GetObjString("KIND", SKind); // Read-Only
 		GetObjBool("NOTINMOTIONTHEN0", NotInMotionThen0);
 		GetObjBool("NOTMOVINGTHEN0", NotInMotionThen0);
+		GetObjBool("MOVING",Moving);
 		// Actor only
 		GetObjString("WIND", Wind);
 		Crash("(Get) Unknown object field: " + ObjKey);
@@ -637,6 +638,14 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_Kthura_VisibilityAll(lua_State*L) {
+		auto lay{GetKthuraLayer()};
+		auto v{Lunatic_CheckBoolean(L,1)};
+		if (!lay) { luaL_error(L,"Kthura.VisAll(%s): No layer available",lboolstring(v).c_str()); return 0; }
+		lay->VisibilityAll(v);
+		return 0;
+	}
+
 	void Init_API_Kthura() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{ "Load", API_Kthura_Load },
@@ -675,7 +684,8 @@ namespace Scyndi_CI {
 			{ "GetAutoRemap",API_Kthura_GetAutoRemap },
 			{ "AnythingMoving",API_Kthura_AnyThingMoving },
 			{ "HideByZone",API_Kthura_HideByZone },
-			{ "ShowByZone",API_Kthura_ShowByZone }
+			{ "ShowByZone",API_Kthura_ShowByZone },
+			{ "VisAll",API_Kthura_VisibilityAll }
 		};
 
 		InstallAPI("Kthura", IAPI);

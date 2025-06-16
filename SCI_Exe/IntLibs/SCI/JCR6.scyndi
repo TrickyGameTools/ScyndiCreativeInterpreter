@@ -1,3 +1,26 @@
+// License:
+// 	SCI_Exe/IntLibs/SCI/JCR6.scyndi
+// 	Scyndi's Creative Interpreter - JCR6 Script
+// 	version: 25.06.16
+// 
+// 	Copyright (C) 2023, 2025 Jeroen P. Broks
+// 
+// 	This software is provided 'as-is', without any express or implied
+// 	warranty.  In no event will the authors be held liable for any damages
+// 	arising from the use of this software.
+// 
+// 	Permission is granted to anyone to use this software for any purpose,
+// 	including commercial applications, and to alter it and redistribute it
+// 	freely, subject to the following restrictions:
+// 
+// 	1. The origin of this software must not be misrepresented; you must not
+// 	   claim that you wrote the original software. If you use this software
+// 	   in a product, an acknowledgment in the product documentation would be
+// 	   appreciated but is not required.
+// 	2. Altered source versions must be plainly marked as such, and must not be
+// 	   misrepresented as being the original software.
+// 	3. This notice may not be removed or altered from any source distribution.
+// End License
 // License Information:
 // SCI_Exe/IntLibs/SCI/JCR6.scyndi
 // Scyndi's Creative Interpreter - JCR6 Script
@@ -49,7 +72,9 @@ String GetString(string Ent,String Tag="*MAIN")
 	return Lua.JCR6.JCRGetString(Tag,Ent)
 End
 
-Table GetLines(string Ent,String Tag="*MAIN")
+// This function is officially deprecated, but I'll leave it here in case of
+// serious conflicts.
+Table GetLines_Old(string Ent,String Tag="*MAIN")
 	Table Ret 
 	Plua Src
 	Src = GetString(Ent,Tag)
@@ -70,6 +95,15 @@ Table GetLines(string Ent,String Tag="*MAIN")
 	End
 	Return Ret
 End
+
+Table GetLines(string ent,String Tag="*MAIN")
+	ret:={}
+	int sz:=Lua.JCR6.JCRLines(-1,Tag,Ent)
+	for i=0,sz-1
+		ret[i]=Lua.JCR6.JCRLines(i)
+	end
+	return ret
+end
 
 Var Dir(String Directory,String Tag="*MAIN")
 	plua Ret = {}

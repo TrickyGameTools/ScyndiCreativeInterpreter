@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // 	Kthura Link up for Scyndi's Creative Interpreter
-// 	version: 25.04.30
+// 	version: 25.06.15
 // 
 // 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
 // 
@@ -387,4 +387,16 @@ End
 
 Get Delegate EachTag
 	return Each(TagList)
+End
+
+Void SetAllVis(Bool A)
+	MyKthura.VisAll(A)
+End
+
+Void HideAll()
+	MyKthura.VisAll(False)
+End
+
+Void ShowAll()
+	MyKthura.VisAll(True)
 End

@@ -22,10 +22,12 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.13
+// Version: 25.06.15
 // End License
 
 #include "../SCI_Script.hpp"
+
+#include <SlyvVecStringSaver.hpp>
 
 
 using namespace Slyvina;
@@ -56,7 +58,7 @@ namespace Scyndi_CI {
 			Tag{ Upper(luaL_checkstring(L,1)) },
 			File{ Lunatic_CheckString(L,2) };
 		if (Prefixed(Tag, "*")) { luaL_error(L, "Tag '%s' is reserved!", luaL_checkstring(L, 1)); return 0; }
-		auto J{ JCR6_Dir(File) }; // Please note that this handles the REAL file system. 
+		auto J{ JCR6_Dir(File) }; // Please note that this handles the REAL file system.
 		if (Last()->Error) {
 			luaL_error(L, "Error '%s' while reading: %s", Last()->ErrorMessage.c_str(), File.c_str());
 			return 0;
@@ -140,6 +142,31 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_JCRLines(lua_State*L) {
+		static VecString VS{nullptr};
+		static size_t VSize{0};
+		auto index{luaL_checkinteger(L,1)};
+
+		// Load
+		if (index<0) {
+			auto Tag{ Upper(luaL_checkstring(L,2)) };
+			if (!JCR_Register.count(Tag)) { luaL_error(L, "There is no JCR6 resource loaded on tag '%s'", Tag.c_str()); return 0; }
+			lvs_autotxt = true;
+			auto Buf{ JCR_Register[Tag].Res->B(luaL_checkstring(L,3)) };
+			VS = LoadVecString(Buf);
+			VSize=VS->size();
+			lua_pushinteger(L,VSize);
+			return 1;
+		}
+		// Index Check
+		if(index>=VSize) {
+			lua_pushnil(L);
+			return 1;
+		}
+		Lunatic_PushString(L,(*VS)[index]);
+		return 1;
+	}
+
 
 	void Init_API_JCR() {
 		JCR_Register["*MAIN"] = RegJCR(Resource());
@@ -150,7 +177,8 @@ namespace Scyndi_CI {
 			{ "JCREntryExists",API_JCREntryExists },
 			{ "JCRGetString",API_JCRGetString },
 			{ "JCRFindFirst",API_JCRFindFirst },
-			{ "JCRFindNext", API_JCRFindNext }
+			{ "JCRFindNext", API_JCRFindNext },
+			{ "JCRLines", API_JCRLines }
 		};
 		InstallAPI("JCR6", IAPI);
 	}

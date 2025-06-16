@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.04.30
+// Version: 25.06.15
 // End License
 
 #include <SlyvString.hpp>
@@ -346,6 +346,16 @@ namespace Scyndi_CI {
 
 	static int API_ListImages(lua_State *L) { ListImages(); return 0;}
 
+	static int API_Circle(lua_State* L) {
+		auto
+			X{luaL_checkinteger(L,1)},  	// X
+			Y{luaL_checkinteger(L,2)},  	// Y
+			R{luaL_checkinteger(L,3)},  	// Radio
+			S{luaL_optinteger(L,4,100)};	// Segments
+		ACircle(X,Y,R,S);
+		return 0;
+	}
+
 
 	void Init_API_Graphics() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -380,7 +390,8 @@ namespace Scyndi_CI {
 			{ "Blit",API_Blit },
 			{ "Plot",API_Plot },
 			{ "Flip",API_Flip },
-			{ "ListImages",API_ListImages	}
+			{ "ListImages",API_ListImages	},
+			{ "Circle", API_Circle }
 		};
 		InstallAPI("Graphics", IAPI);
 	}

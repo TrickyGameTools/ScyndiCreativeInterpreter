@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Graphics.Scyndi
 // 	Scyndi's Creative Interpreter - Graphics linkup
-// 	version: 25.04.30
+// 	version: 25.06.15
 // 
 // 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
 // 
@@ -42,6 +42,9 @@ global const delegate Plot = Lua.Graphics.Plot
 
 // Only meant for debug purposes
 const delegate ListImages = Lua.Graphics.ListImages
+
+const delegate Circle = Lua.Graphics.Circle
+global const delegate Circle = Lua.Graphics.Circle
 
 Class TImage
 	ReadOnly String Tag

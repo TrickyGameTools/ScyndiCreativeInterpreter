@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.06.15
+// Version: 25.06.21
 // End License
 
 
@@ -502,6 +502,25 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_Kthura_StopMoving(lua_State* L) {
+		auto t{ lua_type(L,1) };
+		KthuraObject* o{ nullptr };
+		switch (t) {
+		case LUA_TNUMBER:
+			o = GetKthuraLayer()->Obj(luaL_checkinteger(L, 1));
+			break;
+		case LUA_TSTRING:
+			o = GetKthuraLayer()->Obj(luaL_checkstring(L, 1));
+			break;
+		default:
+			Crash("Illegal object identification!");
+			break;
+		}
+		o->StopMoving();
+		return 0;
+	}
+
+
 	static int API_Kthura_Block(lua_State* L) {
 		lua_pushboolean(L, GetKthuraLayer()->Block((int)luaL_checkinteger(L, 1), (int)luaL_checkinteger(L, 2)));
 		return 1;
@@ -670,6 +689,7 @@ namespace Scyndi_CI {
 			{ "Moving",API_Kthura_Moving },
 			{ "Block",API_Kthura_Block },
 			{ "StopWalking",API_Kthura_StopWalking },
+			{ "StopMoving",API_Kthura_StopMoving },
 			{ "Remap",API_Kthura_Remap },
 			{ "HideByLabel",API_Kthura_HideByLabel },
 			{ "ShowByLabel", API_Kthura_ShowByLabel },

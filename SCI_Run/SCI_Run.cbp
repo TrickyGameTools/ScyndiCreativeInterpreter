@@ -258,6 +258,7 @@
 		<Unit filename="../../../Libs/Units/Source/SlyvStream.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvString.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvTime.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvVecStringSaver.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvVolumes.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvWindows.cpp" />
 		<Unit filename="../SCI_Share/SCI_GlobalConfig.cpp" />

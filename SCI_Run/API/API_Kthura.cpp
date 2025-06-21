@@ -99,7 +99,7 @@ namespace Scyndi_CI {
 		SetObjInt("INSERTX", insertx);
 		SetObjInt("INSERTY", inserty);
 		SetObjInt("SCALEX", scalex);
-		SetObjInt("SCALEY", scalex);
+		SetObjInt("SCALEY", scaley);
 		SetObjInt("ROTATE", rotatedeg);
 		SetObjInt("ROTATION", rotatedeg);
 		SetObjInt("ROTATEDEG", rotatedeg);
@@ -159,7 +159,7 @@ namespace Scyndi_CI {
 		GetObjInt("INSERTX", insertx);
 		GetObjInt("INSERTY", inserty);
 		GetObjInt("SCALEX", scalex);
-		GetObjInt("SCALEY", scalex);
+		GetObjInt("SCALEY", scaley);
 		GetObjInt("ROTATE", rotatedeg);
 		GetObjInt("ROTATION", rotatedeg);
 		GetObjInt("ROTATEDEG", rotatedeg);

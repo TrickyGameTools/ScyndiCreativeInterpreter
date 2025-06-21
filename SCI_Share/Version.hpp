@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.06.16
+// Version: 25.06.21
 // End License
 #pragma once
 #include <string>
@@ -47,6 +47,6 @@ namespace Scyndi_CI {
 		}
 	};
 
-	static QVersionClass QVersion{1,7,9,"20250615205452","Alpha"};
+	static QVersionClass QVersion{1,7,10,"20250619135752","Alpha"};
 
 } // namespace Scyndi_CI

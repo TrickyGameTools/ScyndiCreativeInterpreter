@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024, 2025
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.04.30
+// Version: 26.02.14
 // End License
 
 #include <TQSE.hpp>
@@ -129,6 +129,11 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_Events_MouseWheelY(lua_State* L) {
+		lua_pushinteger(L, TQSE_MouseWheelY());
+		return 1;
+	}
+
 	void Init_API_Events() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{"Poll", API_Events_Poll},
@@ -142,6 +147,7 @@ namespace Scyndi_CI {
 			{ "MouseDown",API_Events_MouseDown },
 			{ "MouseHit",API_Events_MouseHit },
 			{ "MouseReleased",API_Events_MouseReleased },
+			{ "MouseWheelY",API_Events_MouseWheelY },
 			{ "KeyFromName",API_Events_KeyFromName },
 			{ "KeyName",API_Events_KeyName },
 			{ "Flush",API_Events_Flush },

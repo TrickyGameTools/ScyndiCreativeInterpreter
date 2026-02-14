@@ -629,6 +629,7 @@ namespace Scyndi_CI {
 			"\tend\n"
 			"end\n"
 			"function CSayF(fmt,...)\n"
+			//"\tprint(fmt,...)\n"  // Debug
 			"\tCSay(string.format(fmt,...))\n"
 			"end\n"
 			"Scyndi.SetUseFunction(Use)\n"

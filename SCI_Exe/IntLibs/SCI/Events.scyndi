@@ -1,9 +1,9 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Events.scyndi
 // 	Scyndi's Creative Interpreter - Events API link up
-// 	version: 25.04.30
+// 	version: 26.02.14
 // 
-// 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
+// 	Copyright (C) 2023, 2024, 2025, 2026 Jeroen P. Broks
 // 
 // 	This software is provided 'as-is', without any express or implied
 // 	warranty.  In no event will the authors be held liable for any damages
@@ -36,6 +36,7 @@ Const Delegate MouseDown = Lua.Events.MouseDown
 Const Delegate MouseHit = Lua.Events.MouseHit
 Const Delegate MouseReleased = Lua.Events.MouseReleased
 Const Delegate KeyFromName = Lua.Events.KeyFromName
+Const Delegate KeyByName = Lua.Events.KeyFromName
 Const Delegate KeyName = Lua.Events.KeyName
 Const Delegate GetKey = Lua.Events.GetKey
 Const Delegate Flush = Lua.Events.Flush
@@ -81,3 +82,7 @@ end
 get int TrueMouseY
 	return Lua.Events.MouseY(1)
 end
+
+Get Int MouseWheelY
+	return Lua.Events.MouseWheelY
+End

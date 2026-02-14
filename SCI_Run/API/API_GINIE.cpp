@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024, 2025
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.03.25
+// Version: 26.02.14
 // End License
 
 #include <SlyvGINIE.hpp>
@@ -319,6 +319,14 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_GINIEListClear(lua_State*L) {
+		AutoTag;
+		std::string
+			Cat{luaL_checkstring(L,2)},
+			Lst{luaL_checkstring(L,3)};
+		REC->ClearList(Cat,Lst);
+		return 0;
+	}
 
 
 	void Init_API_GINIE() {
@@ -338,6 +346,7 @@ namespace Scyndi_CI {
 			{ "Add",API_GINIEAdd },
 			{ "ListSize",API_GINIEListSize },
 			{ "ListEntry",API_GINIEListEntry },
+			{ "ListClear",API_GINIEListClear },
 			{ "CatsGrab",API_GINIE_GrabCats },
 			{ "Cats",API_GINIE_Cat },
 			{ "ValsGrab", API_GINIE_GrabVals },

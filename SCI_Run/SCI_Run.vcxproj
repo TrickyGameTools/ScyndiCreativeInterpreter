@@ -215,6 +215,7 @@
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvStream.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvString.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvTime.cpp" />
+    <ClCompile Include="..\..\..\Libs\Units\Source\SlyvVecStringSaver.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvVolumes.cpp" />
     <ClCompile Include="..\..\..\Libs\Units\Source\SlyvWindows.cpp" />
     <ClCompile Include="..\SCI_Share\SCI_GlobalConfig.cpp" />

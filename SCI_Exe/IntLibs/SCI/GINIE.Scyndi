@@ -1,9 +1,9 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/GINIE.Scyndi
 // 	Scyndi's Creative Interpreter - Link - GINIE
-// 	version: 25.03.25
+// 	version: 26.02.14
 // 
-// 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
+// 	Copyright (C) 2023, 2024, 2025, 2026 Jeroen P. Broks
 // 
 // 	This software is provided 'as-is', without any express or implied
 // 	warranty.  In no event will the authors be held liable for any damages
@@ -159,7 +159,11 @@ Class TGINIE
 	End
 	
 	Void Kill(string Cat,String What="EVERYTHING")
-		Lua.GINIE.CatKill(Cat,What)
+		Lua.GINIE.CatKill(Tag,Cat,What)
+	End
+	
+	Void ClearList(String Cat,String Lst)
+		Lua.GINIE.ListClear(Tag,Cat,Lst)
 	End
 
 End

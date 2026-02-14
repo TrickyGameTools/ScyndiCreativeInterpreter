@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.06.15
+// Version: 25.06.29
 // End License
 
 #include "../SCI_Script.hpp"
@@ -142,6 +142,15 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_JCRDirExists(lua_State*L) {
+		auto
+			Tag{ Upper(luaL_checkstring(L,1)) },
+			WantDir{Lunatic_CheckString(L,2) };
+			if (!JCR_Register.count(Tag)) { luaL_error(L, "There is no JCR6 resource loaded on tag '%s'", Tag.c_str()); return 0; }
+			lua_pushboolean(L,JCR_Register[Tag].Res->DirectoryExists(WantDir));
+			return 1;
+	}
+
 	static int API_JCRLines(lua_State*L) {
 		static VecString VS{nullptr};
 		static size_t VSize{0};
@@ -175,6 +184,7 @@ namespace Scyndi_CI {
 			{ "JCRSize",API_JCRSize },
 			{ "JCREntry",API_JCREntry },
 			{ "JCREntryExists",API_JCREntryExists },
+			{ "JCRDirExists",API_JCRDirExists },
 			{ "JCRGetString",API_JCRGetString },
 			{ "JCRFindFirst",API_JCRFindFirst },
 			{ "JCRFindNext", API_JCRFindNext },

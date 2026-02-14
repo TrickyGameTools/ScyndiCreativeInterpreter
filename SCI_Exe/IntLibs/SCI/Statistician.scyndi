@@ -1,9 +1,9 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Statistician.scyndi
 // 	Statistician Support
-// 	version: 25.04.30
+// 	version: 26.02.11
 // 
-// 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
+// 	Copyright (C) 2023, 2024, 2025, 2026 Jeroen P. Broks
 // 
 // 	This software is provided 'as-is', without any express or implied
 // 	warranty.  In no event will the authors be held liable for any damages
@@ -403,12 +403,17 @@ Class StatParty
 	end
 	Void NewChar(a,b,c)
 		switch Lua.type(a)
+
+			// Bool AutoAdd, String CharTag, String CharName=CharTag
 			case "boolean"
-				int a1 = 0
-				if a
-					a1 = 1
-				end
+				//int a1 = 0
+				//if a
+				//	a1 = 1
+				//end
+				int a1 := Ternary(a,0,1)
 				Me.StatNewChar(PartyTag,b,c || b,a1)
+			
+			// String CharTag, String CharName=CharTag
 			case "string"
 				Me.StatNewChar(PartyTag,a,b || a,0)
 			default

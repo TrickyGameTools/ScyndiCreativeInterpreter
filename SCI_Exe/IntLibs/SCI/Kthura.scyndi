@@ -1,9 +1,9 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // 	Kthura Link up for Scyndi's Creative Interpreter
-// 	version: 25.06.21
+// 	version: 26.02.14
 // 
-// 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
+// 	Copyright (C) 2023, 2024, 2025, 2026 Jeroen P. Broks
 // 
 // 	This software is provided 'as-is', without any express or implied
 // 	warranty.  In no event will the authors be held liable for any damages
@@ -402,4 +402,22 @@ End
 
 Void ShowAll()
 	MyKthura.VisAll(True)
+End
+
+Var PObjSize(objid)
+	return MyKthura.ObjSize(objid)
+End
+
+Class KthuraObjSize
+	ReadOnly Int X
+	ReadOnly Int Y
+	ReadOnly Int W
+	ReadOnly Int H
+	Constructor(int _X,int _Y,int _W,int _H)
+		X,Y,W,H = _X,_Y,_W,_H
+	End
+End
+
+Var ObjSize(objid)
+	Return New KthuraObjSize(PObjSize(objid))
 End

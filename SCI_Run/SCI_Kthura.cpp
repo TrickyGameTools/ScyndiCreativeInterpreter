@@ -128,7 +128,7 @@ namespace Scyndi_CI {
 		auto m{ GetKthura(MapTag) };
 		if (!m->HasLayer(LayerTag)) {
 			//auto l{ m->Layers() }; std::cout << "Layers: " << l->size() << "\n"; for (auto il : *l) std::cout << "Lay: " + il << "\n"; // debug
-			Crash("Non-existent Kthura Layer requested", "Map Tag: " + MapTag + "\nLayer Tag: " + LayerTag);
+			Crash("ML: Non-existent Kthura Layer requested", "Map Tag: " + MapTag + "\nLayer Tag: " + LayerTag);
 		}
 		return m->Layer(LayerTag);
 	}
@@ -137,7 +137,7 @@ namespace Scyndi_CI {
 		auto m{ GetKthura() };
 		if (!m->HasLayer(LayerTag)) {
 			//auto l{ m->Layers() }; std::cout << "Layers: " << l->size() << "\n"; for (auto il : *l) std::cout << "Lay: " + il << "\n"; // debug
-			Crash("Non-existent Kthura Layer requested", "Map Tag:" + MapLastPicked + "\nLayer Tag:" + LayerTag);
+			Crash("_L: Non-existent Kthura Layer requested", "Map Tag:" + MapLastPicked + "\nLayer Tag:" + LayerTag);
 		}
 		return m->Layer(LayerTag);
 	}

@@ -363,6 +363,9 @@
     <ClCompile Include="..\..\..\Libs\Kthura\Source\Kthura_LoadCompiled.cpp">
       <Filter>Source Files\Slyvina\Kthura</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Libs\Units\Source\SlyvVecStringSaver.cpp">
+      <Filter>Source Files\Slyvina\Units</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SCI_Share\Version.hpp">

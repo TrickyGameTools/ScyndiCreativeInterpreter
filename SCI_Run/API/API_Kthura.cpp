@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024, 2025
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.06.21
+// Version: 26.02.14
 // End License
 
 
@@ -149,6 +149,7 @@ namespace Scyndi_CI {
 		// Method
 
 		// Object
+		GetObjInt("ID",ID);
 		GetObjString("KIND",SKind);
 		GetObjInt("X", x);
 		GetObjInt("Y", y);
@@ -665,6 +666,28 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_Kthura_ObjSize(lua_State*L) {
+	auto t{ lua_type(L,1) };
+		KthuraObject* o{ nullptr };
+		switch (t) {
+		case LUA_TNUMBER:
+			o = GetKthuraLayer()->Obj(luaL_checkinteger(L, 1));
+			break;
+		case LUA_TSTRING:
+			o = GetKthuraLayer()->Obj(luaL_checkstring(L, 1));
+			break;
+		default:
+			Crash("OnjSize: Illegal object identification!");
+			break;
+		}
+		auto osz{SCI_KthuraDraw->_ObstacleSize(o)};
+		lua_pushinteger(L,osz.x);
+		lua_pushinteger(L,osz.y);
+		lua_pushinteger(L,osz.w);
+		lua_pushinteger(L,osz.h);
+		return 4;
+	}
+
 	void Init_API_Kthura() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{ "Load", API_Kthura_Load },
@@ -705,7 +728,8 @@ namespace Scyndi_CI {
 			{ "AnythingMoving",API_Kthura_AnyThingMoving },
 			{ "HideByZone",API_Kthura_HideByZone },
 			{ "ShowByZone",API_Kthura_ShowByZone },
-			{ "VisAll",API_Kthura_VisibilityAll }
+			{ "VisAll",API_Kthura_VisibilityAll },
+			{ "ObjSize",API_Kthura_ObjSize }
 		};
 
 		InstallAPI("Kthura", IAPI);

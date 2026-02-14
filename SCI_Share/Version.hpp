@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024, 2025
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.06.21
+// Version: 26.02.14
 // End License
 #pragma once
 #include <string>
@@ -47,6 +47,6 @@ namespace Scyndi_CI {
 		}
 	};
 
-	static QVersionClass QVersion{1,7,10,"20250619135752","Alpha"};
+	static QVersionClass QVersion{1,7,11,"20260214194450","Beta"};
 
 } // namespace Scyndi_CI

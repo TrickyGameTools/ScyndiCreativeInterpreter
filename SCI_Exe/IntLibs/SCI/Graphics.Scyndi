@@ -1,9 +1,9 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Graphics.Scyndi
 // 	Scyndi's Creative Interpreter - Graphics linkup
-// 	version: 25.06.15
+// 	version: 26.02.14
 // 
-// 	Copyright (C) 2023, 2024, 2025 Jeroen P. Broks
+// 	Copyright (C) 2023, 2024, 2025, 2026 Jeroen P. Broks
 // 
 // 	This software is provided 'as-is', without any express or implied
 // 	warranty.  In no event will the authors be held liable for any damages
@@ -237,6 +237,16 @@ Class TImageFont
 		End
 	End
 	
+	Get Bool Fixed
+		// To be implemented
+		Return False
+	End
+
+	Set Bool Fixed
+		// To be implemented
+	End
+
+	
 	Static Var Load(String File, String _Tag="")
 		String RTag 
 		RTag = _LinkFont(File,_Tag)
@@ -383,9 +393,20 @@ Global Const Delegate SetAlpha = Lua.Graphics.Alpha
 Const delegate Scale = Lua.Graphics.Scale
 Global Const delegate SetScale = Lua.Graphics.Scale
 
-const delegate Rect = Lua.Graphics.Rect
-global const delegate Rect = Lua.Graphics.Rect
+//const delegate Rect = Lua.Graphics.Rect
+//global const delegate Rect = Lua.Graphics.Rect
 
+Void Rect(int x,int y,int w,int h,_o)
+	int o := Ternary(_o && _o!=0,1,0)
+	Lua.Graphics.Rect(x,y,w,h,o)
+End
+
+Global Void Rect(int x,int y,int w,int h,_o)
+	int o := Ternary(_o && _o==0,1,0)	
+	Lua.Graphics.Rect(x,y,w,h,o)
+End
+ 
+	
 
 get int Width
 	return Lua.Graphics.Width(0)
@@ -411,6 +432,7 @@ end
 Get Int TrueHeight
 	return Lua.Graphics.Height(1)
 end
+
 
 Global const delegate Flip = Lua.Graphics.Flip
 const delegate Flip = Lua.Graphics.Flip

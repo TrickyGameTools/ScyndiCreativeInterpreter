@@ -84,5 +84,5 @@ get int TrueMouseY
 end
 
 Get Int MouseWheelY
-	return Lua.Events.MouseWheelY
+	return Lua.Events.MouseWheelY()
 End

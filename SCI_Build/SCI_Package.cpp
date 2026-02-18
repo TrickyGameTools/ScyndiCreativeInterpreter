@@ -1,27 +1,27 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter - Builder
 // Package
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2023, 2024, 2025
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 25.03.25
 // End License
 
@@ -437,6 +437,33 @@ namespace Scyndi_CI {
 			return true;
 		}
 
+		bool _Package::Merge(){
+			auto MJ{*PrjData->List("Merge","Merge")};
+			for (auto M:MJ) {
+				if ( DebugFlag() ) {
+					QCol->Doing("Attaching",M);
+					OutputJQL += "Patch:"+M+"\n";
+				} else {
+					QCol->Doing("Merging",M);
+					auto JI{JCR6::JCR6_Dir(M)};
+					if (!JI) {
+						QCol->Error("Error reading file to merge!");
+						QCol->LMagenta(JCR6::Last()->ErrorMessage+"\n");
+						QCol->Yellow(JCR6::Last()->MainFile+"\n");
+						QCol->LBlue(JCR6::Last()->Entry+"\n");
+						return false;
+					}
+					auto EL{JI->Entries()};
+					for (auto E:*EL) {
+							QCol->LGreen("\t"+E->Name()+"\n");
+							auto B { JI->B(E->Name()) };
+							Packages["*MAIN"]->AddBank(B, E->Name(), _Parent->PrefferedStorage(), E->Author() , E->Notes() );
+					}
+				}
+			}
+			return true;
+		}
+
 		bool _Package::Aliases() {
 			auto AL{ PrjData->Values("Alias") };
 			QCol->Doing("Aliases", (int)AL->size());
@@ -555,6 +582,7 @@ namespace Scyndi_CI {
 			Act(HP->AddString("*MAIN", "ID/Identify.ini", P->IDUnparsed(),P->Author(), P->Copyright()));
 			Act(HP->AddMedals("*MAIN"));
 			Act(HP->Pack());
+			Act(HP->Merge());
 			Act(HP->PackScript());
 			Act(HP->Aliases());
 			return true;

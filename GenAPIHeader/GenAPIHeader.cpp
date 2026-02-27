@@ -1,28 +1,28 @@
 // License:
-//
+// 
 // Scyndi's Creative Interpreter
 // API header creator
-//
-//
-//
+// 
+// 
+// 
 // 	(c) Jeroen P. Broks, 2023(C#), 2024(C#), 2026
-//
+// 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-//
+// 
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//
+// 
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-//
-// Version: 26.02.27
+// 
+// Version: 26.02.27 I
 // End License
 
 
@@ -32,6 +32,7 @@
 
 #include <SlyvDir.hpp>
 #include <SlyvQCol.hpp>
+#include <SlyvDirry.hpp>
 #include <SlyvString.hpp>
 
 using namespace Slyvina;
@@ -41,7 +42,7 @@ using namespace Slyvina::Units;
 int main() {
 try {
 	//QCol->Doing("Running from", Directory.GetCurrentDirectory());
-	const std::string APIDir = "~/dScyndi/Projects/Applications/Slyvina/Apps/SCI/SCI_Run/API";
+	const std::string APIDir = Dirry("$Home$/dScyndi/Projects/Applications/Slyvina/Apps/SCI/SCI_Run/API");
 	auto APIS = FileList(APIDir); if (APIS == nullptr) throw std::runtime_error("I could not get the contents of \""+APIDir+"\"!");
 	std::string Headers = "";
 	std::string InitFunc = "\tinline void InstallAllAPIS() {\n";
@@ -70,6 +71,7 @@ try {
 	return 1;
 }
 QCol->Reset();
+
 
 
 return 0;

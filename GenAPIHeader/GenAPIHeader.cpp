@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.02.27 I
+// Version: 26.02.27 II
 // End License
 
 
@@ -34,6 +34,7 @@
 #include <SlyvQCol.hpp>
 #include <SlyvDirry.hpp>
 #include <SlyvString.hpp>
+#include <SlyvStream.hpp>
 
 using namespace Slyvina;
 using namespace Slyvina::Units;
@@ -64,6 +65,8 @@ try {
 	std::string Output = "namespace Scyndi_CI{\n\n"+Headers+"\n\n"+InitFunc+"\n\n}\n";
 	QCol->Green(Output+"\n");
 	//QuickStream.SaveString($"{APIDir}/SCI_InstallAPIs.hpp", Output);
+	SaveString(APIDir+"/SCI_InstallAPIs.hpp",Output);
+
 
 } catch (std::runtime_error E) {
 	QCol->Error(E.what());

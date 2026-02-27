@@ -1,27 +1,27 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter
 // API header creator
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2023(C#), 2024(C#), 2026
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 26.02.27
 // End License
 
@@ -47,7 +47,7 @@ try {
 	std::string InitFunc = "\tinline void InstallAllAPIS() {\n";
 
 	for (auto& APISource : *APIS) {
-		if (lower(ExtractExt(APISource)) == "cpp") {
+		if (Lower(ExtractExt(APISource)) == "cpp") {
 			QCol->Doing("Adding", APISource);
 			auto APIName = StripAll(APISource);
 			Headers +="\tvoid Init_"+APIName+"();\n";
@@ -61,15 +61,15 @@ try {
 	InitFunc+"\t\n";
 	//const std::string AO = "{", AS = "}";
 	std::string Output = "namespace Scyndi_CI{\n\n"+Headers+"\n\n"+InitFunc+"\n\n}\n";
-	QCol->Green(Output+"\n";
+	QCol->Green(Output+"\n");
 	//QuickStream.SaveString($"{APIDir}/SCI_InstallAPIs.hpp", Output);
 
 } catch (std::runtime_error E) {
-	QCol->Error(E.Message);
-	Console.ResetColor();
+	QCol->Error(E.what());
+	QCol->Reset();
 	return 1;
 }
-Console.ResetColor();
+QCol->Reset();
 
 
 return 0;

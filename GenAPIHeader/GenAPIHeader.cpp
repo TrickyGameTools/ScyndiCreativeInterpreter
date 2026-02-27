@@ -23,7 +23,6 @@
 // 	fall under this licenses. Mostly this is noted in the respective files.
 //
 // Version: 24.10.28
-// End License
 // Lic:
 // Scyndi's Creative Interpreter
 // Create API header filer
@@ -49,12 +48,14 @@
 //
 // Version: 23.01.14
 // EndLic
-using System.Text;
-using TrickyUnits;
+
+
+//using System.Text;
+//using TrickyUnits;
 
 
 // This is only a quick program which will make sure a proper header file containing all APIs is present.
-
+int main() {
 try {
 	QCol.Doing("Running from", Directory.GetCurrentDirectory());
 	const string APIDir = "E:/Projects/Applications/Slyvina/Apps/SCI/SCI_Run/API";
@@ -85,3 +86,4 @@ try {
 	QCol.Magenta($"\n\n{E.StackTrace}\n\n");
 } finally {
 	Console.ResetColor();
+}

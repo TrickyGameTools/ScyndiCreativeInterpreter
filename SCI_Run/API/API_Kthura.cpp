@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.02.14
+// Version: 26.02.27
 // End License
 
 
@@ -78,6 +78,40 @@ namespace Scyndi_CI {
 		Lunatic_PushString(L, LastLoadedKthura());
 		return 1;
 	}
+
+	static int API_Kthura_ColorByLabel(lua_State*L){
+		auto
+			ObjLabel{Lunatic_CheckString(L,1)};
+		auto
+			R{luaL_checkinteger(L,2)},
+			G{luaL_checkinteger(L,3)},
+			B{luaL_checkinteger(L,4)};
+		auto
+			Lay{GetKthuraLayer()};
+		auto LO{Lay->CopyLabelMap(ObjLabel)};
+		for (auto o:LO){
+			o->r(R);
+			o->g(G);
+			o->b(B);
+		}
+		return 0;
+	}
+
+static int API_Kthura_TexByLabel(lua_State*L){
+		auto
+			ObjLabel{Lunatic_CheckString(L,1)},
+			ObjTex{Lunatic_CheckString(L,2)},
+			ObjKind{Upper(Lunatic_OptString(L,3,"*"))};
+		auto
+			Lay{GetKthuraLayer()};
+		auto
+			LO{Lay->CopyLabelMap(ObjLabel)};
+		for (auto o:LO){
+			if (ObjKind=="*" || Upper(o->SKind())==ObjKind) o->texture(ObjTex);
+		}
+		return 0;
+}
+
 
 #define SetObjInt(skey,key) if (ObjKey==skey) {o->key(luaL_checkinteger(L,3)); return 0; }
 #define SetObjByte(skey,key) if (ObjKey==skey) {o->key((byte)(luaL_checkinteger(L,3)%256)); return 0; }
@@ -688,6 +722,32 @@ namespace Scyndi_CI {
 		return 4;
 	}
 
+	static int API_Kthura_AllObj(lua_State*L){
+		static std::vector<int> AOL{};
+		auto Want{Upper(Lunatic_CheckString(L,1))};
+		if (Want=="RESET") {
+			AOL.clear();
+			auto Lay{GetKthuraLayer()};
+			for(auto o=Lay->FirstObject();o;o=o->Next()) AOL.push_back(o->ID());
+			lua_pushinteger(L,AOL.size());
+			return 1;
+		}
+		if (Want=="SIZE") {
+			lua_pushinteger(L,AOL.size());
+			return 1;
+		}
+		if (Want=="GET") {
+			auto idx{luaL_checkinteger(L,2)};
+			if (idx<0 || idx>=AOL.size()) {
+				luaL_error(L,"Kthura Object List Out of Bounds (%d/%d)",idx,AOL.size());
+				return 0;
+			}
+			lua_pushinteger(L,AOL[idx]);
+			return 1;
+		}
+
+	}
+
 	void Init_API_Kthura() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{ "Load", API_Kthura_Load },
@@ -729,7 +789,10 @@ namespace Scyndi_CI {
 			{ "HideByZone",API_Kthura_HideByZone },
 			{ "ShowByZone",API_Kthura_ShowByZone },
 			{ "VisAll",API_Kthura_VisibilityAll },
-			{ "ObjSize",API_Kthura_ObjSize }
+			{ "ObjSize",API_Kthura_ObjSize },
+			{ "ColorByLabel",API_Kthura_ColorByLabel },
+			{ "TexByLabel",API_Kthura_TexByLabel },
+			{ "AllObj",API_Kthura_AllObj }
 		};
 
 		InstallAPI("Kthura", IAPI);

@@ -1,28 +1,28 @@
 // License:
-//
+// 
 // Scyndi's Creative Interpreter - Builder
 // Package
-//
-//
-//
-// 	(c) Jeroen P. Broks, 2023, 2024, 2025
-//
+// 
+// 
+// 
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
+// 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-//
+// 
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//
+// 
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-//
-// Version: 25.03.25
+// 
+// Version: 26.02.27
 // End License
 
 #define Act(A) if (!A) return false
@@ -33,6 +33,7 @@
 #include <SlyvAsk.hpp>
 #include <SlyvDir.hpp>
 #include <SlyvDirry.hpp>
+#include <SlyvGINIE.hpp>
 #include <SlyvVecSearch.hpp>
 #include <SlyvVolumes.hpp>
 
@@ -76,7 +77,19 @@ namespace Scyndi_CI {
 			for (auto a : *L) if (a->FullFileName == FFN) return true;
 			return false;
 		}
-		void SRPushUnique(SRList L, String FFN, String FN, String RD) { if (!SRFind(L,FFN)) L->push_back(make_shared<ScriptRecord>(FFN, FN, RD)); }
+		bool SRFindDir(SRList L, String FFN) {
+			for (auto a : *L) {
+				//QCol->Doing("Debug","Looking for: "+FFN+" ("+a->FullFileName+")");
+				if (Prefixed(Upper(a->FullFileName),Upper(FFN))) return true;
+			}
+			return false;
+		}
+		void SRPushUnique(SRList L, String FFN, String FN, String RD) {
+			if (!SRFind(L,FFN)) {
+				//cout << "\x1b[91mDEBUG!!\t\x1b[37m SRPushUnique(<list>, \""	<<FFN<<"\", \""<<FN<<"\", \""<<RD<<"\")\n";
+				L->push_back(make_shared<ScriptRecord>(FFN, FN, RD));
+			}
+		}
 #pragma endregion
 
 
@@ -331,14 +344,60 @@ namespace Scyndi_CI {
 								for (auto libd : *LibList) {
 									auto fdep{ libd + "/" + dep };
 									if (CLI_Args.bool_flags["scyndidebug"]) fdep += ".Debug"; fdep += ".stb";
-									//cout << "Checking: " << fdep << endl;
-									if ((!SRFind(DepDone, fdep)) && (!SRFind(DepNeed, fdep))) {
+									auto bdep{libd+"/"+dep+".ScyndiBundle"};
+									//cout << "Checking: " << fdep << "\t" <<bdep<< endl;
+									//if ((!SRFind(DepDone, fdep)) && (!SRFind(DepNeed, fdep))) {
+									if ((!SRFind(DepDone, fdep)) && (!SRFind(DepNeed, fdep)) && (!SRFindDir(DepDone,bdep)) && (!SRFindDir(DepNeed,bdep))) {
 										if (FileExists(fdep)) {
 											//VecPushUnique(DepNextNeed, fdep);
 											//cout << "Push " << fdep << "," << dep << ", Libs\n";
 											auto tdep{ dep }; if (CLI_Args.bool_flags["scyndidebug"]) tdep += ".Debug"; tdep += ".stb";
 											SRPushUnique(DepNextNeed, fdep, tdep, "Libs");
 											found = true;
+										}
+									//} else if ((!SRFindDir(DepDone,bdep)) && (!SRFindDir(DepNeed,bdep))) {
+										//QCol->Doing("Debug Dir:",bdep);
+										else if (DirectoryExists(bdep)) {
+											QCol->Doing("=> Dep Bundle",ldep);
+											auto dcontents{GetTree(bdep)};
+											for(auto f:*dcontents){
+												auto uf{Upper(f)};
+												if (ExtractExt(uf)=="SCYNDI" || uf=="SCI_GATHER.INI") {
+													QCol->Doing("==> Ignored",f);
+												} else if (ExtractExt(uf)=="STB") {
+													if (CLI_Args.bool_flags["scyndidebug"] && Suffixed(uf,".DEBUG.STB")) {
+														found=true;
+														QCol->Doing("==> Code",f);
+														auto tdep{dep}; tdep+=".ScyndiBundle/"+f; //if (CLI_Args.bool_flags["scyndidebug"]) tdep += ".Debug"; tdep += ".stb";
+														//cout << dep << " :: "<<f<<" :: "<<tdep<<"\n";
+														SRPushUnique(DepNextNeed, bdep+"/"+f, tdep,"Libs");
+														//OutputJQL+="From:"+f+"\nSteal:";
+													} else if ((!CLI_Args.bool_flags["scyndidebug"]) && (!Suffixed(uf,".DEBUG.STB"))) {
+														found=true;
+														QCol->Doing("==> Code",f);
+														SRPushUnique(DepNextNeed, StripExt(StripExt(f)),bdep+"/"+f, "Libs");
+													}
+												} else {
+													QCol->Doing("==> Asset",f);
+													auto g{LoadOptGINIE(bdep+"/SCI_Gather.ini",bdep+"/SCI_Gather.ini","Just a file needed by the SCI_Builder\nNothing special!")};
+													auto author{Ask(g,"author",f,"Author: ")};
+													auto notes {Ask(g,"Notes",f, "Notes:  ")};
+													if (_debug) {
+														OutputJQL+="\n# Library Bundle: "+bdep+"\n";
+														OutputJQL+="Author:"+author+"\n";
+														OutputJQL+="Notes:"+author+"\n";
+														OutputJQL+="Raw:"+bdep+"/"+f+">Libs/"+dep+".ScyndiBundle/"+f+"\n";
+													} else {
+														auto tname{"Libs/"+dep+".ScyndiBundle/"+f};
+														auto pkg{GetPackage(wantpackage)};
+														if (pkg->Entries.count(Upper(tname))) {
+															QCol->Red("SKIPPED! (Dupe)\n");
+														} else {
+															pkg->AddFile(bdep+"/"+f,tname,_Parent->PrefferedStorage(),author,notes);
+														}
+													}
+												}
+											}
 										}
 									} else found = true;
 								}
@@ -574,6 +633,14 @@ namespace Scyndi_CI {
 			//QCol->Error("Finalizing not yet implemented for release builds");
 		}
 
+		bool _Package::Scorpion() {
+			if  (_debug) return true;
+			auto icon{Ask(PrjData,"Scorpion","Icon","Icon for Scorpion: ","*NONE*")};
+			if (icon=="*NONE") return true;
+			Packages["*MAIN"]->AddFile(icon,"ID/Icon.png");
+			return true;
+		}
+
 		bool HandlePackage(SCI_Project* P, GINIE G) {
 			QCol->Doing("Packaging", P->OutputName());
 			auto HP{ Package(new _Package(P,G)) };
@@ -585,6 +652,7 @@ namespace Scyndi_CI {
 			Act(HP->Merge());
 			Act(HP->PackScript());
 			Act(HP->Aliases());
+			Act(HP->Scorpion());
 			return true;
 		}
 	}

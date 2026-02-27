@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Graphics.Scyndi
 // 	Scyndi's Creative Interpreter - Graphics linkup
-// 	version: 26.02.14
+// 	version: 26.02.27
 // 
 // 	Copyright (C) 2023, 2024, 2025, 2026 Jeroen P. Broks
 // 
@@ -436,6 +436,26 @@ end
 
 Global const delegate Flip = Lua.Graphics.Flip
 const delegate Flip = Lua.Graphics.Flip
+
+Extern Blend_None "0"
+Extern Blend_Alpha "1"
+Extern Blend_Additive "2"
+Extern Blend_Color "4"
+
+Void SetBlend(blnd)
+	Switch Lua.type(blnd)
+		case "number"
+			Lua.Graphics.PureSetBlend(1,blnd)
+		case "string"
+			Lua.Graphics.PureSetBlend(3,blnd)
+		default
+			error("Illegal function call! (SetBlend did not expect a "..Lua.type(blnd).." as parameter!")
+	End
+End
+
+// Only there for powerplayers who know what they are doing!
+// If you don't, just use SetBlend!
+const delegate PureSetBlend = Lua.Graphics.PureSetBlend
 
 Init
 	Lua.Graphics.LoadImage = LoadImage

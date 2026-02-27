@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024, 2025
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.06.15
+// Version: 26.02.27
 // End License
 
 #include <SlyvString.hpp>
@@ -356,6 +356,28 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_SetBlend(lua_State*L) {
+		auto t{luaL_checkinteger(L,1) }; // Type 1 = integer SDL, 2 = integer Blitz, 3 = string
+		switch (t) {
+		case 1:
+			SetBlend((SDL_BlendMode)luaL_checkinteger(L,2));
+			return 0;
+		case 2:
+			SetBlitzBlend((BlitzBlend)luaL_checkinteger(L,2));
+			return 0;
+		case 3: {
+			static std::map<std::string,Blend> Blends { {"ALPHA",Blend::Alpha}, {"ADDITIVE",Blend::Additive}, {"NONE",Blend::None}, {"COLOR",Blend::Color} };
+			auto b{Upper(luaL_checkstring(L,2))};
+			if (!Blends.count(b)) luaL_error(L,"Graphics.PureSetBlend(%d,\"%s\"): Unknown blend",t,b.c_str());
+			SetBlend(Blends[b]);
+			return 0;
+		} return 0;
+		default: luaL_error(L,"Unknown communication type (%d) for blend configuration",t);
+
+		}
+		return 0; // Should NEVER be executed, but just in case!
+	}
+
 
 	void Init_API_Graphics() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -391,7 +413,8 @@ namespace Scyndi_CI {
 			{ "Plot",API_Plot },
 			{ "Flip",API_Flip },
 			{ "ListImages",API_ListImages	},
-			{ "Circle", API_Circle }
+			{ "Circle", API_Circle },
+			{ "PureSetBlend", API_SetBlend }
 		};
 		InstallAPI("Graphics", IAPI);
 	}

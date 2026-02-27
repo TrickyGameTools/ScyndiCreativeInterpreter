@@ -23,6 +23,7 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="../../../Libs/Units/Source/SlyvDir.cpp" />
+		<Unit filename="../../../Libs/Units/Source/SlyvQCol.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvString.cpp" />
 		<Unit filename="GenAPIHeader.cpp" />
 		<Extensions />

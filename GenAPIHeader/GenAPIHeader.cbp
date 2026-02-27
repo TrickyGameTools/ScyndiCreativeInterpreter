@@ -22,6 +22,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="GenAPIHeader.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

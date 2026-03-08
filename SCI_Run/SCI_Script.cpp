@@ -739,13 +739,13 @@ namespace Scyndi_CI {
 				Crash(TrSPrintF("Unknown Run-Type (U%d)", (int)RT), "This is an internal error in Scyndi's Creative Interpreter\nPlease go to https://github.com/TrickyGameTools/ScyndiCreativeInterpreter/issues\nand write an issue about this matter!");
 				return;
 			case RunType::Straight:
-				Call("Flow_Main", "Main");
+				Call("Flow_Main", "Main","");
 				return;
 			case RunType::Flow:
 				Cls();
 				Poll();
 				if (DebugConsoleCalled()) break;
-				Call(CFlow.Name, "MainFlow");
+				Call(CFlow.Name, "MainFlow","");
 				if (DontFlip)
 					DontFlip--;
 				else
@@ -753,14 +753,14 @@ namespace Scyndi_CI {
 				break;
 			case RunType::Callback: {
 				Cls();
-				Call(CFlow.Name, "CB_Draw");
+				Call(CFlow.Name, "CB_Draw","");
 				if (DontFlip)
 					DontFlip--;
 				else
 					Flip();
 				Poll();
 				if (DebugConsoleCalled()) break;
-				Call(CFlow.Name, "CB_Update");
+				Call(CFlow.Name, "CB_Update","");
 				static auto keys{ KeyArray() };
 				for (auto k : keys) {
 					if (KeyDown(k)) Call(CFlow.Name, "CB_KeyDown", to_string((int)k));

@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.02.11
+// Version: 26.03.08
 // End License
 
 
@@ -107,9 +107,13 @@ namespace Scyndi_CI {
 	}
 
 	static int API_Master(lua_State*L) {
+#ifndef SlyvWindows
 		auto r{Mix_MasterVolume(luaL_checkinteger(L,1))};
 		lua_pushinteger(L,r);
 		return 1;
+#else
+		return 0;
+#endif
 	}
 
 	void Init_API_Audio() {

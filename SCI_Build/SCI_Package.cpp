@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.02.27
+// Version: 26.03.08
 // End License
 
 #define Act(A) if (!A) return false
@@ -40,6 +40,8 @@
 #include "SCI_Package.hpp"
 #include "SCI_Build_Config.hpp"
 #include "SCI_Package.hpp"
+
+#include "../SCI_Share/Version.hpp"
 
 using namespace Slyvina;
 using namespace Units;
@@ -374,8 +376,10 @@ namespace Scyndi_CI {
 														//OutputJQL+="From:"+f+"\nSteal:";
 													} else if ((!CLI_Args.bool_flags["scyndidebug"]) && (!Suffixed(uf,".DEBUG.STB"))) {
 														found=true;
+														auto tdep{dep}; tdep+=".ScyndiBundle/"+f;
 														QCol->Doing("==> Code",f);
-														SRPushUnique(DepNextNeed, StripExt(StripExt(f)),bdep+"/"+f, "Libs");
+														//SRPushUnique(DepNextNeed, StripExt(StripExt(f)),bdep+"/"+f, "Libs");
+														SRPushUnique(DepNextNeed, bdep+"/"+f, tdep,"Libs");
 													}
 												} else {
 													QCol->Doing("==> Asset",f);
@@ -634,10 +638,43 @@ namespace Scyndi_CI {
 		}
 
 		bool _Package::Scorpion() {
+			auto P{this->_Parent};
 			if  (_debug) return true;
 			auto icon{Ask(PrjData,"Scorpion","Icon","Icon for Scorpion: ","*NONE*")};
-			if (icon=="*NONE") return true;
-			Packages["*MAIN"]->AddFile(icon,"ID/Icon.png");
+			String SOut{"# Scorpion Data\n\n"};
+			if (icon!="*NONE*") //return true;
+				Packages["*MAIN"]->AddFile(icon,"ID/Icon.png");
+			if (Yes(PrjData,"Scorpion","BackAliasDo","Alias a picture from the JCR resource as background")) {
+				Packages[Ask(PrjData,"Scorpion","BackAliasFromPackage","From Package: ","*MAIN")]
+				->Alias(Ask(PrjData,"Scorpion","BackAliasEntry","Alias entry: "),"ID/Background.png");
+			} else {
+				auto backg{Ask(PrjData,"Scorpion","Back","Background for Scorpion: ","*NONE*")};
+				if (backg=="*NONE*") Packages["*MAIN"]->AddFile(backg,"ID/Background.png");
+			}
+			SOut+="\n[Meta]";
+			SOut+="\nAuthor="+P->Author();
+			SOut+="\nTitle="+P->Title();
+			auto desc{AskList(PrjData,"Scorpion","Description","Describe the game:",2)};
+			SOut+="\n*List:Description";
+			for (auto& dl:*desc) SOut+="\n\t"+dl;
+			SOut+="\n*end";
+			SOut+="\n[Engine]";
+			SOut+="\nEngine=SCI";
+			SOut+="\nVersion="+QVersion.Version();
+			SOut+="\nExe=SCI_Run";
+			SOut+="\n[Buttons]";
+			SOut+="\nText="+Ask(PrjData,"Scorpion","Button.Text","Button Text Color: ","#7f7f7f");
+			SOut+="\nBack="+Ask(PrjData,"Scorpion","Button.Back","Button Background Color:","#000000");
+			SOut+="\n[Head]";
+			SOut+="\nText="+Ask(PrjData,"Scorpion","Head.Text","Header Text Color: ","#7f7f7f");
+			//SOut+="Back="+Ask(PrjData,"Scorpion","Head.Back","Header Background Color:","#000000");
+			SOut+="\n[Text]";
+			SOut+="\nText="+Ask(PrjData,"Scorpion","Text.Text","General Text Color: ","#7f7f7f");
+			SOut+="\n[Listbox]";
+			SOut+="\nText="+Ask(PrjData,"Scorpion","ListBox.Text","Listbox Text Color: ","#7f7f7f");
+			SOut+="\nBack="+Ask(PrjData,"Scorpion","ListBox.Back","Listbox Background Color:","#000000");
+			//SOut+="Back="+Ask(PrjData,"Scorpion","Text.Back","Texter Background Color:","#000000");
+			AddString("*MAIN","ID/Scorpion.ini",SOut,_Parent->Author(),_Parent->Copyright());
 			return true;
 		}
 

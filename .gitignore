@@ -48,3 +48,7 @@ qvmin
 *.depend
 bin/
 obj/
+
+
+# Visual Studio Crap
+*.vcxproj.user

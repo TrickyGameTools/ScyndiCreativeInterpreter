@@ -73,6 +73,9 @@
     <Filter Include="Source Files\Slyvina\Medals">
       <UniqueIdentifier>{a7180d7a-5b1d-4007-9cb0-54a922a50cda}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\lib">
+      <UniqueIdentifier>{be230191-a585-448c-bccb-2997df120c5f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SCI_Run.cpp">

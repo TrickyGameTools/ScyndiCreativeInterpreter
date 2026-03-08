@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.02.27
+// Version: 26.03.08
 // End License
 namespace Scyndi_CI{
 
@@ -66,5 +66,6 @@ namespace Scyndi_CI{
 		Init_API_String();
 		Init_API_Vars();
 
+	}
 
 }

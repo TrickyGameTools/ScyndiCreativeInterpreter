@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.02.27 II
+// Version: 26.03.08
 // End License
 
 
@@ -62,7 +62,7 @@ try {
 
 	InitFunc+"\t\n";
 	//const std::string AO = "{", AS = "}";
-	std::string Output = "namespace Scyndi_CI{\n\n"+Headers+"\n\n"+InitFunc+"\n\n}\n";
+	std::string Output = "namespace Scyndi_CI{\n\n"+Headers+"\n\n"+InitFunc+"\n\t}\n\n}\n";
 	QCol->Green(Output+"\n");
 	//QuickStream.SaveString($"{APIDir}/SCI_InstallAPIs.hpp", Output);
 	SaveString(APIDir+"/SCI_InstallAPIs.hpp",Output);

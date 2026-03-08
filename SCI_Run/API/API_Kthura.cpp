@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.02.27
+// Version: 26.03.08
 // End License
 
 
@@ -110,6 +110,38 @@ static int API_Kthura_TexByLabel(lua_State*L){
 			if (ObjKind=="*" || Upper(o->SKind())==ObjKind) o->texture(ObjTex);
 		}
 		return 0;
+}
+
+static int API_Kthura_ObjByLabel(lua_State*L) {
+	static std::vector<int> ret{};
+	static std::map<std::string,int> WTD2N { {"RESET",1},{"CLEAR",1},{"COPY",2},{"SIZE",3}, {"COUNT",3}, {"GET",4} };
+	auto Lay{GetKthuraLayer()};
+	auto WTD{Upper(Lunatic_CheckString(L,1))};
+	if (!WTD2N.count(WTD)) { luaL_error(L,"Unknown ObjByLevel command: %s",WTD.c_str()); return 0; }
+	switch (WTD2N[WTD]) {
+	case 1:
+		ret.clear();
+		return 0;
+	case 2:{
+		auto l{Lunatic_CheckString(L,2)};
+		auto cpy = Lay->CopyLabelMap(l);
+		ret.clear();
+		for(auto o:cpy) ret.push_back(o->ID());
+	}
+		// FALLTHROUGH! NO BREAK!
+	case 3:
+		lua_pushinteger(L,ret.size());
+		return 1;
+	case 4: {
+		auto idx{luaL_checkinteger(L,2)};
+		if (idx<0 || idx>=ret.size()) { luaL_error(L,"Label array out of bounds %d/%d",idx,ret.size()); return 0; }
+		lua_pushinteger(L,ret[idx]);
+		return 1;
+	}
+	default:
+		luaL_error(L,"Internal error in ObjByLabel API. Unknown command number: %d/%s\nPlease report!",WTD2N[WTD],WTD.c_str());
+	}
+	return 0; // Safety! Should never be executed!
 }
 
 
@@ -792,7 +824,8 @@ static int API_Kthura_TexByLabel(lua_State*L){
 			{ "ObjSize",API_Kthura_ObjSize },
 			{ "ColorByLabel",API_Kthura_ColorByLabel },
 			{ "TexByLabel",API_Kthura_TexByLabel },
-			{ "AllObj",API_Kthura_AllObj }
+			{ "AllObj",API_Kthura_AllObj },
+			{ "ObjByLabel",API_Kthura_ObjByLabel }
 		};
 
 		InstallAPI("Kthura", IAPI);

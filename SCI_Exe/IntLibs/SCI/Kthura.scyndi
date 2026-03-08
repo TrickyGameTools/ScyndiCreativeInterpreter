@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // 	Kthura Link up for Scyndi's Creative Interpreter
-// 	version: 26.02.27
+// 	version: 26.03.08
 // 
 // 	Copyright (C) 2023, 2024, 2025, 2026 Jeroen P. Broks
 // 
@@ -450,3 +450,13 @@ Get Var EachObject
 	end
 	Return ret
 End
+
+Var ObjByLabel(string L)
+	Remap()
+	S:=MyKthura.ObjByLabel("COPY",L)
+	R:={}
+	For i=0,S-1
+		R+=MyKthura.ObjByLabel("GET",i)
+	End
+	Return R
+End	

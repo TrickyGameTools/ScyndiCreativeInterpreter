@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024, 2025
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,33 +22,10 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.13
+// Version: 26.04.11
 // End License
-// Lic:
-// Scyndi's Creative Interpreter
-// Bank API
-// 
-// 
-// 
-// (c) Jeroen P. Broks, 2023, 2024
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
-// Please note that some references to data like pictures or audio, do not automatically
-// fall under this licenses. Mostly this is noted in the respective files.
-// 
-// Version: 24.09.24
-// EndLic
+
+#include <JCR6_Core.hpp>
 #include <SlyvBank.hpp>
 
 #include "../SCI_Script.hpp"
@@ -134,16 +111,42 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int API_Size(lua_State*L) {
+		auto Tag{ Upper(Lunatic_CheckString(L,1)) };
+		if (!BankRegister.count(Tag)) luaL_error(L, "Bank.Size: There is no bank tagged '%s'", Tag.c_str());
+		lua_pushinteger(L, BankRegister[Tag]->Size());
+		return 1;
+	}
+
+
+	static int API_JCR6(lua_State*L) {
+		static uint32 count{0};
+		auto
+			E{Lunatic_CheckString(L,1)},
+			Tag{Lunatic_CheckString(L,2)};
+		if (Tag == "") {
+			Tag = TrSPrintF("***AUTO_%08x_JCR6", count++);
+		} else if (Prefixed(Tag, "*")) {
+			luaL_error(L, "Cannot create a bank with a reserved tag! '%s'", Tag.c_str());
+			return 0;
+		}
+		BankRegister[Tag]=Resource()->B(E);
+		Lunatic_PushString(L,Tag);
+		return 1;
+	}
+
 	Bank SGBank(std::string Tag) { return BankRegister[Upper(Tag)]; } // Needed for the savegame system
 	void SGBank(std::string Tag, Bank Bnk) { BankRegister[Upper(Tag)] = Bnk; }
- 
+
 	void Init_API_Bank() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{ "Create", API_CreateBank},
 			{ "Kill",API_KillBank },
 			{ "Poke",API_PokeBank },
 			{ "Peek",API_PeekBank },
-			{ "Clean",API_Clean }
+			{ "Clean",API_Clean },
+			{ "Load",API_JCR6 },
+			{ "Size",API_Size }
 		};
 		InstallAPI("Bank", IAPI);
 	}

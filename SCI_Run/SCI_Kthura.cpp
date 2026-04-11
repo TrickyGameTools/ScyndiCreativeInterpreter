@@ -1,53 +1,28 @@
 // License:
-//
+// 
 // Scyndi's Creative Interpreter
 // Kthura Manager
-//
-//
-//
-// 	(c) Jeroen P. Broks, 2023, 2024, 2025
-//
+// 
+// 
+// 
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
+// 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-//
+// 
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//
+// 
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-//
-// Version: 25.01.05
-// Lic:
-// Scyndi's Creative Interpreter
-// Kthura Manager
-//
-//
-//
-// (c) Jeroen P. Broks, 2023, 2024
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-// Please note that some references to data like pictures or audio, do not automatically
-// fall under this licenses. Mostly this is noted in the respective files.
-//
-// Version: 24.09.24
-// EndLic
+// 
+// Version: 26.03.23
 // End License
 
 #include <SlyvQCol.hpp>
@@ -55,11 +30,16 @@
 #include <Kthura_Core.hpp>
 #include <Kthura_Draw.hpp>
 #include <Kthura_Walk_Dijkstra.hpp>
+#include <Kthura_LoadCompiled.hpp>
 #include <Kthura_Draw_TQSG.hpp>
+
+#include <TQSE.hpp>
 
 #include "SCI_JCR.hpp"
 #include "SCI_Kthura.hpp"
 #include "SCI_Crash.hpp"
+#include "SCI_Config.hpp"
+#include "SCI_Script.hpp"
 
 
 using namespace Slyvina;
@@ -69,6 +49,7 @@ using namespace Units;
 namespace Scyndi_CI {
 
 	KthuraDraw SCI_KthuraDraw{ nullptr };
+	TypeScriptLoadCallBack ScriptLoadCallBack{""};
 	static std::string MapLastLoaded{""};
 	static std::string MapLastPicked{""};
 	static std::string LayerLastPicked{""};
@@ -80,6 +61,17 @@ namespace Scyndi_CI {
 		Crash("Kthura error: " + errormessage, xdata);
 	}
 	static void SCIKthuraDrawCrash(std::string em) { SCIKthuraCrash(em, "Error in Kthura_Draw_TQSG"); }
+
+	static void SCI_KthuraLoadCB(int l, int lo, int to) {
+		TQSE::Poll();
+		if (Upper(IDVal("Build", "Type")) == "DEBUG") {
+			QCol->Doing("- Kthura Load",TrSPrintF("L%03d; OL%04d; OT%04d;",l,lo,to));
+		}
+		if (ScriptLoadCallBack.State!="" && ScriptLoadCallBack.Function!="") {
+			Call(ScriptLoadCallBack.State,ScriptLoadCallBack.Function,TrSPrintF("%d,%d,%d",l,lo,to));
+		}
+
+	};
 
 	static void Init_SCI_Kthura() {
 		if (!SCI_KthuraDraw) {
@@ -93,6 +85,7 @@ namespace Scyndi_CI {
 			TQSG_Kthura_Panic = SCIKthuraDrawCrash;
 			QCol->Doing("=>", "Done");
 		}
+		Slyvina::Kthura::LoadCompiledKthuraProcessCallBack=SCI_KthuraLoadCB;
 	}
 
 	Slyvina::Kthura::Kthura GetKthura(std::string Tag) {

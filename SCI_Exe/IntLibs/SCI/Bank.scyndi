@@ -1,30 +1,42 @@
-// License Information:
-// SCI_Exe/IntLibs/SCI/Bank.scyndi
-// Scyndi's Creative Interpreter - Bank API
-// version: 24.09.24
-// Copyright (C) 2023, 2024 Jeroen P. Broks
-// This software is provided 'as-is', without any express or implied
-// warranty.  In no event will the authors be held liable for any damages
-// arising from the use of this software.
-// Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it
-// freely, subject to the following restrictions:
-// 1. The origin of this software must not be misrepresented; you must not
-// claim that you wrote the original software. If you use this software
-// in a product, an acknowledgment in the product documentation would be
-// appreciated but is not required.
-// 2. Altered source versions must be plainly marked as such, and must not be
-// misrepresented as being the original software.
-// 3. This notice may not be removed or altered from any source distribution.
-// End License Information
+// License:
+// 	SCI_Exe/IntLibs/SCI/Bank.scyndi
+// 	Scyndi's Creative Interpreter - Bank API
+// 	version: 26.04.11 I
+// 
+// 	Copyright (C) 2023, 2024, 2026 Jeroen P. Broks
+// 
+// 	This software is provided 'as-is', without any express or implied
+// 	warranty.  In no event will the authors be held liable for any damages
+// 	arising from the use of this software.
+// 
+// 	Permission is granted to anyone to use this software for any purpose,
+// 	including commercial applications, and to alter it and redistribute it
+// 	freely, subject to the following restrictions:
+// 
+// 	1. The origin of this software must not be misrepresented; you must not
+// 	   claim that you wrote the original software. If you use this software
+// 	   in a product, an acknowledgment in the product documentation would be
+// 	   appreciated but is not required.
+// 	2. Altered source versions must be plainly marked as such, and must not be
+// 	   misrepresented as being the original software.
+// 	3. This notice may not be removed or altered from any source distribution.
+// End License
+
 
 MODULE
 
 VAR GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"Bank")
 
+Void Kill(String Tag)
+	Lua.Bank.Kill(Tag)
+End
+
+	
+
 CLASS TBank
 
 	READONLY STRING Tag
+	INT Position = 0
 		
 	GET BOOL AutoDelete
 		RETURN Prefixed(Tag,"***AUTO")
@@ -33,22 +45,37 @@ CLASS TBank
 	STATIC VAR Obtain(STRING _Tag)
 		RETURN NEW TBank(-999,_Tag)
 	END
+		
 
-	CONSTRUCTOR(INT size,STRING _Tag="")
-		if (size==-999) && (_Tag!="")
+	CONSTRUCTOR(INT _size,STRING _Tag="")
+		if (_size==-999) && (_Tag!="")
 			Tag = _Tag
 			Return
 		End
-		if (size<=16) 
+		if (_size<=16) 
 			error("A bank must be at least 16 bytes")
 		end		
-		Tag = Lua.Bank.Create(_Tag,size)
+		Tag = Lua.Bank.Create(_Tag,_size)
 	END
 	
 	DESTRUCTOR
 		IF AutoDelete
 			Lua.Bank.Kill(Tag)
 		END
+	END
+	
+	STATIC VAR Load(string _E,string _Tag="")
+		_GT:=Lua.Bank.Load(_E,_Tag)
+		ret:=New TBank(-999,_GT)
+		return ret
+	END
+	
+	GET INT Size
+		RETURN Lua.Bank.Size(Tag)
+	END
+	
+	GET BOOL EOF
+		Return Position>=Size
 	END
 	
 	VOID Poke(INT ADDR,INT VALUE,INT BITS=8)
@@ -91,31 +118,31 @@ CLASS TBank
 		RETURN Lua.Bank.Peek(Tag,ADDR,BITS)
 	END
 	
-	BYTE PeekS8(INT ADDR)
+	BYTE PeekU8(INT ADDR)
 		RETURN Lua.Bank.Peek(Tag,ADDR,8)
 	END
-	INT PeekU8(INT ADDR)
+	INT PeekS8(INT ADDR)
 		RETURN Lua.Bank.Peek(Tag,ADDR,-8)
 	END
 	
-	INT PeekS16(INT ADDR)
+	INT PeekU16(INT ADDR)
 		RETURN Lua.Bank.Peek(Tag,ADDR,16)
 	END
-	INT PeekU16(INT ADDR)
+	INT PeekS16(INT ADDR)
 		RETURN Lua.Bank.Peek(Tag,ADDR,-16)
 	END
 	
-	INT PeekS32(INT ADDR)
+	INT PeekU32(INT ADDR)
 		RETURN Lua.Bank.Peek(Tag,ADDR,32)
 	END
-	INT PeekU32(INT ADDR)
+	INT PeekS32(INT ADDR)
 		RETURN Lua.Bank.Peek(Tag,ADDR,-32)
 	END
 	
-	INT PeekS64(INT ADDR)
+	INT PeekU64(INT ADDR)
 		RETURN Lua.Bank.Peek(Tag,ADDR,64)
 	END
-	INT PeekU64(INT ADDR)
+	INT PeekS64(INT ADDR)
 		RETURN Lua.Bank.Peek(Tag,ADDR,-64)
 	END
 	
@@ -123,4 +150,46 @@ CLASS TBank
 		Lua.Bank.Clean(Tag)
 	END
 	
+	BYTE ReadByte()		
+		ret:=Ternary(EOF,0,self.PeekU8(Position))
+		Position++
+		RETURN ret
+	END
+	
+	INT ReadInt32()
+		ret:=Ternary(Position<Size-4,Self.PeekS32(Position))
+		Position+=4
+		Return Ret
+	END
+	
+	STRING ReadString(Int Sz=0)
+		Sz=Ternary(Sz==0,Self.ReadInt32(),Sz)
+		Ret:=""
+		FOR I=1,Sz
+			Ret+=LString.Char(Self.ReadByte())
+		END
+		RETURN Ret
+	END
+	
+	STRING ReadNullString(Int Sz=0)
+		Ret:=""
+		BOOL N=False
+		WHILE SZ>0 && (!N)
+			C:=Self.ReadByte()
+			N=N||C<=0
+			IF !N
+				Ret+=LString.Char(Self.ReadByte())
+			END
+			SZ=math.max(0,SZ-1)
+		END
+		RETURN Ret
+	END
 END
+
+Get Var Load
+	return TBank.Load
+End
+
+Get Var Obtain
+	Return TBank.Obtain
+End

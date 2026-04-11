@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.03.08
+// Version: 26.03.23
 // End License
 
 
@@ -780,6 +780,12 @@ static int API_Kthura_ObjByLabel(lua_State*L) {
 
 	}
 
+	static int API_SetScriptLoadCallBack(lua_State*L) {
+		ScriptLoadCallBack.State = luaL_checkstring(L,1);
+		ScriptLoadCallBack.Function = luaL_checkstring(L,2);
+		return 0;
+	}
+
 	void Init_API_Kthura() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{ "Load", API_Kthura_Load },
@@ -825,7 +831,8 @@ static int API_Kthura_ObjByLabel(lua_State*L) {
 			{ "ColorByLabel",API_Kthura_ColorByLabel },
 			{ "TexByLabel",API_Kthura_TexByLabel },
 			{ "AllObj",API_Kthura_AllObj },
-			{ "ObjByLabel",API_Kthura_ObjByLabel }
+			{ "ObjByLabel",API_Kthura_ObjByLabel },
+			{ "ScriptLoadCallBack",API_SetScriptLoadCallBack }
 		};
 
 		InstallAPI("Kthura", IAPI);

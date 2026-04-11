@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // 	Kthura Link up for Scyndi's Creative Interpreter
-// 	version: 26.03.08
+// 	version: 26.04.11
 // 
 // 	Copyright (C) 2023, 2024, 2025, 2026 Jeroen P. Broks
 // 
@@ -35,6 +35,10 @@ Init
 	MyKthura = Lua.Kthura
 	Lua.Kthura = nil
 End
+
+Void ScriptLoadCallBack(string State,string Func)
+	MyKthura.ScriptLoadCallBack(State,Func)
+End	
 
 void Load(String T,String F)
 	MyKthura.Load(T,F)		
@@ -82,9 +86,11 @@ QuickMeta Kthura_Layers
 		End
 	End
 End
+
 Get Var Layers
 	Return Kthura_Layers
 End
+
 
 plua _Niks()
 end

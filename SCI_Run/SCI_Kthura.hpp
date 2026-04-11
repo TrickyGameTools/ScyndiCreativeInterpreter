@@ -1,28 +1,29 @@
-// Lic:
+// License:
+// 
 // Scyndi's Creative Interpreter
 // Kthura Manager (header)
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2023
+// 	(c) Jeroen P. Broks, 2023, 2026
 // 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// 		This program is free software: you can redistribute it and/or modify
+// 		it under the terms of the GNU General Public License as published by
+// 		the Free Software Foundation, either version 3 of the License, or
+// 		(at your option) any later version.
 // 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 		This program is distributed in the hope that it will be useful,
+// 		but WITHOUT ANY WARRANTY; without even the implied warranty of
+// 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// 		GNU General Public License for more details.
+// 		You should have received a copy of the GNU General Public License
+// 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Please note that some references to data like pictures or audio, do not automatically
-// fall under this licenses. Mostly this is noted in the respective files.
+// 	Please note that some references to data like pictures or audio, do not automatically
+// 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 23.11.03
-// EndLic
+// Version: 26.03.23 I
+// End License
 
 #pragma once
 #include <Kthura_Draw.hpp>
@@ -30,11 +31,16 @@
 namespace Scyndi_CI {
 	extern Slyvina::Kthura::KthuraDraw SCI_KthuraDraw;
 
+	struct TypeScriptLoadCallBack {
+		std::string State{""},Function{""};
+	};
+	extern TypeScriptLoadCallBack ScriptLoadCallBack;
+
 
 	Slyvina::Kthura::Kthura GetKthura(std::string Tag);
 	Slyvina::Kthura::Kthura GetKthura();
 	void PickKthura(std::string Tag);
-	void SCI_LoadKthura(std::string Tag,std::string MapDir);	
+	void SCI_LoadKthura(std::string Tag,std::string MapDir);
 	std::string LastLoadedKthura();
 	//KthuraLayer* GetKthuraLayer(std::string MapTag, std::string LayerTag);
 	Slyvina::Kthura::KthuraLayer* GetKthuraLayer(std::string MapTag, std::string LayerTag);

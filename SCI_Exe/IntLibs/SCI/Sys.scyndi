@@ -103,3 +103,7 @@ End
 Get String ExtPlatform
 	Return Lua.SCI_Platform(0)
 End
+
+Void KillOthers()
+	Lua.SYS_KillOthers(StateName)
+End

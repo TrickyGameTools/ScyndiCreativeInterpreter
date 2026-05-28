@@ -20,7 +20,6 @@
 // 	2. Altered source versions must be plainly marked as such, and must not be
 // 	   misrepresented as being the original software.
 // 	3. This notice may not be removed or altered from any source distribution.
-// End License
 // License Information:
 // SCI_Exe/IntLibs/SCI/SGJCR.scyndi
 // Scyndi's Creative Interpreter
@@ -40,6 +39,7 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // End License Information
+// End License
 
 Module
 
@@ -77,7 +77,7 @@ Class TSGJCR
 			error("L:Loading banks in savegames requires 'Libs/SCI/Bank' to be imported with #use")
 		end
 		Lua.SGJCR.GetBank(Tag,File,BnkTag)
-		Return Lua.Scyndi["NEW"](-999,BnkTag)
+		Return Lua.Scyndi["NEW"]("TBANK",-999,BnkTag)
 	End
 	
 	Void SetStatistician(String StatTag,String Folder="Party")

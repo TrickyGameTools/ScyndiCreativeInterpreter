@@ -53,6 +53,11 @@ String GetString(string Ent,String Tag="*MAIN")
 	return Lua.JCR6.JCRGetString(Tag,Ent)
 End
 
+String LoadString(string Ent,String Tag="*MAIN")
+	return Lua.JCR6.JCRGetString(Tag,Ent)
+End
+
+
 // This function is officially deprecated, but I'll leave it here in case of
 // serious conflicts.
 Table GetLines_Old(string Ent,String Tag="*MAIN")

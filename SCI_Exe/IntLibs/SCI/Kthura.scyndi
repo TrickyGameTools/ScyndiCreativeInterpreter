@@ -308,6 +308,10 @@ Var NewObject(String Kind,string Tag="")
 	return ret
 End
 
+Get Delegate NewObj
+	Return NewObject
+End
+
 Var NewTiledArea(int X, int Y, int W, int H, String Tex)
 	var r;r = NewObject("TiledArea")
 	r.X = X

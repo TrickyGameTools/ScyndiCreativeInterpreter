@@ -157,10 +157,29 @@ CLASS TBank
 	END
 	
 	INT ReadInt32()
-		ret:=Ternary(Position<Size-4,Self.PeekS32(Position))
+		ret:=Ternary(Position<Size-4,Self.PeekS32(Position),0)
 		Position+=4
 		Return Ret
 	END
+	
+	INT ReadUInt32()
+		ret:=Ternary(Position<Size-4,Self.PeekU32(Position),0)
+		Position+=4
+		Return Ret
+	END		
+
+	INT ReadInt16()
+		ret:=Ternary(Position<Size-2,Self.PeekS16(Position),0)
+		Position+=2
+		Return Ret
+	END
+	
+	INT ReadUInt16()
+		ret:=Ternary(Position<Size-2,Self.PeekU32(Position),0)
+		Position+=4
+		Return Ret
+	END		
+	
 	
 	STRING ReadString(Int Sz=0)
 		Sz=Ternary(Sz==0,Self.ReadInt32(),Sz)

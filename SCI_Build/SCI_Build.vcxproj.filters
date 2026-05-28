@@ -25,6 +25,9 @@
     <Filter Include="Source Files\Slyvina\JCR6">
       <UniqueIdentifier>{3bd9d150-70a2-4152-9bb6-d91070d0810f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Libraries">
+      <UniqueIdentifier>{567b53e3-b0a5-484c-b237-6d4478a41534}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SCI_Build.cpp">
@@ -119,5 +122,10 @@
     <ClInclude Include="SCI_Butler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\..\Libs\JCR6\3rdParty\zlib\zlibstatic.lib">
+      <Filter>Source Files\Libraries</Filter>
+    </Library>
   </ItemGroup>
 </Project>

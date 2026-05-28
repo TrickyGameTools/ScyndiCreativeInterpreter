@@ -1,27 +1,27 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter
 // Script & State Manager
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 26.03.23
 // End License
 
@@ -524,6 +524,17 @@ namespace Scyndi_CI {
 		KillState(luaL_checkstring(L, 1));
 		return 0;
 	}
+
+	static int SYS_KillOthers(lua_State*L) {
+		auto skip{Upper(Lunatic_CheckString(L,1))};
+		std::vector<std::string> Victims{};
+		for (auto&K:StateRegister) if (K.first!=skip) Victims.push_back(K.first);
+		for (auto V:Victims) {
+				QCol->Doing("Kill",V); // debug
+				KillState(V);
+		}
+		return 0;
+	}
 #pragma endregion
 
 	static void InitScript() {
@@ -564,7 +575,7 @@ namespace Scyndi_CI {
 			{"SCI_KillState",SYS_KillState},
 			{"SCI_InterReturn",SYS_InterReturn},
 			{"SCI_GetInterReturn",SYS_GetLastReturn},
-
+			{"SYS_KillOthers",SYS_KillOthers},
 			{"__DEBUG_ONOFF",DBG_OnOff},
 			{"__DEBUG_LINE",DBG_Line},
 			{"__DEBUG_PUSH",DBG_Push},

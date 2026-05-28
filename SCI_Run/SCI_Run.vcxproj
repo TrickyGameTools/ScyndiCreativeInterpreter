@@ -72,6 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>E:\Projects\Applications\Slyvina\Libs\Medals;E:\Projects\Applications\Slyvina\Libs\Statistician;E:\Projects\Applications\Slyvina\Libs\Kthura\Headers;E:\Projects\Applications\Slyvina\Libs\Lunatic;E:\Projects\Applications\Slyvina\Libs\TQSL\SDL2\include;E:\Projects\Applications\Slyvina\Libs\Units\Headers;E:\Projects\Applications\Slyvina\Libs\TQSL\Headers;E:\Projects\Applications\Slyvina\Libs\JCR6\Headers;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)SCI_Exe</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -46,6 +46,14 @@ const delegate ListImages = Lua.Graphics.ListImages
 const delegate Circle = Lua.Graphics.Circle
 global const delegate Circle = Lua.Graphics.Circle
 
+
+// HSV, RGB conversion
+const delegate RGB2HSV = Lua.Graphics.RGB2HSV
+const delegate HSV2RGB = Lua.Graphics.HSV2RGB
+global const delegate RGB2HSV = Lua.Graphics.RGB2HSV
+global const delegate HSV2RGB = Lua.Graphics.HSV2RGB
+
+
 Class TImage
 	ReadOnly String Tag
 		
@@ -402,7 +410,7 @@ Void Rect(int x,int y,int w,int h,_o)
 End
 
 Global Void Rect(int x,int y,int w,int h,_o)
-	int o := Ternary(_o && _o==0,1,0)	
+	int o := Ternary(_o && _o!=0,1,0)	
 	Lua.Graphics.Rect(x,y,w,h,o)
 End
  

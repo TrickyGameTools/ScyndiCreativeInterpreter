@@ -26,6 +26,8 @@ const delegate SaveString = Lua.SGFile.SaveString
 const delegate LoadString = Lua.SGFile.LoadString
 const delegate FileExists = Lua.SGFile.FileExists
 
+Const delegate NewDir = Lua.SGFile.NewDir
+
 
 QuickMeta SGDir
 

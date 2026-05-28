@@ -1,27 +1,27 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter - Builder
 // Package
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 26.03.08
 // End License
 
@@ -107,7 +107,7 @@ namespace Scyndi_CI {
 			if (pkg == "*MAIN") return MainPackage;
 			if (!Packages.count(pkg)) {
 				if (_Parent->Yes("Release_Package_MergeWithMain", pkg, "Merge package " + pkg + " with main package")) return MainPackage;
-				auto jname{ _Parent->ReleaseDirectory("JCR6") + _Parent->OutputName() + "." + pkg + ".jcr" };
+				auto jname{ Dirry(_Parent->ReleaseDirectory("JCR6") + _Parent->OutputName() + "." + pkg + ".jcr") };
 				auto pdir{ExtractDir(jname)};
 				if (!IsDir(pdir)) {
                     QCol->Doing("Creating dir",pdir); MakeDir(pdir);
@@ -411,6 +411,10 @@ namespace Scyndi_CI {
 						}
 						string ent{ bndl->ResFileName(wantbytecode) };
 						string dir{ bndl->ResDir }; // No longer needed, but kept for saving myself some work
+						if (bcfg->Value("INCLUSION","SCI")!="") {
+								ent=bcfg->Value("INCLUSION","SCI");
+								QCol->Doing("=> Add as",ent);
+						}
 						PackScript(bndl->FullFileName, wantbytecode, ent, wantpackage , dir);
 					}
 					DepNeed = DepNextNeed;

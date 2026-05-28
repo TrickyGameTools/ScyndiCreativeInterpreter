@@ -1,32 +1,33 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter
 // SGFile management API
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2023, 2025
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 25.01.13
 // End License
 
 #include <SlyvDir.hpp>
 #include <SlyvQCol.hpp>
+#include <SlyvStream.hpp>
 
 #include "../SCI_Config.hpp"
 #include "../SCI_Script.hpp"
@@ -108,11 +109,21 @@ namespace Scyndi_CI {
 		return 0;
 	}
 
+	static int SG_NewDir(lua_State*L) {
+		auto ND{Lunatic_CheckString(L,1)},FND{SaveGameDir() +"/"+ND};
+		if (IsDir(FND)) {
+			lua_pushboolean(L,true);
+		} else {
+			lua_pushboolean(L,MakeDir(FND));
+		}
+		return 1;
+	}
+
 
 	void Init_API_SGFile() {
 		std::map<std::string, lua_CFunction>IAPI{
 			{ "DirCount", SG_DirCount },
-			{ "DirSize", SG_DirCount }, 
+			{ "DirSize", SG_DirCount },
 			{ "DirEntry", SG_DirEntry },
 			{ "Delete", SG_DeleteFile },
 			{ "Kill", SG_DeleteFile },
@@ -120,7 +131,8 @@ namespace Scyndi_CI {
 			{ "SaveString", SG_SaveString },
 			{ "FileExists",SG_FileExists },
 			{ "ResetDir",SG_ResetDir },
-			{ "FileExists",SG_FileExists }
+			{ "FileExists",SG_FileExists },
+			{ "NewDir",SG_NewDir }
 		};
 		InstallAPI("SGFile", IAPI);
 	}

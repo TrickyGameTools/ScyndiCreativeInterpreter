@@ -1,31 +1,34 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter
 // Graphics API
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 26.02.27
 // End License
 
 #include <SlyvString.hpp>
+#include <SlyvHSVRGB.hpp>
+
+#include <Lunatic.hpp>
 
 #include "../SCI_Crash.hpp"
 #include "../SCI_Script.hpp"
@@ -149,6 +152,44 @@ namespace Scyndi_CI {
 		SetColorHSV(hue, saturation, value);
 		if (alpha >= 0) SetAlpha(alpha);
 		return 0;
+	}
+
+	static int API_RGB2HSV(lua_State*L) {
+		auto
+			R{luaL_checknumber(L,1)},
+			G{luaL_checknumber(L,2)},
+			B{luaL_checknumber(L,3)};
+		auto D255{Lunatic_OptBoolean(L,4,true)};
+		hsv ret{};
+		rgb src{};
+		src.r=D255?(double)R/255.0:R;
+		src.g=D255?(double)G/255.0:G;
+		src.b=D255?(double)B/255.0:B;
+		ret = rgb2hsv(src);
+		lua_pushnumber(L,ret.h);
+		lua_pushnumber(L,ret.s);
+		lua_pushnumber(L,ret.v);
+		return 3;
+	}
+
+	static int API_HSV2RGB(lua_State*L) {
+		hsv src{
+			luaL_checknumber(L,1), // hue
+			luaL_checknumber(L,2), // saturation
+			luaL_checknumber(L,3)  // value
+			};
+		rgb ret{hsv2rgb(src)};
+		bool M255{Lunatic_OptBoolean(L,4,true)};
+		if (M255) {
+			lua_pushinteger(L,(lua_Integer)std::floor((ret.r*255)+.5));
+			lua_pushinteger(L,(lua_Integer)std::floor((ret.g*255)+.5));
+			lua_pushinteger(L,(lua_Integer)std::floor((ret.b*255)+.5));
+		} else {
+			lua_pushnumber(L,ret.r);
+			lua_pushnumber(L,ret.g);
+			lua_pushnumber(L,ret.b);
+		}
+		return 3;
 	}
 
 	static int API_SWidth(lua_State* L) {
@@ -414,7 +455,9 @@ namespace Scyndi_CI {
 			{ "Flip",API_Flip },
 			{ "ListImages",API_ListImages	},
 			{ "Circle", API_Circle },
-			{ "PureSetBlend", API_SetBlend }
+			{ "PureSetBlend", API_SetBlend },
+			{ "RGB2HSV",API_RGB2HSV },
+			{ "HSV2RGB",API_HSV2RGB }
 		};
 		InstallAPI("Graphics", IAPI);
 	}

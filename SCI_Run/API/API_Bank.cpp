@@ -1,27 +1,27 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter
 // Bank API
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 26.04.11
 // End License
 
@@ -123,15 +123,15 @@ namespace Scyndi_CI {
 		static uint32 count{0};
 		auto
 			E{Lunatic_CheckString(L,1)},
-			Tag{Lunatic_CheckString(L,2)};
+			Tag{Upper(Lunatic_CheckString(L,2))};
 		if (Tag == "") {
 			Tag = TrSPrintF("***AUTO_%08x_JCR6", count++);
 		} else if (Prefixed(Tag, "*")) {
 			luaL_error(L, "Cannot create a bank with a reserved tag! '%s'", Tag.c_str());
 			return 0;
 		}
-		BankRegister[Tag]=Resource()->B(E);
-		Lunatic_PushString(L,Tag);
+		BankRegister[Upper(Tag)]=Resource()->B(E);
+		Lunatic_PushString(L,Upper(Tag));
 		return 1;
 	}
 

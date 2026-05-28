@@ -1,27 +1,27 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter
 // JCR based savegames
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2023, 2024, 2025
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 25.01.29
 // End License
 
@@ -158,7 +158,10 @@ namespace Scyndi_CI {
 			BankTag{ Lunatic_CheckString(L,3) };
 		auto
 			Bnk{ Rec->Banks[EntryN] };
-		if (!Bnk) { luaL_error(L, "Bank %s does not appear to be present in the savegame", BankTag.c_str()); return 0; }
+		if (!Bnk) {
+				for(auto&t:Rec->Banks) QCol->Doing("Has Bank",t.first);
+				luaL_error(L, "Bank %s does not appear to be present in the savegame", BankTag.c_str()); return 0;
+		}
 		SGBank(BankTag, Bnk);
 		return 0;
 	}
@@ -294,7 +297,7 @@ namespace Scyndi_CI {
 				for (auto F : JI->_Entries) {
 					if (ExtractDir(F.first) == "BINDATA") {
 						QCol->Doing("-> Binary", F.second->Name());
-						Rec->Banks[F.first] = JI->B(F.first);
+						Rec->Banks[StripDir(F.first)] = JI->B(F.first);
 					}
 				}
 				break;

@@ -54,11 +54,11 @@ using namespace NSLunatic;
 namespace Scyndi_CI {
 
 	static VecString ePath() {
-		auto ret{NewVecString()},
+		auto ret{NewVecString()};
 		#ifdef SlyvWindows
-		p{Split(std::getenv("PATH"),';'};
+		auto p{Split(std::getenv("PATH"),';')};
 		#else
-		p{Split(std::getenv("PATH"),':'};
+		auto p{Split(std::getenv("PATH"),':')};
 		#endif
 		for(auto&pi:*p) ret->push_back(pi);
 		return ret;

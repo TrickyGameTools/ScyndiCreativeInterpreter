@@ -5,7 +5,7 @@
 //
 //
 //
-// 	(c) Jeroen P. Broks, 2023, 2024, 2025
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
 //
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 //
-// Version: 25.03.25
+// Version: 26.06.27
 // End License
 
 #include <SlyvQCol.hpp>
@@ -33,8 +33,12 @@
 #include <SlyvDir.hpp>
 #include <SlyvStream.hpp>
 #include <SlyvDirry.hpp>
+#include <SlyvConInput.hpp>
+
+#include <JCR6_Write.hpp>
 
 #include "../SCI_Share/Version.hpp"
+#include "../SCI_Share/SCI_GlobalConfig.hpp"
 
 #include "SCI_Build_Config.hpp"
 #include "SCI_Project.hpp"
@@ -187,6 +191,7 @@ namespace Scyndi_CI {
 				Export_Linux_Basic();
 				#ifdef SlyvLinux
 				Export_Linux_AppImage();
+				Export_Linux_Debian();
 				#endif // SlyvLinux
 				//Butler(this); // temporarily on dummy
 			}
@@ -337,6 +342,7 @@ namespace Scyndi_CI {
 		    for (auto J:*JD) QCF(ReleaseDirectory("JCR6")+J,AppDir+"/usr/bin/"+J);
 
 		    String AppRun{"#!/usr/bin/sh\n"};
+		    AppRun+="export LD_LIBRARY_PATH=\"$APPDIR/usr/local/lib:$LD_LIBRARY_PATH\"\n";
 		    AppRun+="$APPDIR/usr/bin/SCI_Run ";
 		    AppRun+="\"$APPDIR/usr/bin/"+Data->Value("Project","OutputName")+".jcr\"\n";
 		    AppRun+="echo Exit code $?\n\n# Script Generated with SCI_Build\n#(c) Jeroen P. Broks\n\n";
@@ -365,6 +371,217 @@ namespace Scyndi_CI {
 			MOUNT="rm -R "+SESD;
 			QCol->Doing("Destroying",SESD);
 			system(MOUNT.c_str());
+       }
+
+       void SCI_Project::Export_Linux_Debian() {
+			// control
+			std::string
+				deb_control {""},
+				deb_package{""},
+				deb_icon{""},
+				deb_license{"Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/\n"};
+
+			// control - package
+			do {
+				deb_package=ChReplace(Lower(Ask(Data,"Debian","Package","Debian Package Name:")),' ','-');
+				auto ok{true};
+				for(size_t i=0;i<deb_package.size();i++) {
+					auto ch{deb_package[i]};
+					ok=ok && (ch=='-' || ch=='+' || (ch>='a' && ch<='z') || ch>='0' && ch<='9');
+				}
+				if (!ok) {
+						QCol->Error("Invalid Debian Package Name!");
+						Data->Value("Debian","Package","");
+				}
+			} while(Data->Value("Debian","Package")=="");
+			deb_control+="Package: "+deb_package+"\n";
+			// Version
+			auto deb_version{TrSPrintF("%d.%d.%d",CurrentYear()-2000,CurrentMonth(),CurrentDay())};
+			if (Data->Value("Debian","LastVersion")==deb_version) {
+				Data->Value("Debian","TimesToday",Data->IntValue("Debian","TimesToday")+1);
+				deb_version+=TrSPrintF("-%d",Data->IntValue("Debian","TimesToday"));
+			} else {
+				Data->Value("Debian","LastVersion",deb_version);
+				Data->Value("Debian","TimesToday",0);
+			}
+			deb_control+="Section: games\nPriority: optional\n";
+			deb_control+="Version: "+deb_version+"\n";
+			// Architecture
+			deb_control+="Architecture: amd64\n";
+			// Maintainer
+			deb_control+="Maintainer: ";
+			deb_control+=Ask(Data,"Debian","Maintainer_Name","Debian Maintainer Name:",Data->Value("AA_META","02_CREATEDBY"));
+			deb_control+=" <"+Ask(Data,"Debian","Maintainer_Mail","Debian Maintainer e-mail:")+">\n";
+			// Dependencies (SDL2)
+			deb_control+="Depends: libsdl2-2.0-0 (>= 2.0.0), libsdl2-image-2.0-0 (>= 2.0.0), libsdl2-mixer-2.0-0 (>= 2.0.0)\n";
+			// Description
+			deb_control+="Description: "+Ask(Data,"Debian","Description_Short","Debian Short Description: ")+"\n";
+			deb_control+=" "+StReplace( Ask(Data,"Debian","Description_Long","Debian Long Description: (<nl>=New Line) "),"<nl>","\n ")+"\n";
+
+			// Copyright
+			std::vector<std::string> licsasked{}; licsasked.push_back("GPL-3.0+");
+			deb_license+="Upstream-Name: "+Ask(Data,"Debian","License.Upstream-Name","License Upstream Name: ",Data->Value("Debian","Package"))+"\n";
+			deb_license+="Upstream-Contact: "+Data->Value("Debian","Maintainer_Name")+" <"+Data->Value("Debian","Maintainer_Mail")+">\n";
+			{
+				auto src{Ask(Data,"Debian","License.Source","Repository source code:","NONE")};
+				if (Upper(src)!="NONE") deb_license+="Source: "+src+"\n";
+			}
+			deb_license+="\nFiles: usr/bin/"+deb_package+"\n";
+			deb_license+=TrSPrintF("Copyright: 2023-%d",CurrentYear());
+			deb_license+="\nLicense: GPL-3.0+\n";
+			deb_license+="\nFiles: usr/share/ScyndisCreativeInterpreter/"+deb_package+".jcr\n";
+			{
+				auto iyear{ToInt(Ask(Data,"Debian","License.Copyright.InitialYear","Project's initial copyright year: "))},cyear{CurrentYear()};
+				deb_license+="Copyright: ";
+				deb_license+=iyear==cyear?TrSPrintF("%d ",iyear):TrSPrintF("%d-%d ",iyear,cyear);
+				deb_license+=Ask(Data,"Debian","License.Copyright.Owner","Project's copyright owner:",Data->Value("Debian","Maintainer_Name"))+"\n";
+				auto lic{Ask(Data,"Debian","License.JCR6","Project's license: ","GPL-3.0+")};
+				deb_license+="License: "+lic+"\n";
+
+				// Only add license to list if it isn't already in there.
+				auto havelic{false};
+				for(auto& L:licsasked) {havelic=havelic||Upper(L)==Upper(lic);}
+				if (!havelic) licsasked.push_back(lic);
+			}
+
+			for(auto&lic:licsasked) {
+				auto lfile{Ask(GlobalConfig(),"Build.Licenses",lic,"Which file should I copy for the \""+lic+"\" license? ") };
+				deb_license+="\nLicense: "+lic+"\n";
+				if (FileExists(lfile)) {
+					auto ll{LoadLines(lfile)};
+					for (auto &l:*ll) { deb_license+=" "+l+"\n"; }
+				} else {
+					QCol->Error("\x07File "+lfile+" (for "+lic+") has not been found!");
+					deb_license+=" -- No details about this license available --\n";
+				}
+			}
+
+			// Desktop
+			std::string deb_desktop{""};
+			deb_desktop+="[Desktop Entry]\n";
+			deb_desktop+="Name="+Ask(Data,"Debian","Desktop_Name","Desktop Application Name:",Data->Value("AA_META","01_TITLE"))+"\n";
+			deb_desktop+="Exec=/usr/bin/"+deb_package+"\n";
+			deb_desktop+="Icon="+deb_package+"\n";
+			deb_desktop+="Type=Application\n";
+			deb_desktop+="Categories=Game;\n";
+			deb_icon = Ask(Data,"Debian","Icon","Debian Icon (PNG): ");
+
+			// Meta-Info
+			std::string deb_meta{"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<component type=\"desktop-application\">\n"};
+			deb_meta+="\t<id>"+deb_package+"</id>\n";
+			deb_meta+="\t<name>"+Data->Value("Debian","Desktop_Name")+"</name>\n";
+			deb_meta+="\t<summary>"+Data->Value("Debian","Description_Short")+"</summary>\n";
+			deb_meta+="\t<description>\n\t<p>"+StReplace(Data->Value("Debian","Description_Long"),"<nl>","</p>\n\t<p>")+"</p></description>\n";
+			{
+				auto url{Ask(Data,"Debian","MetaInfo.Homepage","Project homepage URL: ","NONE")};
+				if (Upper(url)!="NONE") deb_meta+="\t<url type=\"homepage\">"+url+"</url>\n";
+			}
+			//deb_meta+="\t<icon type=\"local\">usr/share/icons/hicolor/256x256/apps/"+deb_package+".png</icon>\n";
+			deb_meta+="\t<icon type=\"stock\">"+deb_package+"</icon>\n";
+			deb_meta+="\t<metadata_license>CC0-1.0</metadata_license>\n";
+			deb_meta+="\t<project_license>LicenseRef-"+Data->Value("Debian","License.JCR6")+"</project_license>\n";
+			deb_meta+="\t<content_rating type=\"oars-1.1\">";
+			{
+				static const size_t catcnt=10;
+				static char cats[catcnt][30]{"violence-cartoon", "violence-realistic", "violence-bloodshed", "sex-nudity", "sex-themes", "language-profanity", "language-discrimination", "drugs-alcohol", "drugs-narcotics", "gambling" };
+				for(size_t i=0;i<catcnt;i++) {
+					char *cat{cats[i]};
+					while(Data->Value("Debian","Rating."+std::string(cat))=="") {
+						static const size_t ratcnt=4;
+						static char rating[ratcnt][10] = {"none","mild","moderate","intense"};
+						QCol->Yellow(); printf("No rating has been set for category '%s'. Please set one:\n",cat);
+						for(size_t j=0;j<ratcnt;j++) {
+							QCol->Cyan(); printf("%2d: ",j);
+							QCol->LGreen(); printf("%s\n",rating[j]);
+						}
+						int crating{-1};
+						do {
+							QCol->Yellow("Please give a rating: ");
+							QCol->LCyan();
+							crating=ToInt(ReadLine());
+						} while(crating<0||crating>=ratcnt);
+						Data->Value("Debian",(std::string)"Rating."+cat,rating[crating]);
+					}
+					if (Lower(Data->Value("Debian","Rating."+std::string(cat)))!="none") {
+						deb_meta+="\t\t<content_attribute id=\"";
+						deb_meta+=cat;
+						deb_meta+="\">"+Lower(Data->Value("Debian",(String)"Rating."+cat))+"</content_attribute>\n";
+					}
+				}
+			}
+			deb_meta+="\t</content_rating>\n";
+			deb_meta+="</component>";
+
+			// Create Debian Source folder
+			std::string deb_debsrc{ReleaseDirectory("Linux_DebianSource")};
+			QCol->Doing("Creating","Debian Source");
+			if (!DirectoryExists(deb_debsrc)) {
+				QCol->Doing("- Creating",deb_debsrc);
+				MkDir(deb_debsrc);
+			} else {
+				// prevent conflicts with older builds
+				QCol->Doing("- Cleaning",deb_debsrc);
+				std::string rmcmd{"rm -R \""+deb_debsrc+"\"*"};
+				system(rmcmd.c_str());
+			}
+			// Text files
+			MkDir(deb_debsrc+"usr");
+			QCol->Doing("- Saving","Control");
+			MkDir(deb_debsrc+"DEBIAN");
+			SaveString(deb_debsrc+"DEBIAN/control",deb_control);
+			QCol->Doing("- Saving","Desktop");
+			MkDir(deb_debsrc+"usr/share");
+			MkDir(deb_debsrc+"usr/share/applications");
+			SaveString(deb_debsrc+"usr/share/applications/"+deb_package+".desktop",deb_desktop);
+			QCol->Doing("- Saving","Copyright");
+			MkDir(deb_debsrc+"usr/share/doc/"+deb_package);
+			SaveString(deb_debsrc+"usr/share/doc/"+deb_package+"/copyright",deb_license);
+			QCol->Doing("- Saving","Meta Info");
+			MkDir(deb_debsrc+"usr/share/metainfo");
+			SaveString(deb_debsrc+"usr/share/metainfo/"+deb_package+".metainfo.xml",deb_meta);
+
+			// Let's copy the binaries
+			auto mydir{ ExtractDir(CLI_Args.myexe) };  // Dir where SCI_build with all stuff is located.
+			MkDir(deb_debsrc+"usr/bin");
+			QCol->Doing("- Creating","ELF");
+			std::string ELF{"cat \""+mydir+"/SCI_Run\" \""+mydir+"/SCI_Run.srf\" > \""+deb_debsrc+"/usr/bin/"+deb_package+"\""};
+			system(ELF.c_str());
+
+			MkDir(deb_debsrc+"usr/share/icons");
+			MkDir(deb_debsrc+"usr/share/icons/hicolor");
+			MkDir(deb_debsrc+"usr/share/icons/hicolor/256x256");
+			MkDir(deb_debsrc+"usr/share/icons/hicolor/256x256/apps");
+			QCF(deb_icon,deb_debsrc+"usr/share/icons/hicolor/256x256/apps/"+deb_package+".png");
+			//MkDir(deb_debsrc+"usr/share/"+deb_package);
+			MkDir(deb_debsrc+"usr/share/ScyndisCreativeInterpreter");
+			//SaveString(deb_debsrc+"usr/share/ScyndisCreativeInterpreter/Update.txt","Last Updated: "+Now()+"\n");
+			//QCF(deb_debsrc+"usr/share/"+deb_package+"/"+deb_package+".jcr");
+			auto JD{FileList(ReleaseDirectory("JCR6")) };
+			auto JL{JCR6::CreateJCR6(deb_debsrc+"usr/share/ScyndisCreativeInterpreter/"+deb_package+".jcr")};
+			QCol->Doing("- Resources",JD->size());
+		    for (auto J:*JD) {
+				//QCF(ReleaseDirectory("JCR6")+J,deb_package+"/usr/share/"+deb_package+"/"+J);
+				QCF(ReleaseDirectory("JCR6")+J,deb_debsrc+"/usr/share/ScyndisCreativeInterpreter/"+J);
+				JL->Import("/usr/share/ScyndisCreativeInterpreter/"+J);
+		    }
+		    JL->Close();
+
+		    // Let dpkg-dep do its magic
+		    std::string deb_debtar{ReleaseDirectory("Linux_DebianPackage")};
+		    	QCol->Doing("Creating","Debian Package");
+			if (!DirectoryExists(deb_debtar)) {
+				QCol->Doing("- Creating",deb_debtar);
+				MkDir(deb_debtar);
+			} else {
+				// prevent conflicts with older builds
+				QCol->Doing("- Cleaning",deb_debtar);
+				std::string rmcmd{"rm -R \""+deb_debtar+"\"*"};
+				system(rmcmd.c_str());
+			}
+		    std::string dpkg{"dpkg --build \""+deb_debsrc+"\" \""+deb_debtar+deb_package+".deb\""};
+			QCol->Doing("- Executing",dpkg);
+			auto ec{system(dpkg.c_str())};
+			if (ec>0) QCol->Error(TrSPrintF("DPKG returned: %d/%x",ec,ec));
        }
 
 	}

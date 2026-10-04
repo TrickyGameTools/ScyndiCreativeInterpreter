@@ -1,27 +1,27 @@
 // License:
-// 
+//
 // Scyndi's Creative Interpreter
 // Real File
-// 
-// 
-// 
+//
+//
+//
 // 	(c) Jeroen P. Broks, 2024, 2025
-// 
+//
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
 // 		the Free Software Foundation, either version 3 of the License, or
 // 		(at your option) any later version.
-// 
+//
 // 		This program is distributed in the hope that it will be useful,
 // 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 		GNU General Public License for more details.
 // 		You should have received a copy of the GNU General Public License
 // 		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
-// 
+//
 // Version: 25.01.13
 // End License
 
@@ -36,7 +36,9 @@
 
 
 #ifdef SlyvLinux
+#include <cstdlib>
 #define NoFileRequest
+#define zenity
 #endif // SlyvLinux
 
 #ifdef NoFileRequest
@@ -51,8 +53,28 @@ using namespace NSLunatic;
 
 namespace Scyndi_CI {
 
+	static VecString ePath() {
+		auto ret{NewVecString()},
+		#ifdef SlyvWindows
+		p{Split(std::getenv("PATH"),';'};
+		#else
+		p{Split(std::getenv("PATH"),':'};
+		#endif
+		for(auto&pi:*p) ret->push_back(pi);
+		return ret;
+	}
+
+	static String InPath(String F) {
+		auto pth{ePath()};
+		for(auto &pf:*pth) if (FileExists(pf+"/"+F)) return pf+"/"+F;
+		return "";
+	}
+
 	static int API_RF_RequestFile(lua_State* L) {
-	    #ifdef NoFileRequest
+		#ifdef zenity
+		auto zenity{InPath("zenity")};
+
+	    #elif defined(NoFileRequest)
 	    Notify("Unfortunately file requesting is not yet possible in "+Platform()+"\n\nThis has been planned for future versions, though!");
 	    lua_pushstring(L,"");
 	    #else

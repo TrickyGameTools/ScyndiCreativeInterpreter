@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024, 2025
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.03.04
+// Version: 26.06.27
 // End License
 // Lic:
 // Scyndi's Creative Interpreter - Builder
@@ -120,6 +120,8 @@ namespace Scyndi_CI {
 
 			void Export_Linux_Basic(); // Linux users will have to fill me in on this one.
 			void Export_Linux_AppImage();
+
+			void Export_Linux_Debian();
 
 		};
 

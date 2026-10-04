@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.03.23
+// Version: 26.06.27
 // End License
 
 #include <TQSE.hpp>
@@ -51,10 +51,26 @@ namespace Scyndi_CI {
 
 	static GINIE srf_id{ nullptr };
 	static GINIE res_id{ nullptr };
-	
+
 	std::string JCR_MainFile() {
 		if (Args.arguments.size()) return ChReplace(Args.arguments[0],'\\','/');
+		#ifdef SlyvWindows
 		return ChReplace(StripExt(Args.myexe) + ".jcr", '\\', '/');
+		#elif defined(SlyvLinux)
+		std::vector<std::string> TryDirectories{};
+		std::string jcr6file{StripAll(Args.myexe)+".jcr"};
+		// Check directory where exe is located
+		{ // I only need 'med' (My Exe Directory) in this part.
+			std::string med{ExtractDir(Args.myexe)};
+			if (med!="") TryDirectories.push_back(med);
+		}
+		// Check /usr/share
+		TryDirectories.push_back("/usr/share/ScyndisCreativeInterpreter");
+		for(std::string&D:TryDirectories) {
+			std::string DF{D+"/"+jcr6file};
+			if (FileExists(DF)) return DF;
+		}
+		#endif
 	}
 
 	std::string GameGlobalHome() {
@@ -71,7 +87,7 @@ namespace Scyndi_CI {
 
 #pragma region SRF
 
-	std::string JCR_SRF() {	
+	std::string JCR_SRF() {
 		return
 			_JT_Dir::Recognize(Args.myexe) == "JCR6" ?
 			Args.myexe :
@@ -83,9 +99,9 @@ namespace Scyndi_CI {
 			auto src = SRF()->GetString("ID/Identify.ini");
 			if (Last()->Error) { QCol->Error("JCR Error in getting SRF identification: " + Last()->ErrorMessage); exit(1); }
 			QCol->Doing("Parsing", "SRF Identification");
-			srf_id = ParseGINIE(src); 
+			srf_id = ParseGINIE(src);
 
-		}		
+		}
 	}
 
 	std::string SRF_Date() {
@@ -93,7 +109,7 @@ namespace Scyndi_CI {
 		return srf_id->Value("SRF", "Build");
 	}
 
-	
+
 #pragma endregion
 
 #pragma region "Game ID"
@@ -176,7 +192,7 @@ namespace Scyndi_CI {
 				if (gt > QVersion.giant) { throw runtime_error(TrSPrintF("This game requires at least version %d.0.0 in order to run", gt)); }
 				if (gt == QVersion.giant && (mj > QVersion.major || (mj == QVersion.minor && mn > QVersion.minor))) {
 					return Yes(TrSPrintF("This game requires version %d.%d.%d of Scyndi's Creative Interpreter, which is a slightly later version than you are using now. Are you sure you wish to continue?"));
-				}				
+				}
 				return Yes("This version of Scyndi's Creative Interpreter appears to be of a later version than the game wants.\n\nThis means it's possible this game uses deprecated or even removed portions of the engine.\n\nAre you sure you wish to continue?");
 			}
 			return true;

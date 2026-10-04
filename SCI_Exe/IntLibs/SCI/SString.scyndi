@@ -25,6 +25,8 @@
 
 Module
 
+Extern SubStr "string.sub"
+
 // Just making sure this comes first. GewoonNiks will contain 'nil' as result, but that doesn't matter!
 Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"SString")
 

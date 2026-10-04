@@ -92,6 +92,8 @@
 		<Unit filename="../../../Libs/JCR6/Source/JCR6_RealDir.cpp" />
 		<Unit filename="../../../Libs/JCR6/Source/JCR6_Write.cpp" />
 		<Unit filename="../../../Libs/JCR6/Source/JCR6_zlib.cpp" />
+		<Unit filename="../../../Libs/Units/Headers/SlyvConInput.hpp" />
+		<Unit filename="../../../Libs/Units/Headers/SlyvStream.hpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvArgParse.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvAsk.cpp" />
 		<Unit filename="../../../Libs/Units/Source/SlyvBank.cpp" />

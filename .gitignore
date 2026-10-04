@@ -52,3 +52,6 @@ obj/
 
 # Visual Studio Crap
 *.vcxproj.user
+
+# Qt crap
+.qtcreator

@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2025
+// 	(c) Jeroen P. Broks, 2023, 2025, 2026
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,12 +22,19 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.06.29
+// Version: 26.10.23
 // End License
 
 #include "../SCI_Script.hpp"
+#include "../SCI_Crash.hpp"
 
+#include "API_Bank.hpp"
+
+#include <SlyvMD5.hpp>
+#include <SlyvTime.hpp>
 #include <SlyvVecStringSaver.hpp>
+#include <JCR6_RealDir.hpp>
+#include <JCR6_Write.hpp>
 
 
 using namespace Slyvina;
@@ -52,6 +59,11 @@ namespace Scyndi_CI {
 	};
 
 	static std::map<std::string, RegJCR> JCR_Register{}; //{ {"*MAIN", RegJCR(Resource()) } };
+    JT_Dir GetFromReg(std::string Tag) {
+        Trans2Upper(Tag);
+        if (!JCR_Register.count(Tag)) { Crash("There is no JCR6 resource loaded on tag:"+ Tag); return nullptr; }
+        return JCR_Register[Tag].Res;
+    }
 
 	static int API_GetJCR(lua_State* L) {
 		auto
@@ -117,7 +129,7 @@ namespace Scyndi_CI {
 	static int API_JCRFindFirst(lua_State* L) {
 		auto
 			Tag{ Upper(luaL_checkstring(L,1)) },
-			Dir{ Upper(ChReplace(luaL_checkstring(L,2),'\\','/')) }; if (!Suffixed(Dir, "/")) Dir += "/";
+            Dir{ Upper(ChReplace(luaL_checkstring(L,2),'\\','/')) }; if (!Suffixed(Dir, "/")) Dir += Dir==""?"":"/";
 		if (!JCR_Register.count(Tag)) { luaL_error(L, "There is no JCR6 resource loaded on tag '%s'", Tag.c_str()); return 0; }
 		FoundFiles.clear();
 		FoundFilesIndex = 1;
@@ -125,7 +137,7 @@ namespace Scyndi_CI {
 		for (auto e : *entries) {
 			auto UName{ Upper(e->Name()) };
 			//std::cout << "FindFirst in " << Tag << " Directory: " << Dir << " --> " << e->Name() << "(Allow: "<< (Prefixed(UName, Dir)) <<")\n"; // DEBUG!
-			if (Prefixed(UName, Dir)) FoundFiles.push_back(e->Name());
+            if (Dir=="" || Prefixed(UName, Dir)) FoundFiles.push_back(e->Name());
 		}
 		if (FoundFiles.size()) {
 			Lunatic_PushString(L, FoundFiles[0]);
@@ -176,6 +188,87 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+    static int API_PatchJCR(lua_State *L){
+        auto
+            Tag{Upper(luaL_checkstring(L,1))},
+            Patch{Lunatic_CheckString(L,2)},
+            PDir{Lunatic_OptString(L,3,"")};
+        auto
+            realdir{Lunatic_OptBoolean(L,4,false)},
+            realdirmerge{Lunatic_OptBoolean(L,5,true)};
+        if (!JCR_Register.count(Tag)) { luaL_error(L, "There is no JCR6 resource loaded on tag '%s' so I cannot patch %s", Tag.c_str(),Patch.c_str()); return 0; }
+        if (realdir) {
+            auto p{GetDirAsJCR(Patch,realdirmerge)};
+            JCR_Register[Tag].Res->Patch(p,PDir);
+        } else {
+            JCR_Register[Tag].Res->Patch(Patch,PDir);
+        }
+        return 0;
+    }
+
+    static int API_JCR_Act_RealDir(lua_State*L) {
+        static bool Done{false};
+        if (Done) return 0;
+        JCR6::JCR6_InitRealDir();
+        Done=true;
+        return 0;
+    }
+
+    static int API_JCR_GetRealDir(lua_State*L) {
+        auto
+            Tag{ Upper(luaL_checkstring(L,1)) },
+            File{ Lunatic_CheckString(L,2) };
+        auto AllowMerge{Lunatic_OptBoolean(L,3,true)};
+        if (Prefixed(Tag, "*")) { luaL_error(L, "Tag '%s' is reserved!", luaL_checkstring(L, 1)); return 0; }
+        //auto J{ JCR6_Dir(File) }; // Please note that this handles the REAL file system.
+        auto J{GetDirAsJCR(File, AllowMerge)};
+        if (Last()->Error) {
+            luaL_error(L, "Error '%s' while reading: %s", Last()->ErrorMessage.c_str(), File.c_str());
+            return 0;
+        }
+        //{auto a{J->Entries()}; printf("\x1b[0mEntries from real dir '%s' -> %d\n",File.c_str(),a->size());} // DEBUG ONLY!
+        JCR_Register[Tag] = RegJCR(J);
+        return 0;
+    }
+
+    static int API_JCR_Write(lua_State *L) {
+        auto cmd{luaL_checkinteger(L,1)};
+        static JCR6::JT_Create out{nullptr};
+        static JCR6::JT_CreateBlock outblock{nullptr};
+        static std::string outstorage{"Store"};
+        switch(cmd) {
+        case 0: // end it all
+            if (out) {
+                if (outblock) outblock->Close();
+                out->Close();
+            }
+            outblock=nullptr;
+            out=nullptr;
+            return 0;
+        case 1: // start it all
+        {
+            if (out) {
+                luaL_error(L,"Already a JCR6 sequence writing!");
+                return 0;
+            }
+            auto File{Lunatic_CheckString(L,2)}, Storage{Lunatic_OptString(L,3,"Store")};
+            auto Solid{Lunatic_OptBoolean(L,3,false)};
+            out = JCR6::CreateJCR6(File,Storage,md5(Now()));
+            if (!out) luaL_error(L,"JCR6 real creation error: %s ",JCR6::Last()->ErrorMessage.c_str());
+            outblock = Solid ? out->AddBlock(Storage):nullptr;
+            outstorage = Storage;
+        }
+            return 0;
+        case 2: // add a string
+            if (outblock) outblock->AddString(luaL_checkstring(L,2),luaL_checkstring(L,3),Lunatic_OptString(L,4,""),Lunatic_OptString(L,5,""));
+            else if (out) out->AddString(luaL_checkstring(L,2),luaL_checkstring(L,3),outstorage,Lunatic_OptString(L,4,""),Lunatic_OptString(L,5,""));
+            else luaL_error(L,"Can't output strings to non-existent real JCR6 file");
+            return 0;
+        case 3: // add a bank
+
+        }
+    }
+
 
 	void Init_API_JCR() {
 		JCR_Register["*MAIN"] = RegJCR(Resource());
@@ -188,7 +281,10 @@ namespace Scyndi_CI {
 			{ "JCRGetString",API_JCRGetString },
 			{ "JCRFindFirst",API_JCRFindFirst },
 			{ "JCRFindNext", API_JCRFindNext },
-			{ "JCRLines", API_JCRLines }
+            { "JCRLines", API_JCRLines },
+            { "JCRPatch", API_PatchJCR },
+            //{ "JCRActRealDir",API_JCR_Act_RealDir },
+            { "GetRealDir",API_JCR_GetRealDir }
 		};
 		InstallAPI("JCR6", IAPI);
 	}

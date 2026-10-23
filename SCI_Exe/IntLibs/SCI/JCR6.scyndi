@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/JCR6.scyndi
 // 	Scyndi's Creative Interpreter - JCR6 Script
-// 	version: 26.06.27
+// 	version: 26.10.23
 // 
 // 	Copyright (C) 2023, 2025, 2026 Jeroen P. Broks
 // 
@@ -38,8 +38,12 @@ End
 Var GewoonNiks = Lua.SCI_InitAPI(Lua.SCI_StateName,"JCR6")
 
 const delegate LoadDir = Lua.JCR6.GetJCR
+const delegate LoadRealDir = Lua.JCR6.GetRealDir 
+    
 
-const delegate DirSize = Lua.JCRGetSize
+const delegate DirSize = Lua.JCR6.GetSize
+
+//const delegate ActivateRealDir = Lua.JCR6.JCRActRealDir
 
 Var DirIndex(int idx,string Tag="*MAIN")
 	return Lua.JCR6.JCRGetEntry(idx,Tag)
@@ -119,3 +123,10 @@ Bool DirectoryExists(string WDir,string Tag="*MAIN")
 	Return Lua.JCR6.JCRDirExists(Tag,WDir)
 End
 
+Void Patch(String JFile,String Tag="*MAIN", String PDir="")
+	Lua.JCR6.JCRPatch(Tag,JFile,PDir)
+End
+
+Void PatchRealDir(String JDir,String Tag="*MAIN", String PDir="",NoMerge)
+	Lua.JCR6.JCRPatch(Tag,JDir,PDir,true,!NoMerge)
+End

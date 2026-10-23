@@ -1,22 +1,27 @@
-// License Information:
-// SCI_Exe/IntLibs/SCI/RealFile.scyndi
-// Scyndi's Creative Interpreter - Real File functions (linkup script)
-// version: 24.03.22
-// Copyright (C) 2024 Jeroen P. Broks
-// This software is provided 'as-is', without any express or implied
-// warranty.  In no event will the authors be held liable for any damages
-// arising from the use of this software.
-// Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it
-// freely, subject to the following restrictions:
-// 1. The origin of this software must not be misrepresented; you must not
-// claim that you wrote the original software. If you use this software
-// in a product, an acknowledgment in the product documentation would be
-// appreciated but is not required.
-// 2. Altered source versions must be plainly marked as such, and must not be
-// misrepresented as being the original software.
-// 3. This notice may not be removed or altered from any source distribution.
-// End License Information
+// License:
+// 	SCI_Exe/IntLibs/SCI/RealFile.scyndi
+// 	Scyndi's Creative Interpreter - Real File functions (linkup script)
+// 	version: 26.10.23
+// 
+// 	Copyright (C) 2024, 2026 Jeroen P. Broks
+// 
+// 	This software is provided 'as-is', without any express or implied
+// 	warranty.  In no event will the authors be held liable for any damages
+// 	arising from the use of this software.
+// 
+// 	Permission is granted to anyone to use this software for any purpose,
+// 	including commercial applications, and to alter it and redistribute it
+// 	freely, subject to the following restrictions:
+// 
+// 	1. The origin of this software must not be misrepresented; you must not
+// 	   claim that you wrote the original software. If you use this software
+// 	   in a product, an acknowledgment in the product documentation would be
+// 	   appreciated but is not required.
+// 	2. Altered source versions must be plainly marked as such, and must not be
+// 	   misrepresented as being the original software.
+// 	3. This notice may not be removed or altered from any source distribution.
+// End License
+
 
 Module
 
@@ -30,6 +35,39 @@ ReadOnly Delegate LoadString = Lua.RealFile.LoadText
 	
 ReadOnly Delegate RequestFile = Lua.RealFile.RequestFile
 ReadOnly Delegate RequestSaveFile = Lua.RealFile.RequestSaveFile
+	
+ReadOnly Delegate MkDir = Lua.RealFile.MkDir
+ReadOnly Delegate MD    = Lua.RealFile.MkDir
+	
+ReadOnly Delegate Pipe = Lua.RealFile.Pipe
+	
+ReadOnly Delegate Check = Lua.RealFile.Check
+	
+Bool IsDir(string f)
+	Return Check(f)=="dir"
+End
+
+Bool IsFile(string f)
+	Return Check(f)=="file"
+End
+	
+Extern WantFiles "0"
+Extern WantDirectories "1"
+Extern WantFilesAndDirectories "2"
+Extern WantTree "3"
+	
+Var FileList(string path, int want=0,allowhidden)
+	Int sz:=Lua.RealFile.GetDir(-1,want,path,allowhidden==true)
+	ret:={}
+	For i=0,sz-1
+		ret[i]=Lua.RealFile.GetDir(i)
+	End
+	Return ret
+End
+
+Global Get Delegate FileList
+	Return FileList
+End
 	
 	
 // NOTE! These functions communicate with the actual file system without ANY 

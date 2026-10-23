@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.03.23 I
+// Version: 26.10.23
 // End License
 
 #pragma once
@@ -41,6 +41,7 @@ namespace Scyndi_CI {
 	Slyvina::Kthura::Kthura GetKthura();
 	void PickKthura(std::string Tag);
 	void SCI_LoadKthura(std::string Tag,std::string MapDir);
+    void SCI_LoadRealKthura(std::string Tag,std::string Tag,std::string MapDir);
 	std::string LastLoadedKthura();
 	//KthuraLayer* GetKthuraLayer(std::string MapTag, std::string LayerTag);
 	Slyvina::Kthura::KthuraLayer* GetKthuraLayer(std::string MapTag, std::string LayerTag);
@@ -53,4 +54,5 @@ namespace Scyndi_CI {
 	bool MapPicked();
 	bool LayerPicked();
 	bool InKthuraObject(Slyvina::Kthura::KthuraObject* o, int x, int y);
+    void Kthura_ReTex(Slyvina::JCR6::JT_Dir J);
 }

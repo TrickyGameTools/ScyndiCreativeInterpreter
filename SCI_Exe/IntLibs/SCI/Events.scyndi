@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Events.scyndi
 // 	Scyndi's Creative Interpreter - Events API link up
-// 	version: 26.02.27
+// 	version: 26.10.23
 // 
 // 	Copyright (C) 2023, 2024, 2025, 2026 Jeroen P. Broks
 // 
@@ -65,6 +65,14 @@ End
 get Bool MouseDownRight
 	return Lua.Events.MouseDown( Lua.Events.MouseButtonFromName("RIGHT") )
 End
+
+Get Bool MouseReleasedLeft
+	return Lua.Events.MouseReleased( Lua.Events.MouseButtonFromName("LEFT") )
+end
+
+Get Bool MouseReleasedRight
+	return Lua.Events.MouseReleased( Lua.Events.MouseButtonFromName("RIGHT") )
+end
 
 
 get int MouseX

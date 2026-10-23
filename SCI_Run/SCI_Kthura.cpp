@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.03.23
+// Version: 26.10.23
 // End License
 
 #include <SlyvQCol.hpp>
@@ -88,6 +88,21 @@ namespace Scyndi_CI {
 		Slyvina::Kthura::LoadCompiledKthuraProcessCallBack=SCI_KthuraLoadCB;
 	}
 
+
+    void Kthura_ReTex(JCR6::JT_Dir J) {
+        auto Nieuw{SCI_KthuraDraw==nullptr};
+        QCol->Doing("Reconfigure","Kthura");
+        if (Nieuw) {
+            QCol->Doing("=>", "Dijkstra");
+            InitDijkstraForKthura();
+            QCol->Doing("=>", "Panic");
+            KthuraPanic = SCIKthuraCrash;
+            TQSG_Kthura_Panic = SCIKthuraDrawCrash;
+        }
+        QCol->Doing("=>", "Draw routines to alternate JCR");
+        SCI_KthuraDraw = Init_TQSG_For_Kthura(J);
+    }
+
 	Slyvina::Kthura::Kthura GetKthura(std::string Tag) {
 		Init_SCI_Kthura();
 		Trans2Upper(Tag);
@@ -113,6 +128,19 @@ namespace Scyndi_CI {
 		if (!MapRegister[Tag]) Crash("Loading Kthura map \"" + MapDir + "\" failed");
 		MapLastLoaded = MapDir;
 	}
+
+    void SCI_LoadRealKthura(std::string file,std::string Tag, std::string MapDir) {
+        Init_SCI_Kthura();
+        auto AltRes{JCR6::JCR6_Dir(file,MapDir)};
+        Trans2Upper(Tag);
+        if (Tag == MapLastPicked) { ChosenMap = nullptr; ChosenLayer = nullptr; }
+        QCol->Doing("Loading Kthura", MapDir, " ");
+        QCol->Doing("from",file," ");
+        QCol->Doing("to", Tag);
+        MapRegister[Tag] = XLoadKthura(AltRes, MapDir);
+        if (!MapRegister[Tag]) Crash("Loading Kthura map \"" + MapDir + "\" from real \""+file+"\" failed");
+        MapLastLoaded = MapDir;
+    }
 
 	std::string LastLoadedKthura() { return MapLastLoaded; }
 

@@ -41,7 +41,7 @@ namespace Scyndi_CI {
 	Slyvina::Kthura::Kthura GetKthura();
 	void PickKthura(std::string Tag);
 	void SCI_LoadKthura(std::string Tag,std::string MapDir);
-    void SCI_LoadRealKthura(std::string Tag,std::string Tag,std::string MapDir);
+    void SCI_LoadRealKthura(std::string File,std::string Tag,std::string MapDir);
 	std::string LastLoadedKthura();
 	//KthuraLayer* GetKthuraLayer(std::string MapTag, std::string LayerTag);
 	Slyvina::Kthura::KthuraLayer* GetKthuraLayer(std::string MapTag, std::string LayerTag);

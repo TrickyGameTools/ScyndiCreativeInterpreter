@@ -264,8 +264,22 @@ namespace Scyndi_CI {
             else if (out) out->AddString(luaL_checkstring(L,2),luaL_checkstring(L,3),outstorage,Lunatic_OptString(L,4,""),Lunatic_OptString(L,5,""));
             else luaL_error(L,"Can't output strings to non-existent real JCR6 file");
             return 0;
-        case 3: // add a bank
+        case 3: { // add a bank
+            auto
+                btag{luaL_checkstring(L,2)},
+                entry{luaL_checkstring(L,3)},
+                author{luaL_optstring(L,4,"")},
+                notes{luaL_optstring(L,5,"")};
 
+            auto b{SGBank(btag)}; if (b) { luaL_error(L,"Can't add a nullpointer back (%s)",btag); return 0; }
+            if (outblock) outblock->AddBank(b,entry,author,notes);
+            else if (out) out->AddBank(b,entry,outstorage,author,notes);
+            else luaL_error(L,"Can't output banks to non-existent real JCR6 file");
+            return 0;
+        } return 0;
+        default:
+            luaL_error(L,"Unknown JCR6-write command tag: %d",cmd);
+            return 0;
         }
     }
 
@@ -284,7 +298,8 @@ namespace Scyndi_CI {
             { "JCRLines", API_JCRLines },
             { "JCRPatch", API_PatchJCR },
             //{ "JCRActRealDir",API_JCR_Act_RealDir },
-            { "GetRealDir",API_JCR_GetRealDir }
+            { "GetRealDir",API_JCR_GetRealDir },
+            { "WriteCore",API_JCR_Write }
 		};
 		InstallAPI("JCR6", IAPI);
 	}

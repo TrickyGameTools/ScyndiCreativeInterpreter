@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/JCR6.scyndi
 // 	Scyndi's Creative Interpreter - JCR6 Script
-// 	version: 26.10.23
+// 	version: 26.06.27
 // 
 // 	Copyright (C) 2023, 2025, 2026 Jeroen P. Broks
 // 
@@ -130,3 +130,28 @@ End
 Void PatchRealDir(String JDir,String Tag="*MAIN", String PDir="",NoMerge)
 	Lua.JCR6.JCRPatch(Tag,JDir,PDir,true,!NoMerge)
 End
+
+// Just never call this directly UNLESS you KNOW what you are doing!
+LocExtern CoreWrite "JCR6.WriteCore"
+
+Void Create(String OutFile, String Storage="Store", solid)
+	CoreWrite(1,OutFile,Storage,solid==true && Storage!="Store")
+End
+Void AddString(String str,String Entry,String Author="",String Notes="")
+	CoreWrite(2,Str,Entry,Author,Notes)
+End
+Void AddBank(bt,String Entry,String Author="",String Notes="")
+	CoreWrite(3,Ternary(Lua.type(bt)=="string",bt,bt.Tag),Entry,Author,Notes)
+End
+Void Finalize()
+	CoreWrite(0)
+End
+Void StoreTable(T,String OutFile, String Storage="Store", String Author="", String Notes="", solid)
+	Create(OutFile,Storage,solid)
+	For k,v in pairs(T)
+		Lua.assert(Lua.type(k)=="string",sprintf("String expected for tablekey got %s(%s)",Lua.type(k),k))
+		Lua.assert(Lua.type(v)=="string",sprintf("String expected for tablecontent got %s(%s)",Lua.type(v),v))
+		AddString(v,k,Author,Notes)
+	End
+	Finalize()
+End	

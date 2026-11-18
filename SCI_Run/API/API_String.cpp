@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2023, 2024, 2025
+// 	(c) Jeroen P. Broks, 2023, 2024, 2025, 2026
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,10 +22,11 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 25.01.13
+// Version: 26.11.18
 // End License
 
 #include <SlyvMD5.hpp>
+#include <SlyvSTOI.hpp>
 #include "../SCI_Script.hpp"
 
 using namespace Slyvina;
@@ -125,6 +126,11 @@ namespace Scyndi_CI {
 		return 1;
 	}
 
+    static int API_ToInt(lua_State* L) {
+        lua_pushinteger(L,ToInt(luaL_checkstring(L,1)));
+        return 1;
+    }
+
 
 	void Init_API_String() {
 		std::map<std::string, lua_CFunction> IAPI{
@@ -140,6 +146,7 @@ namespace Scyndi_CI {
 			{ "SplitVal",API_SplitVal },
 			{ "Prefixed",API_Prefixed },
 			{ "Suffixed",API_Suffixed },
+            { "ToInt", API_ToInt },
 			{ "Trim",API_Trim }
 		};
 		InstallAPI("SString", IAPI);

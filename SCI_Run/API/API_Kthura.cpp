@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.10.23
+// Version: 26.11.18
 // End License
 
 
@@ -789,7 +789,7 @@ static int API_Kthura_ObjByLabel(lua_State*L) {
 			lua_pushinteger(L,AOL[idx]);
 			return 1;
 		}
-
+        return 0;
 	}
 
 	static int API_SetScriptLoadCallBack(lua_State*L) {
@@ -810,6 +810,51 @@ static int API_Kthura_ObjByLabel(lua_State*L) {
         }
         return 0;
     }
+
+    static int API_Kthura_GetConfig(lua_State *L) {
+        auto k{GetKthura()};
+        auto cat{luaL_checkstring(L,1)};
+        auto key{luaL_checkstring(L,2)};
+        Lunatic_PushString(L,k->Option(cat,key));
+        return 1;
+    }
+
+    static int API_Kthura_SetConfig(lua_State *L) {
+        auto k{GetKthura()};
+        auto cat{luaL_checkstring(L,1)};
+        auto key{luaL_checkstring(L,2)};
+        auto val(luaL_checkstring(L,3));
+        k->Option(cat,key,val);
+        return 0;
+    }
+
+    static int API_Kthura_UsedTextures(lua_State*L) {
+        auto k{GetKthura()};
+        auto l{k->Layers()};
+        unsigned int cnt{0};
+        std::string result{"-- Used Textures --\nreturn { "};
+        std::map<std::string,std::string> UT;
+        for(auto&lay:*l){
+            auto layer{k->Layer(lay)};
+            for(auto o=layer->FirstObject();o;o=o->Next()) {
+                if (o->texture()!="") {
+                    UT[Upper(o->texture())] = o->texture();
+                }
+            }
+        }
+        for(auto&ti:UT) {
+            result+=cnt++?",\n\t":"\n\t";
+            result+="[\"";
+            result+=ti.first;
+            result+="\"] = \"";
+            result+=ti.second;
+            result+="\"";
+        }
+        result+="\n}\n";
+        Lunatic_PushString(L,result);
+        return 1;
+    }
+
 
 	void Init_API_Kthura() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -859,7 +904,10 @@ static int API_Kthura_ObjByLabel(lua_State*L) {
 			{ "AllObj",API_Kthura_AllObj },
 			{ "ObjByLabel",API_Kthura_ObjByLabel },
             { "ScriptLoadCallBack",API_SetScriptLoadCallBack },
-            { "ReTex",API_ReTex }
+            { "ReTex",API_ReTex },
+            { "SetConfig",API_Kthura_SetConfig },
+            { "GetConfig",API_Kthura_GetConfig },
+            { "UsedTextures",API_Kthura_UsedTextures }
 		};
 
 		InstallAPI("Kthura", IAPI);

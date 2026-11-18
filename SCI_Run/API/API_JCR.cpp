@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.10.23
+// Version: 26.11.18
 // End License
 
 #include "../SCI_Script.hpp"
@@ -252,7 +252,7 @@ namespace Scyndi_CI {
                 return 0;
             }
             auto File{Lunatic_CheckString(L,2)}, Storage{Lunatic_OptString(L,3,"Store")};
-            auto Solid{Lunatic_OptBoolean(L,3,false)};
+            auto Solid{Lunatic_OptBoolean(L,4,false)};
             out = JCR6::CreateJCR6(File,Storage,md5(Now()));
             if (!out) luaL_error(L,"JCR6 real creation error: %s ",JCR6::Last()->ErrorMessage.c_str());
             outblock = Solid ? out->AddBlock(Storage):nullptr;
@@ -271,7 +271,12 @@ namespace Scyndi_CI {
                 author{luaL_optstring(L,4,"")},
                 notes{luaL_optstring(L,5,"")};
 
-            auto b{SGBank(btag)}; if (b) { luaL_error(L,"Can't add a nullpointer back (%s)",btag); return 0; }
+            auto b{SGBank(btag)}; if (!b) { luaL_error(L,"Can't add a nullpointer bank (%s)",btag); return 0; }
+            /*
+            for (size_t i=0;i<b->Size();++i) {
+                printf("%s: Peek %08d; %08d -> %c  (%s)\n",btag,(int)i,b->PeekByte(i),b->PeekChar(i),outstorage.c_str());
+            }
+            //*/
             if (outblock) outblock->AddBank(b,entry,author,notes);
             else if (out) out->AddBank(b,entry,outstorage,author,notes);
             else luaL_error(L,"Can't output banks to non-existent real JCR6 file");

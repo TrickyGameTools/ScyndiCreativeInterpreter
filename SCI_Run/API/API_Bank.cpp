@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.06.27
+// Version: 26.11.18
 // End License
 
 #include <JCR6_Core.hpp>
@@ -60,9 +60,10 @@ namespace Scyndi_CI {
 			Value{ luaL_checkinteger(L,3) },
 			Bits{ luaL_optinteger(L,4,8) };
 		if (!BankRegister.count(Tag)) luaL_error(L, "There is no bank tagged '%s'", Tag.c_str());
+        //printf("\x1b[0m%s.Poke(%08d,%08d,%d)\n",Tag.c_str(),Address,Value,Bits);
 		auto Bnk{ BankRegister[Tag] };
 		switch (Bits) {
-		case 8:	Bnk->Poke(Address, (byte)Value); break;
+        case 8:	Bnk->PokeByte(Address, (byte)Value); break;
 		case 16: Bnk->Poke(Address, (uint16)Value); break;
 		case 32: Bnk->Poke(Address, (uint32)Value); break;
 		case 64: Bnk->Poke(Address, (uint64)Value); break;

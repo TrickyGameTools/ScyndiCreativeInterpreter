@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/JCR6.scyndi
 // 	Scyndi's Creative Interpreter - JCR6 Script
-// 	version: 26.06.27
+// 	version: 26.11.18
 // 
 // 	Copyright (C) 2023, 2025, 2026 Jeroen P. Broks
 // 
@@ -132,7 +132,7 @@ Void PatchRealDir(String JDir,String Tag="*MAIN", String PDir="",NoMerge)
 End
 
 // Just never call this directly UNLESS you KNOW what you are doing!
-LocExtern CoreWrite "JCR6.WriteCore"
+LocExtern CoreWrite "_G.JCR6.WriteCore"
 
 Void Create(String OutFile, String Storage="Store", solid)
 	CoreWrite(1,OutFile,Storage,solid==true && Storage!="Store")

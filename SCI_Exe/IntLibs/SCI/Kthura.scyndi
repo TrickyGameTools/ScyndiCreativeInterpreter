@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // 	Kthura Link up for Scyndi's Creative Interpreter
-// 	version: 26.10.23
+// 	version: 26.11.18
 // 
 // 	Copyright (C) 2023, 2024, 2025, 2026 Jeroen P. Broks
 // 
@@ -481,4 +481,21 @@ End
 
 Void ReTexFile(string JCRFile,string path="")
 	MyKthura.ReTex(JCRFile,true,path)
+End
+
+
+Var Config(String Cat, String Key, Value)
+	Switch Lua.type(value)
+		case "nil"
+			return MyKthura.GetConfig(Cat,Key)
+		case "string"
+			MyKthura.SetConfig(Cat,Key,Value)
+			return nil
+		case "number" "boolean"
+			MyKthura.SetConfig(Cat,Key,sprintf("%s",Value))
+			return nil
+		default
+			printf("\x1b[31mERROR!\x07\x1b[37mType %s cannot be used for config definitios in Kthura!\n",Lua.type(Value))
+			return nil
+	End
 End

@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/SString.scyndi
 // 	Scyndi's Creative Interpreter
-// 	version: 26.10.23
+// 	version: 26.11.18
 // 
 // 	Copyright (C) 2023, 2024, 2026 Jeroen P. Broks
 // 
@@ -43,6 +43,7 @@ ReadOnly Delegate Prefixed = Lua.SString.Prefixed
 ReadOnly Delegate Suffixed = Lua.SString.Suffixed
 ReadOnly Delegate Trim = Lua.SString.Trim
 	
+Global ReadOnly Delegate ToInt = Lua.SString.ToInt	
 	
 Global Table XSplit(String Str,String Sep=" ")
 	Int V;V = Lua.SString.Split(Str,Sep)

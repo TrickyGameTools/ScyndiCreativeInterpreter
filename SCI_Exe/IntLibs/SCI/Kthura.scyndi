@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // 	Kthura Link up for Scyndi's Creative Interpreter
-// 	version: 26.11.18
+// 	version: 26.11.18 I
 // 
 // 	Copyright (C) 2023, 2024, 2025, 2026 Jeroen P. Broks
 // 
@@ -498,4 +498,24 @@ Var Config(String Cat, String Key, Value)
 			printf("\x1b[31mERROR!\x07\x1b[37mType %s cannot be used for config definitios in Kthura!\n",Lua.type(Value))
 			return nil
 	End
+End
+
+Get Var UsedTextures
+	src:=MyKthura.UsedTextures()
+	fun:=nil
+	ret:=nil
+	err:=nil
+	fun,err = Load(src)
+	if (!fun)
+		printf("\x1b[37m%s\n",src)
+		Lua.error(sprintf("UsedTextures readout failed: %s",err))
+		return nil
+	end
+	ret,err = fun()
+	if (!ret)
+		printf("\x1b[37m%s\n",src)
+		Lua.error(sprintf("UsedTextures funexe failed: %s",err))
+		return nil
+	end
+	return ret
 End

@@ -505,7 +505,8 @@ Get Var UsedTextures
 	fun:=nil
 	ret:=nil
 	err:=nil
-	fun,err = Load(src)
+	Lua.assert(Lua.type(src)=="string",sprintf("Somehow the source of UsedTextures API did not turn out to be a string but to be a %s (%s)",Lua.type(src),src))
+	fun,err = Lua.load(src)
 	if (!fun)
 		printf("\x1b[37m%s\n",src)
 		Lua.error(sprintf("UsedTextures readout failed: %s",err))

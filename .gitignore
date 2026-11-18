@@ -55,3 +55,6 @@ obj/
 
 # Qt crap
 .qtcreator
+
+# Result of disk errors. I don't need that in my repository
+SCI_Exe_Quarantaine

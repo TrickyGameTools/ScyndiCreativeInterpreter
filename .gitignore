@@ -60,3 +60,7 @@ SCI_Run/build
 # Result of disk errors. I don't need that in my repository
 SCI_Exe_Quarantaine
 /SCI_Run/Icon/Scyndi.ico
+/SCI_Run/SCI_Run.cscope_file_list
+/SCI_Run/WTF_VSPROJECT.zip
+/SCI_Run/user.rar
+/SCI_Run/x64_Corrupt/

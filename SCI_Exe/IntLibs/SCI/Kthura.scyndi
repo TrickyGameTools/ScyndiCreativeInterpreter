@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // 	Kthura Link up for Scyndi's Creative Interpreter
-// 	version: 26.11.26
+// 	version: 26.11.26 I
 // 
 // 	Copyright (C) 2023, 2024, 2025, 2026 Jeroen P. Broks
 // 
@@ -538,6 +538,18 @@ Get Var UsedTextures
 		return nil
 	end
 	return ret
+End
+
+Void Save(String File,String Storage="Store",String Author="",String Notes="")
+	MyKthura.Save(0,File,"",Storage,Author,Notes)
+End
+
+Void SaveCompiled(String File,String Storage="Store",String Author="",String Notes="")
+	MyKthura.Save(1,File,"",Storage,Author,Notes)
+End
+
+Void SavePerlientje(String File)
+	MyKthura.Save(2,File)
 End
 
 ReadOnly Delegate Font = Lua.Kthura.Font

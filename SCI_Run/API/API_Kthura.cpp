@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.11.26
+// Version: 26.11.26 I
 // End License
 
 
@@ -31,6 +31,10 @@
 #include <Lunatic.hpp>
 
 #include <Kthura_Draw_TQSG.hpp>
+
+#include <Kthura_Save.hpp>
+#include <Kthura_Compiler.hpp>
+#include <Kthura_Perlientje.hpp>
 
 #include "../SCI_Script.hpp"
 #include "../SCI_Kthura.hpp"
@@ -950,6 +954,32 @@ static int API_Kthura_ObjByLabel(lua_State*L) {
         return 0;
     }
 
+    enum class AST{Native,Compiled,Perlientje};
+    static int API_Kthura_Save(lua_State*L) {
+        auto T{(AST)luaL_checkinteger(L,1)};
+        auto
+            File{Lunatic_CheckString(L,2)},
+            Prefix{Lunatic_OptString(L,3,"")},
+            Storage{Lunatic_OptString(L,4,"Store")},
+            Author{Lunatic_OptString(L,5,"")},
+            Notes{Lunatic_OptString(L,6,"")};
+        auto km{GetKthura()};
+        switch(T) {
+        case AST::Native:
+            Kthura_Save(km,File,Prefix,Storage,Author,Notes);
+        case AST::Compiled:
+            Slyvina::Kthura::Compile(km,File,Prefix);
+            break;
+        case AST::Perlientje:
+            Slyvina::Kthura::SavePerlientje(km,File);
+            break;
+        default:
+            luaL_error(L,"Unknown Kthura Save Kind: %04d",(int)T);
+            break;
+        }
+        return 0;
+    }
+
 
 	void Init_API_Kthura() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -1006,7 +1036,8 @@ static int API_Kthura_ObjByLabel(lua_State*L) {
             { "AllowDraw",API_Kthura_AllowDraw },
             { "Font",API_Kthura_Font },
             { "BlockSizes",API_Kthura_BlockSizes },
-            { "NextObject",API_Kthura_Next }
+            { "NextObject",API_Kthura_Next },
+            { "Save", API_Kthura_Save }
 		};
 
 		InstallAPI("Kthura", IAPI);

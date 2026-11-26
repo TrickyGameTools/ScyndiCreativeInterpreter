@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.10.23
+// Version: 26.11.26
 // End License
 
 #include <SlyvQCol.hpp>
@@ -85,7 +85,7 @@ namespace Scyndi_CI {
 			TQSG_Kthura_Panic = SCIKthuraDrawCrash;
 			QCol->Doing("=>", "Done");
 		}
-		Slyvina::Kthura::LoadCompiledKthuraProcessCallBack=SCI_KthuraLoadCB;
+		Slyvina::Kthura::LoadCompiledKthuraProcessCallBack=SCI_KthuraLoadCB;        
 	}
 
 

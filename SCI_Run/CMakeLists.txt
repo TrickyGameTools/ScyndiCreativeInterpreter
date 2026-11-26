@@ -81,6 +81,7 @@ add_executable(SCI_Run
     ../../../Libs/Units/Source/SlyvStream.cpp
     ../../../Libs/Units/Source/SlyvTime.cpp
     ../../../Libs/Units/Source/SlyvOpenURL.cpp
+    ../../../Libs/Units/Source/SlyvPerlientje.cpp
     ../../../Libs/Units/Source/SlyvDir.cpp
     ../../../Libs/Units/Source/SlyvBank.cpp
     ../../../Libs/Units/Source/SlyvVolumes.cpp
@@ -92,6 +93,7 @@ add_executable(SCI_Run
     ../../../Libs/Kthura/Source/Kthura_Draw_TQSG.cpp
     ../../../Libs/Kthura/Source/Kthura_LoadCompiled.cpp
     ../../../Libs/Kthura/Source/Kthura_Save.cpp
+    ../../../Libs/Kthura/Source/Kthura_Perlientje.cpp
     ../../../Libs/Kthura/Source/Kthura_Walk_Dijkstra.cpp
     ../../../Libs/TQSL/Source/TQSA.cpp
     ../../../Libs/TQSL/Source/TQSE.cpp

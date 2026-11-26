@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.03.23
+// Version: 26.11.26
 // End License
 
 #undef SCI_NO_ERROR_CATCHING
@@ -45,6 +45,7 @@
 #include <SlyvWindows.hpp>
 
 #include <Kthura_LoadCompiled.hpp>
+#include <Kthura_Perlientje.hpp>
 
 #include "../SCI_Share/SCI_Header.hpp"
 #include "SCI_Config.hpp"
@@ -109,6 +110,7 @@ int main(int c, char** cli_args) {
 	QCol->Doing("Game Home", GameGlobalHome());
 	_Bank::DefineDefaultBankPanic(SCI_BankPanic);
 	Slyvina::Kthura::RegCompiledXLoader();
+    Slyvina::Kthura::InitXPerlientje();
 	if (CanStart(c, cli_args)) {
 #ifndef SCI_NO_ERROR_CATCHING
 		try {

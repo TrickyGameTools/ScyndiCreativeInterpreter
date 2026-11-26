@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 26.11.18
+// Version: 26.11.26
 // End License
 
 
@@ -30,9 +30,12 @@
 
 #include <Lunatic.hpp>
 
+#include <Kthura_Draw_TQSG.hpp>
+
 #include "../SCI_Script.hpp"
 #include "../SCI_Kthura.hpp"
 #include "../SCI_Crash.hpp"
+#include "../SCI_Graphics.hpp"
 
 #include "API_JCR6.hpp"
 using namespace Slyvina;
@@ -604,6 +607,12 @@ static int API_Kthura_ObjByLabel(lua_State*L) {
 		lua_pushboolean(L, GetKthuraLayer()->Block((int)luaL_checkinteger(L, 1), (int)luaL_checkinteger(L, 2)));
 		return 1;
 	}
+    static int API_Kthura_BlockSizes(lua_State* L) {
+        auto Lay{GetKthuraLayer()};
+        lua_pushinteger(L,Lay->BlockWidth());
+        lua_pushinteger(L,Lay->BlockHeight());
+        return 2;
+    }
 
 	static int API_Kthura_Remap(lua_State* L) {
 		switch (luaL_optinteger(L, 1, 0)) {
@@ -758,13 +767,40 @@ static int API_Kthura_ObjByLabel(lua_State*L) {
 			Crash("OnjSize: Illegal object identification!");
 			break;
 		}
-		auto osz{SCI_KthuraDraw->_ObstacleSize(o)};
-		lua_pushinteger(L,osz.x);
-		lua_pushinteger(L,osz.y);
-		lua_pushinteger(L,osz.w);
-		lua_pushinteger(L,osz.h);
-		return 4;
-	}
+        switch(o->Kind()){
+        case KthuraKind::TiledArea:
+        case KthuraKind::StretchedArea:
+        case KthuraKind::Rect:
+        case KthuraKind::Zone:
+            lua_pushinteger(L,o->x());
+            lua_pushinteger(L,o->y());
+            lua_pushinteger(L,o->w());
+            lua_pushinteger(L,o->h());
+            return 4;
+
+        case KthuraKind::Picture:
+        case KthuraKind::Obstacle: {
+            auto osz{SCI_KthuraDraw->_ObstacleSize(o)};
+            lua_pushinteger(L,osz.x);
+            lua_pushinteger(L,osz.y);
+            lua_pushinteger(L,osz.w);
+            lua_pushinteger(L,osz.h);
+            return 4;}
+        case KthuraKind::Pivot:
+        case KthuraKind::Exit:
+            lua_pushinteger(L,o->x()-4);
+            lua_pushinteger(L,o->y()-4);
+            lua_pushinteger(L,8);
+            lua_pushinteger(L,8);
+            return 4;
+        default:
+            lua_pushinteger(L,0);
+            lua_pushinteger(L,0);
+            lua_pushinteger(L,0);
+            lua_pushinteger(L,0);
+            return 4;
+        }
+    }
 
 	static int API_Kthura_AllObj(lua_State*L){
 		static std::vector<int> AOL{};
@@ -855,6 +891,65 @@ static int API_Kthura_ObjByLabel(lua_State*L) {
         return 1;
     }
 
+    static int API_Kthura_AllowDraw(lua_State *L) {
+        static std::map<std::string,KthuraKind> KKM {
+            {"TILEDAREA",KthuraKind::TiledArea},
+            {"TILED",KthuraKind::TiledArea},
+            {"STRETCHED",KthuraKind::StretchedArea},
+            {"STRETCHEDAREA",KthuraKind::StretchedArea},
+            {"ACTOR",KthuraKind::Actor},
+            {"CUSTOM",KthuraKind::Custom},
+            {"EXIT",KthuraKind::Exit},
+            {"OBSTACLE",KthuraKind::Obstacle},
+            {"PICTURE",KthuraKind::Picture},
+            {"RECT",KthuraKind::Rect},
+            {"ZONE",KthuraKind::Zone},
+            {"PIVOT",KthuraKind::Pivot},
+            {"UNKNOWN",KthuraKind::Unknown}
+        };
+        auto AKind{Upper(luaL_checkstring(L,1))};
+        if (AKind=="GET") {
+            auto GKind{Upper(luaL_checkstring(L,2))};
+            if (GKind[0]=='$') GKind="CUSTOM";
+            if (!KKM.count(GKind)) { luaL_error(L,"Cannot acquire kind: %s",GKind.c_str()); return 0; }
+            lua_pushboolean(L,SCI_KthuraDraw->AllowDraw[KKM[GKind]]);
+            return 1;
+        }
+        if (AKind[0]=='$') AKind="CUSTOM";
+        if (!KKM.count(AKind)) { luaL_error(L,"Cannot set kind: %s",AKind.c_str()); return 0; }
+        SCI_KthuraDraw->AllowDraw[KKM[AKind]] = Lunatic_CheckBoolean(L,2);
+        return 0;
+    }
+
+    static int API_Kthura_Font(lua_State* L){
+        TQSGKthuraFont(Fnt(luaL_checkstring(L,1)));
+        return 0;
+    }
+
+    static int API_Kthura_Next(lua_State* L) {
+        auto kl{GetKthuraLayer()};
+        auto t{luaL_checkinteger(L,1)};
+        KthuraObject* KO{nullptr};
+        switch (t){
+        case 0:
+            KO=kl->FirstObject();
+            if (!KO) return 0;
+            lua_pushinteger(L,KO->ID());
+            return 1;
+        case 1: KO=kl->Obj(luaL_checkstring(L,2)); break;
+        case 2: KO=kl->Obj(luaL_checkinteger(L,2)); break;
+        default: luaL_error(L,"Unknown command number for Kthura::Next -> %d",t); return 0;
+        }
+        auto NO{KO->Next()};
+        auto back2first{Lunatic_OptBoolean(L,3,true)};
+        if ((!NO) && back2first) NO=kl->FirstObject();
+        if (NO) {
+            lua_pushinteger(L,NO->ID());
+            return 1;
+        }
+        return 0;
+    }
+
 
 	void Init_API_Kthura() {
 		std::map<std::string, lua_CFunction>IAPI{
@@ -907,7 +1002,11 @@ static int API_Kthura_ObjByLabel(lua_State*L) {
             { "ReTex",API_ReTex },
             { "SetConfig",API_Kthura_SetConfig },
             { "GetConfig",API_Kthura_GetConfig },
-            { "UsedTextures",API_Kthura_UsedTextures }
+            { "UsedTextures",API_Kthura_UsedTextures },
+            { "AllowDraw",API_Kthura_AllowDraw },
+            { "Font",API_Kthura_Font },
+            { "BlockSizes",API_Kthura_BlockSizes },
+            { "NextObject",API_Kthura_Next }
 		};
 
 		InstallAPI("Kthura", IAPI);

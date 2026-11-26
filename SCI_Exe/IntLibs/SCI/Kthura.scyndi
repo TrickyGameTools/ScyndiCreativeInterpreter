@@ -1,7 +1,7 @@
 // License:
 // 	SCI_Exe/IntLibs/SCI/Kthura.scyndi
 // 	Kthura Link up for Scyndi's Creative Interpreter
-// 	version: 26.11.18 I
+// 	version: 26.11.26
 // 
 // 	Copyright (C) 2023, 2024, 2025, 2026 Jeroen P. Broks
 // 
@@ -135,6 +135,9 @@ plua _ObjKeyIndex(s,string Key)
 		_ObjData = _ObjData || {}
 		_ObjData[s.____objtag] = _ObjData[s.____objtag] || SetMetaTable({["____objtag"]=s.____objtag},{["__index"]=GData,["__newindex"]=SData})
 		return _ObjData[s.____objtag]
+	Case "NEXT"
+		KN:=MyKthura.NextObject(1,s.____objtag,true)
+		return Kthura.Obj[sprintf("%%%d",KN)]
 	Default
 		return MyKthura.GetObj(s.____objtag,Key)
 	End
@@ -247,6 +250,7 @@ Const Delegate Moving  = Lua.Kthura.Moving
 Const Delegate Kill = Lua.Kthura.Kill
 
 Const Delegate Block = Lua.Kthura.Block
+Const Delegate BlockSizes = Lua.Kthura.BlockSizes
 Const Delegate Remap = Lua.Kthura.Remap
 
 Const Delegate Blocked = Lua.Kthura.Block
@@ -255,6 +259,21 @@ Const Delegate HideByLabel = Lua.Kthura.HideByLabel
 Const Delegate ShowByLabel = Lua.Kthura.ShowByLabel
 Const Delegate HideButLabel = Lua.Kthura.HideButLabel
 Const Delegate ShowButLabel = Lua.Kthura.ShowButLabel
+
+Get Int BlockW
+	plua W
+	plua H
+	W,H = BlockSizes()
+	return W
+End
+
+Get Int BlockH
+	plua W
+	plua H
+	W,H = BlockSizes()
+	return H
+End
+
 
 Void HideByZone(String Z,O)
 	MyKthura.HideByZone(Z,O!=nil && O!=false)
@@ -519,4 +538,17 @@ Get Var UsedTextures
 		return nil
 	end
 	return ret
+End
+
+ReadOnly Delegate Font = Lua.Kthura.Font
+
+plua __IDXALLOWDRAW(t,string k)
+	return MyKthura.AllowDraw("GET",k)
+end
+plua __NEWIDXALLOWDRAW(t,string k,bool v)
+	return MyKthura.AllowDraw(k,v)
+end
+ReadOnly Var AllowDraw
+Init
+	AllowDraw = SetMetaTable({},{["__newindex"]=__NEWIDXALLOWDRAW, ["__index"]=__IDXALLOWDRAW})
 End
